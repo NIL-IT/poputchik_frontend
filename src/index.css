@@ -32,3 +32,54 @@ body {
   min-height: 100vh;
   position: relative;
 }
+
+.visually-hidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+
+  -webkit-clip-path: inset(100%);
+  clip-path: inset(100%);
+
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.img-upload__label {
+  position: absolute;
+
+  top: 200px;
+  left: 210px;
+
+  width: 31px;
+  height: 31px;
+
+  font-size: 0;
+  background-color: var(--orange-color);
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  cursor: pointer;
+}
+
+.img-upload__label::after {
+  content: "";
+  position: absolute;
+
+  top: 10px;
+  left: 8px;
+
+  width: 16px;
+  height: 13px;
+
+  background-image: url("./assets/icons/camera.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
