@@ -1,0 +1,62 @@
+.profile {
+  background-color: white;
+  padding: 15px 18px;
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+}
+.profile-img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: var(--grey-color);
+}
+
+.profile-info {
+  display: flex;
+  gap: 15px;
+  color: #181818;
+}
+
+.profile-name {
+  font-size: 17px;
+}
+
+.profile-ratings {
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: space-between;
+  padding-top: 21px;
+  width: 91px;
+}
+
+.profile-message {
+  background: var(--orange-color);
+  width: 53px;
+  height: 44px;
+  border-radius: 10px;
+}
+.profile-stars {
+  padding-left: 22px;
+  background: url("../../assets/icons/star.svg") no-repeat;
+}
+.profile-comments {
+  padding-left: 22px;
+  background: url("../../assets/icons/comment.svg") no-repeat;
+}
+.profile-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* <div className='profile-info'>
+        <h3 className='profile-name'></h3>
+        <div className='profile-ratings'>
+          <p className='profile-stars'></p>
+          <p className='profile-comments'></p>
+        </div>
+      </div>
+      <button className='profile-message'></button> */
