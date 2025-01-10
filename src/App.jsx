@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StartPage from "./pages/StartPage";
 import RegistrationPage from "./pages/RegistrationPage";
+import MainPage from "./pages/MainPage";
 
 function App() {
   return (
@@ -11,8 +12,12 @@ function App() {
           element={<StartPage />}
         />
         <Route
-          path='/register'
+          path='/registration'
           element={<RegistrationPage />}
+        />
+        <Route
+          path='/main'
+          element={<MainPage />}
         />
       </Routes>
     </Router>

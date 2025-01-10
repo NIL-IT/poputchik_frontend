@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import FooterBlock from "../components/FooterBlock";
+import FooterBlock from "../UI/Footer/Footer";
 import Button from "../UI/Button/Button";
 import Switcher from "../UI/Switcher/Switcher";
 import Background from "../assets/welcome/startScreen.png";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function StartPage() {
   const navigate = useNavigate();
   const navigateToRegister = () => {
-    navigate("/register");
+    navigate("/registration");
   };
   return (
     <div className='flex justify-center items-center h-screen'>

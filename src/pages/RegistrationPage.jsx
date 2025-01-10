@@ -9,13 +9,14 @@ import { useState } from "react";
 import Select from "../UI/Select/Select";
 export default function RegistrationPage() {
   const [phone, setPhone] = useState("");
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState(null);
 
   const [formError, setFormError] = useState("");
+
+  const regex = /^\w+$/;
 
   const handlePhoneChange = (value) => {
     setPhone(value);
@@ -29,8 +30,8 @@ export default function RegistrationPage() {
     e.preventDefault();
     let isValid = true;
 
-    if (!name) {
-      setFormError("Имя обязательно");
+    if (!name && regex.test(name)) {
+      // setFormError("Имя обязательно");
       isValid = false;
     } else {
       setFormError("");
@@ -145,7 +146,8 @@ export default function RegistrationPage() {
           <Button
             type='submit'
             classNames='mb-10'
-            size={"large"}>
+            size={"large"}
+            onClick={() => {}}>
             Сохранить
           </Button>
           <Switcher isActive={true} />

@@ -1,0 +1,19 @@
+.hamburger-menu {
+  background-color: white;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 40px;
+  width: 40px;
+}
+
+.bar {
+  background-color: #000;
+  height: 2px;
+  width: 24px;
+}

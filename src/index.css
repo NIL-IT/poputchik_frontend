@@ -25,6 +25,11 @@
   text-align: center;
 }
 
+.container-custom {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
 body {
   background-color: var(--grey-color);
   max-width: 390px;
