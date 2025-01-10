@@ -2,23 +2,28 @@ import Button from "../UI/Button/Button";
 import Footer from "../UI/Footer/Footer";
 import Profile from "../UI/Profile/Profile";
 
-export default function BottomList({ list, currentRole }) {
+export default function BottomList({ list, currentRole, toggle }) {
   return (
     <Footer className={"bg-[#F6F6F6] px-5"}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
         Список {currentRole === "passenger" ? "водителей" : "попутчиков"}
       </h2>
       <div className='flex flex-col items-center justify-center gap-4 pb-4'>
-        {list.map((i) => {
+        {list.map((obj) => {
           return (
             <Profile
-              key={i}
-              name={i.name}
+              key={obj.id}
+              avatar={obj.avatar}
+              name={obj.name}
+              rating={obj.rating}
+              comments={obj.comments}
             />
           );
         })}
       </div>
-      <div className='flex justify-end items-center text-[14px] leading-[16.1px] pb-4'>
+      <div
+        className='flex justify-end items-center text-[14px] leading-[16.1px] pb-4'
+        onClick={() => toggle()}>
         <p className='pr-5'>Смотреть весь список</p>
         <svg
           width='19'

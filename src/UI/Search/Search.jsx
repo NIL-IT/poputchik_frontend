@@ -16,7 +16,6 @@ export default function Search() {
           fill='#64748B'
         />
       </svg>
-
       <input
         className='search-input'
         type='text'
