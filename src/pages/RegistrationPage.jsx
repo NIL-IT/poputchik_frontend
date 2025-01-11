@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../UI/Button/Button";
 import "react-phone-number-input/style.css";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
@@ -7,7 +7,8 @@ import Switcher from "../UI/Switcher/Switcher";
 import backIcon from "../assets/icons/arrow-left.svg";
 import { useState } from "react";
 import Select from "../UI/Select/Select";
-export default function RegistrationPage() {
+
+export default function RegistrationPage({ currentUser, setCurrentUser }) {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,6 +17,7 @@ export default function RegistrationPage() {
 
   const [formError, setFormError] = useState("");
 
+  const navigate = useNavigate();
   const regex = /^\w+$/;
 
   const handlePhoneChange = (value) => {
@@ -31,7 +33,6 @@ export default function RegistrationPage() {
     let isValid = true;
 
     if (!name && regex.test(name)) {
-      // setFormError("Имя обязательно");
       isValid = false;
     } else {
       setFormError("");
@@ -53,13 +54,13 @@ export default function RegistrationPage() {
 
     if (isValid) {
       const formData = new FormData();
+      formData.append("avatar", avatar);
       formData.append("name", name);
       formData.append("phone", phone);
       formData.append("email", email);
       formData.append("city", city);
-      if (avatar) {
-        formData.append("avatar", avatar);
-      }
+      setCurrentUser({ avatar, name, phone, email, city });
+      navigate("/main");
     }
   };
   return (

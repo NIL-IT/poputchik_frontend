@@ -88,3 +88,35 @@ body {
   background-repeat: no-repeat;
   background-position: center;
 }
+.change-file.img-upload__label {
+  position: absolute;
+
+  top: 96px;
+  left: 95px;
+
+  width: 30px;
+  height: 30px;
+
+  font-size: 0;
+  background-color: var(--orange-color);
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  cursor: pointer;
+}
+
+.change-file.img-upload__label::after {
+  content: "";
+  position: absolute;
+
+  top: 6px;
+  left: 7.5px;
+  width: 15px;
+  height: 15px;
+
+  background-image: url("./assets/icons/edit.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}

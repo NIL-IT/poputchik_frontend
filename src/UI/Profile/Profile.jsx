@@ -12,7 +12,7 @@ export default function Profile({ name, rating, avatar, comments }) {
           <h3 className='profile-name'>{name}</h3>
           <div className='profile-ratings'>
             <p className='profile-stars'>{rating}</p>
-            <p className='profile-comments'>{comments}</p>
+            <p className='profile-comments'>{comments.length}</p>
           </div>
         </div>
       </div>
