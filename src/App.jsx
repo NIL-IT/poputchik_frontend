@@ -8,9 +8,9 @@ import UserPage from "./pages/UserPage";
 function App() {
   const [currentUser, setCurrentUser] = useState({
     name: "Антон Татарченко",
-    phone: "+79635120103",
+    phone: "+132131231",
     avatar: "https://i.pravatar.cc/150?img=4",
-    email: "tatarchenko.04@mail.ru",
+    email: "xd@mail.ru",
     city: "Новосибирск",
   });
   return (
