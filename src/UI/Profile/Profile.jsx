@@ -1,6 +1,10 @@
 import "./Profile.css";
 import message from "../../assets/icons/message.svg";
-export default function Profile({ name, rating, avatar, comments }) {
+export default function Profile({ driver }) {
+  if (!driver) {
+    return null;
+  }
+  const { name, rating, avatar, comments } = driver;
   return (
     <div className='profile'>
       <div className='profile-info'>

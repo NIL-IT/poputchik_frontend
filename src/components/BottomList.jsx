@@ -13,10 +13,7 @@ export default function BottomList({ list, currentRole, toggle }) {
           return (
             <Profile
               key={obj.id}
-              avatar={obj.avatar}
-              name={obj.name}
-              rating={obj.rating}
-              comments={obj.comments}
+              driver={obj}
             />
           );
         })}

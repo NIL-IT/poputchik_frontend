@@ -1,0 +1,152 @@
+.history {
+  padding: 15px;
+  background: white;
+  border-radius: 16px;
+  /* height: 160px; */
+  width: 100%;
+  color: var(--dark-color);
+  font-size: 16px;
+  line-height: 18.4px;
+}
+
+.history-wrapper {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #efeff4;
+  padding-bottom: 10px;
+}
+
+.history-path {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 35px;
+  text-align: left;
+  position: relative;
+}
+
+.history-path::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  height: 76%;
+  width: 2px;
+  background: linear-gradient(to bottom, #c8c7cc 50%, transparent 50%);
+  background-size: 6px 12px;
+  background-repeat: repeat-y;
+}
+
+.history-from {
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.history-from::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  padding: 5px;
+  border: 2px solid var(--orange-color);
+  border-radius: 50%;
+  left: -35px;
+}
+
+.history-from::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--orange-color);
+  padding: 5px;
+  border: 2px solid white;
+  border-radius: 50%;
+  left: -32px;
+  top: 3px;
+}
+
+.history-to {
+  position: relative;
+}
+
+.history-to::before {
+  content: "";
+  width: 20px;
+  position: absolute;
+  display: block;
+  height: 25px;
+  left: -35px;
+  top: -3px;
+  background: url("../../assets/icons/geo-icon.svg");
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.history-date {
+  text-align: right;
+  color: #878787;
+  font-size: 14px;
+  line-height: 16.1px;
+  padding-bottom: 24px;
+}
+
+.history-img {
+  height: 37px;
+  width: 37px;
+  border-radius: 50%;
+}
+
+.history-driver {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.history-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  padding-bottom: 15px;
+}
+
+.history-price {
+  color: #242e42;
+  padding-left: 37px;
+  padding-top: 11px;
+  position: relative;
+}
+.history-price::before {
+  content: "₽";
+  color: white;
+  text-align: center;
+  padding: 3px;
+  width: 22px;
+  position: absolute;
+  display: block;
+  height: 22px;
+  left: 0px;
+  top: 8px;
+  background: url("../../assets/icons/price-bg.svg");
+}
+
+.history-rating {
+  color: #343b71;
+  padding-right: 10px;
+  position: relative;
+  padding-left: 22px;
+  background: url("../../assets/icons/star.svg") no-repeat left;
+}
+
+.history-status {
+  font-weight: 700;
+  padding-top: 10px;
+  text-align: center;
+  color: #03de73;
+}
