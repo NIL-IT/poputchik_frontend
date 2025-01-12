@@ -13,17 +13,22 @@ function App() {
     email: "xd@mail.ru",
     city: "Новосибирск",
   });
+  const [role, setRole] = useState("");
+  function chooseRole(value) {
+    setRole(value);
+  }
   return (
     <Router>
       <Routes>
         <Route
           path='/'
-          element={<StartPage />}
+          element={<StartPage setRole={chooseRole} />}
         />
         <Route
           path='/registration'
           element={
             <RegistrationPage
+              role={role}
               currentUser={currentUser}
               setCurrentUser={setCurrentUser}
             />

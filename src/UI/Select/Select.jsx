@@ -1,13 +1,7 @@
 import "./Select.css";
 import { useState } from "react";
 
-export default function Select({ options, placeholder }) {
-  const [selectedValue, setSelectedValue] = useState("");
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
+export default function Select({ selectedValue, options, placeholder, onChange }) {
   return (
     <div className='select-wrapper'>
       <svg
@@ -26,13 +20,11 @@ export default function Select({ options, placeholder }) {
         />
       </svg>
       <select
-        required
         className={`input select ${selectedValue === "" ? "select-placeholder" : "select-option"}`}
         value={selectedValue}
-        //
-        onChange={handleChange}>
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={placeholder}>
         <option
-          className='text-[#2C2C2C]'
           value=''
           disabled
           hidden>
@@ -41,8 +33,8 @@ export default function Select({ options, placeholder }) {
         {options.map((option, index) => (
           <option
             key={index}
-            value={option.value}>
-            {option.label}
+            value={option}>
+            {option}
           </option>
         ))}
       </select>

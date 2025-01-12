@@ -4,10 +4,11 @@ import Button from "../UI/Button/Button";
 import Switcher from "../UI/Switcher/Switcher";
 import Background from "../assets/welcome/startScreen.png";
 import { useNavigate } from "react-router-dom";
-export default function StartPage() {
+export default function StartPage({ setRole }) {
   const navigate = useNavigate();
-  const navigateToRegister = () => {
+  const navigateToRegister = (value) => {
     navigate("/registration");
+    setRole(value);
   };
   return (
     <div className='flex justify-center items-center h-screen'>
@@ -26,12 +27,12 @@ export default function StartPage() {
         <div className='flex gap-5 pb-9'>
           <Button
             size='small'
-            onClick={() => navigateToRegister()}>
+            onClick={() => navigateToRegister("passenger")}>
             Я попутчик
           </Button>
           <Button
             size='small'
-            onClick={() => navigateToRegister()}>
+            onClick={() => navigateToRegister("driver")}>
             Я водитель
           </Button>
         </div>
