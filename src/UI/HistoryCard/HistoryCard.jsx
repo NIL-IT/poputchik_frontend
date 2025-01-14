@@ -1,8 +1,7 @@
 import "./HistoryCard.css";
 export default function HistoryCard({ drive }) {
-  console.log(drive);
   if (!drive) {
-    return null; // Или можно отобразить сообщение об ошибке
+    return null;
   }
   return (
     <div className='history'>

@@ -57,19 +57,17 @@ body {
 }
 
 .img-upload__label {
-  position: absolute;
-
-  top: 200px;
-  left: 210px;
-
+  position: relative;
+  display: block;
+  width: 121px;
+  height: 121px;
+  background: #b9b9b9;
+  border-radius: 50%;
+  /* 
   width: 31px;
-  height: 31px;
+  height: 31px; */
 
   font-size: 0;
-  background-color: var(--orange-color);
-  border-radius: 50%;
-  background-repeat: no-repeat;
-  background-position: center;
 
   cursor: pointer;
 }
@@ -78,45 +76,34 @@ body {
   content: "";
   position: absolute;
 
-  top: 10px;
-  left: 8px;
+  bottom: 0px;
+  right: 8px;
 
-  width: 16px;
-  height: 13px;
-
-  background-image: url("./assets/icons/camera.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.change-file.img-upload__label {
-  position: absolute;
-
-  top: 96px;
-  left: 95px;
-
-  width: 30px;
-  height: 30px;
-
-  font-size: 0;
+  width: 31px;
+  height: 31px;
   background-color: var(--orange-color);
   border-radius: 50%;
   background-repeat: no-repeat;
   background-position: center;
-
-  cursor: pointer;
+  background-image: url("./assets/icons/camera.svg");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.change-file.img-upload__label::after {
+.change-file .img-upload__label {
+  border: var(--orange-color) solid 2px;
+}
+
+.change-file .img-upload__label::after {
   content: "";
   position: absolute;
 
-  top: 6px;
-  left: 7.5px;
-  width: 15px;
-  height: 15px;
+  bottom: 6px;
+  right: 7.5px;
+  width: 19px;
+  height: 19px;
 
   background-image: url("./assets/icons/edit.svg");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
 }

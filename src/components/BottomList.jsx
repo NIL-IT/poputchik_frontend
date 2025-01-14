@@ -1,8 +1,10 @@
+import { useUserStore } from "../state/UserStore";
 import Button from "../UI/Button/Button";
 import Footer from "../UI/Footer/Footer";
 import Profile from "../UI/Profile/Profile";
 
-export default function BottomList({ list, currentRole, toggle }) {
+export default function BottomList({ list, toggle }) {
+  const { currentRole } = useUserStore();
   return (
     <Footer className={"bg-[#F6F6F6] px-5"}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>

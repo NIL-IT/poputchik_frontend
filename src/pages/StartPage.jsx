@@ -4,11 +4,18 @@ import Button from "../UI/Button/Button";
 import Switcher from "../UI/Switcher/Switcher";
 import Background from "../assets/welcome/startScreen.png";
 import { useNavigate } from "react-router-dom";
-export default function StartPage({ setRole }) {
+import { useUserStore } from "../state/UserStore";
+export default function StartPage() {
+  const { changeCurrentRole } = useUserStore();
   const navigate = useNavigate();
+  const { currentUser } = useUserStore();
   const navigateToRegister = (value) => {
-    navigate("/registration");
-    setRole(value);
+    if (!currentUser) {
+      navigate("/registration");
+    } else {
+      navigate("/main");
+    }
+    changeCurrentRole(value);
   };
   return (
     <div className='flex justify-center items-center h-screen'>

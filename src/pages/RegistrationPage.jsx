@@ -7,33 +7,24 @@ import Switcher from "../UI/Switcher/Switcher";
 import backIcon from "../assets/icons/arrow-left.svg";
 import { useState } from "react";
 import Select from "../UI/Select/Select";
+import { registration } from "../api/api";
+import { useUserStore } from "../state/UserStore";
 
-export default function RegistrationPage({ currentUser, setCurrentUser, role }) {
+export default function RegistrationPage() {
+  const { currentRole } = useUserStore();
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [visiblePhoto, setVisiblePhoto] = useState("");
+  const [passportPhoto, setPassportPhoto] = useState("");
+  const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState("");
 
   const navigate = useNavigate();
-  const regex = /^\w+$/;
-  // console.log(role);
-
-  async function sendData(data) {
-    const response = await fetch(`http://localhost:8082/users/signup_passenger`, {
-      method: "POST",
-      body: data,
-      encType: "multipart/form-data",
-      mode: "no-cors",
-    });
-    console.log(role);
-    if (!response.status === 201) {
-      throw new Error(response.body);
-    }
-  }
-
+  const regex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
+  console.log(currentRole);
   const handleCityChange = (value) => {
     setCity(value);
   };
@@ -66,16 +57,19 @@ export default function RegistrationPage({ currentUser, setCurrentUser, role }) 
 
     if (isValid) {
       const formData = new FormData();
-      formData.append("telegram_id", "431");
+      formData.append("telegram_id", "4321242");
       formData.append("profile_photo", avatar);
       formData.append("name", name);
       formData.append("phone_number", phone);
       formData.append("email", email);
       formData.append("city", city);
+      if (currentRole === "driver") {
+        formData.append("passport_photo", passportPhoto);
+        formData.append("driver_license", driverLicensePhoto);
+      }
 
       try {
-        await sendData(formData, role).then(() => navigate("/main"));
-        setCurrentUser({ avatar, name, phone, email, city });
+        await registration(formData, currentRole).then(() => navigate("/main"));
       } catch (error) {
         setFormError(error.message || "Неизвестная ошибка");
       }
@@ -113,13 +107,8 @@ export default function RegistrationPage({ currentUser, setCurrentUser, role }) 
         onSubmit={handleSubmit}
         className='flex flex-col gap-5 justify-center items-center mb-[114px]'
         action='#'>
-        <fieldset
-          style={{
-            backgroundImage: avatar ? `url(${visiblePhoto})` : "none",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className={`${avatar ? `` : "bg-[#B9B9B9]"}  w-[121px] h-[121px] rounded-full mb-10`}>
+        <fieldset className='w-[121px] h-[121px] mb-10'>
+          {/* className={`${avatar ? `` : "bg-[#B9B9B9]"}  w-[121px] h-[121px] rounded-full mb-10`} */}
           <input
             id='upload-file'
             className='visually-hidden'
@@ -128,6 +117,11 @@ export default function RegistrationPage({ currentUser, setCurrentUser, role }) 
             onChange={handleFileChange}
           />
           <label
+            style={{
+              backgroundImage: avatar ? `url(${visiblePhoto})` : "none",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
             htmlFor='upload-file'
             className='img-upload__label  img-upload__control'>
             Загрузить
@@ -166,6 +160,26 @@ export default function RegistrationPage({ currentUser, setCurrentUser, role }) 
           value={city}
           onChange={handleCityChange}
         />
+        {currentRole === "driver" && (
+          <>
+            <label htmlFor='passportPhoto'>Выберите фото пасспорта</label>
+            <input
+              type='file'
+              name='passportPhoto'
+              id='passportPhoto'
+              accept='image/*'
+              onChange={(e) => setPassportPhoto(e.target.files[0])}
+            />
+            <label htmlFor='licensePhoto'>Выберите фото водительского удостоверения</label>
+            <input
+              type='file'
+              name='licensePhoto'
+              id='licensePhoto'
+              accept='image/*'
+              onChange={(e) => setDriverLicensePhoto(e.target.files[0])}
+            />
+          </>
+        )}
 
         <footer className='absolute bottom-[30px] flex flex-col '>
           <Button

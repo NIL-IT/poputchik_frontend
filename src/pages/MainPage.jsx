@@ -5,7 +5,7 @@ import BottomList from "../components/BottomList";
 import { useState } from "react";
 import FullScreenList from "../UI/FullScreenList/FullScreenList";
 
-export default function MainPage({ currentUser }) {
+export default function MainPage() {
   const mock = [
     {
       id: 1,
@@ -116,7 +116,7 @@ export default function MainPage({ currentUser }) {
   }
   return (
     <div className='bg-black h-screen relative'>
-      <Header currentUser={currentUser}></Header>
+      <Header />
       <Map></Map>
       <FullScreenList
         isOpen={isFullScreen}
@@ -135,7 +135,6 @@ export default function MainPage({ currentUser }) {
       </FullScreenList>
       <BottomList
         list={nerbiest}
-        currentRole={"passenger"}
         toggle={toggleFullScreen}
       />
     </div>

@@ -4,8 +4,12 @@ import Button from "../UI/Button/Button";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
 import FullScreenList from "../UI/FullScreenList/FullScreenList";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../state/UserStore";
 
-export default function UserPage({ currentUser }) {
+export default function UserPage() {
+  const navigate = useNavigate();
+  const { changeCurrentRole } = useUserStore();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const mock = [
     {
@@ -103,14 +107,21 @@ export default function UserPage({ currentUser }) {
   function toggleHistory() {
     setIsHistoryOpen((prev) => !prev);
   }
+
+  function toSelectRole() {
+    navigate("/");
+    changeCurrentRole("");
+  }
+
   return (
     <div className='relative'>
       <BackButton />
       <div className='pt-8 pb-10 px-5 border-b border-[#919191]'>
-        <UserInfo currentUser={currentUser} />
+        <UserInfo />
         <div className='flex gap-5'>
           <Button size={"medium"}>Редактировать</Button>
           <Button
+            onClick={toSelectRole}
             size={"medium"}
             classNames={"black"}>
             Выйти

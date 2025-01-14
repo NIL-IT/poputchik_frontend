@@ -1,25 +1,27 @@
+import { useUserStore } from "../state/UserStore";
 import Input from "../UI/Input/Input";
 
-export default function UserInfo({ currentUser }) {
+export default function UserInfo() {
+  const { currentUser } = useUserStore();
   return (
     <div className='flex flex-col justify-center items-center '>
       <div className='edit flex flex-col justify-center items-center mb-8'>
-        <fieldset
-          style={{
-            backgroundImage: `url(${currentUser.avatar})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className={`w-[128px] h-[128px] rounded-full mb-1 relative border-[2px] border-[#ef7828] `}>
+        <fieldset className={`change-file mb-2`}>
           <input
             id='change-file'
             className='visually-hidden'
             type='file'
             accept='image/*'
+            disabled
           />
           <label
+            style={{
+              backgroundImage: `url(${currentUser.profile_photo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
             htmlFor='change-file'
-            className='change-file img-upload__label  img-upload__control'>
+            className='img-upload__label  img-upload__control'>
             Загрузить
           </label>
         </fieldset>
