@@ -24,7 +24,7 @@ export default function RegistrationPage() {
 
   const navigate = useNavigate();
   const regex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
-  console.log(currentRole);
+
   const handleCityChange = (value) => {
     setCity(value);
   };
@@ -57,7 +57,7 @@ export default function RegistrationPage() {
 
     if (isValid) {
       const formData = new FormData();
-      formData.append("telegram_id", "4321242");
+      formData.append("telegram_id", "43212421");
       formData.append("profile_photo", avatar);
       formData.append("name", name);
       formData.append("phone_number", phone);
@@ -65,6 +65,7 @@ export default function RegistrationPage() {
       formData.append("city", city);
       if (currentRole === "driver") {
         formData.append("passport_photo", passportPhoto);
+        formData.append("car_photo", passportPhoto);
         formData.append("driver_license", driverLicensePhoto);
       }
 

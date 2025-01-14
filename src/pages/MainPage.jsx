@@ -1,9 +1,10 @@
 import Header from "../UI/Header/Header";
 import Profile from "../UI/Profile/Profile";
 import Map from "../components/Map";
-import BottomList from "../components/BottomList";
 import { useState } from "react";
 import FullScreenList from "../UI/FullScreenList/FullScreenList";
+import DriverList from "../components/DriverList";
+import CreateTrip from "../components/CreateTrip";
 
 export default function MainPage() {
   const mock = [
@@ -108,9 +109,14 @@ export default function MainPage() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-
+  const [isCreating, setIsCreating] = useState(false);
   const nerbiest = mock.slice(0, 2);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  function toggleCreating() {
+    setIsCreating((prev) => !prev);
+  }
+
   function toggleFullScreen() {
     setIsFullScreen((prev) => !prev);
   }
@@ -133,10 +139,16 @@ export default function MainPage() {
           })}
         </div>
       </FullScreenList>
-      <BottomList
-        list={nerbiest}
-        toggle={toggleFullScreen}
-      />
+      {isCreating ? (
+        <CreateTrip />
+      ) : (
+        <DriverList
+          list={nerbiest}
+          toggle={toggleFullScreen}
+          toggleCreating={toggleCreating}
+          isCreating={isCreating}
+        />
+      )}
     </div>
   );
 }

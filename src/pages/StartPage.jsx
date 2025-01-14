@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import FooterBlock from "../UI/Footer/Footer";
 import Button from "../UI/Button/Button";
 import Switcher from "../UI/Switcher/Switcher";
