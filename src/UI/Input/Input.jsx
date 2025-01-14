@@ -1,5 +1,5 @@
 import "./Input.css";
-const Input = ({ type, placeholder, value, onChange }) => {
+const Input = ({ type, placeholder, value, onChange, ...props }) => {
   return (
     <input
       type={type}
@@ -7,6 +7,7 @@ const Input = ({ type, placeholder, value, onChange }) => {
       value={value}
       onChange={onChange}
       className='input'
+      {...props}
     />
   );
 };

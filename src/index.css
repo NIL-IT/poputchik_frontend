@@ -25,10 +25,85 @@
   text-align: center;
 }
 
+.container-custom {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
 body {
   background-color: var(--grey-color);
   max-width: 390px;
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
+}
+
+.visually-hidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+
+  -webkit-clip-path: inset(100%);
+  clip-path: inset(100%);
+
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.img-upload__label {
+  position: relative;
+  display: block;
+  width: 121px;
+  height: 121px;
+  background: #b9b9b9;
+  border-radius: 50%;
+  /* 
+  width: 31px;
+  height: 31px; */
+
+  font-size: 0;
+
+  cursor: pointer;
+}
+
+.img-upload__label::after {
+  content: "";
+  position: absolute;
+
+  bottom: 0px;
+  right: 8px;
+
+  width: 31px;
+  height: 31px;
+  background-color: var(--orange-color);
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("./assets/icons/camera.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.change-file .img-upload__label {
+  border: var(--orange-color) solid 2px;
+}
+
+.change-file .img-upload__label::after {
+  content: "";
+  position: absolute;
+
+  bottom: 6px;
+  right: 7.5px;
+  width: 19px;
+  height: 19px;
+
+  background-image: url("./assets/icons/edit.svg");
+  background-repeat: no-repeat;
+  background-position: center;
 }

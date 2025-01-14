@@ -1,13 +1,20 @@
-// import { useState } from "react";
-import FooterBlock from "../components/FooterBlock";
+import FooterBlock from "../UI/Footer/Footer";
 import Button from "../UI/Button/Button";
 import Switcher from "../UI/Switcher/Switcher";
 import Background from "../assets/welcome/startScreen.png";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../state/UserStore";
 export default function StartPage() {
+  const { changeCurrentRole } = useUserStore();
   const navigate = useNavigate();
-  const navigateToRegister = () => {
-    navigate("/register");
+  const { currentUser } = useUserStore();
+  const navigateToRegister = (value) => {
+    if (!currentUser) {
+      navigate("/registration");
+    } else {
+      navigate("/main");
+    }
+    changeCurrentRole(value);
   };
   return (
     <div className='flex justify-center items-center h-screen'>
@@ -26,12 +33,12 @@ export default function StartPage() {
         <div className='flex gap-5 pb-9'>
           <Button
             size='small'
-            onClick={() => navigateToRegister()}>
+            onClick={() => navigateToRegister("passenger")}>
             Я попутчик
           </Button>
           <Button
             size='small'
-            onClick={() => navigateToRegister()}>
+            onClick={() => navigateToRegister("driver")}>
             Я водитель
           </Button>
         </div>
