@@ -1,0 +1,57 @@
+name: Deploy nails-bot
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy repository to /var/www/Poputchik/frontend/
+        env:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          PAT: ${{ secrets.PAT }}
+        run: |
+          sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
+          if [ -d /var/www/Poputchik/frontend/.git ]; then
+            cd /var/www/Poputchik/frontend/ && \
+            git fetch && \
+            git checkout main && \
+            git pull origin main
+          else
+            rm -rf /var/www/Poputchik/frontend//* && \
+            git clone https://$USERNAME:$PAT@github.com/NIL-IT/poputchik_frontend.git /var/www/Poputchik/frontend/ && \
+            cd /var/www/Poputchik/frontend/ && \
+            git checkout main
+          fi
+          "
+      - name: Build project using npm
+        env:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
+          cd /var/www/Poputchik/frontend/ && \
+          npm install && \
+          npm run build
+          "
+      - name: Move built files to /var/www/Poputchik/frontend/
+        env:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
+          rm -rf /var/www/Poputchik/frontend/* && \
+          cp -r /var/www/Poputchik/frontend/dist/* /var/www/Poputchik/frontend/
+          "
