@@ -3,20 +3,7 @@ import StartPage from "./pages/StartPage";
 import RegistrationPage from "./pages/RegistrationPage";
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route
-          path='/'
-          element={<StartPage />}
-        />
-        <Route
-          path='/register'
-          element={<RegistrationPage />}
-        />
-      </Routes>
-    </Router>
-  );
+  return <StartPage />;
 }
 
 export default App;
