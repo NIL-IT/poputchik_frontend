@@ -4,6 +4,7 @@ import Switcher from "../UI/Switcher/Switcher";
 import Background from "../assets/welcome/startScreen.png";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
+
 export default function StartPage() {
   const { changeCurrentRole } = useUserStore();
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function StartPage() {
           Есть возможность создавать маршруты, искать активные поездки, бронировать их и взаимодействовать между собой
           через чат.
         </p>
-        <div className='flex gap-5 pb-9'>
+        <div className='flex gap-5 pb-9 justify-center'>
           <Button
             size='small'
             onClick={() => navigateToRegister("passenger")}>

@@ -1,10 +1,12 @@
+import { useModal } from "../state/ModalStore";
 import { useUserStore } from "../state/UserStore";
 import Button from "../UI/Button/Button";
 import Footer from "../UI/Footer/Footer";
 import Profile from "../UI/Profile/Profile";
 
-export default function DriverList({ list, toggle, toggleCreating }) {
+export default function DriverList({ list, toggleCreating }) {
   const { currentRole } = useUserStore();
+  const { toggleDrivers } = useModal();
   return (
     <Footer className={`bg-[#F6F6F6] px-5`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
@@ -21,8 +23,8 @@ export default function DriverList({ list, toggle, toggleCreating }) {
         })}
       </div>
       <div
-        className='flex justify-end items-center text-[14px] leading-[16.1px] pb-4'
-        onClick={() => toggle()}>
+        className='flex max-w-[350px] justify-end items-end text-right text-[14px] leading-[16.1px] margin-[0 auto] pb-4'
+        onClick={() => toggleDrivers(true)}>
         <p className='pr-5'>Смотреть весь список</p>
         <svg
           width='19'

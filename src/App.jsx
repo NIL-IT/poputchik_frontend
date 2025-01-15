@@ -22,8 +22,16 @@ function App() {
       <Routes>
         <Route
           path='/'
-          element={<StartPage />}
+          element={
+            <div className='container-custom'>
+              <StartPage />
+            </div>
+          }
         />
+        {/* <Route
+          path='/search'
+          element={<SearchComponent />}
+        /> */}
         <Route
           path='/registration'
           element={<RegistrationPage />}

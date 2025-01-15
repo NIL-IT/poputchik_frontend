@@ -4,7 +4,7 @@ export default function BackButton({ ...props }) {
   const navigate = useNavigate();
   return (
     <button
-      className='absolute top-8 left-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback'
+      className='absolute top-8  left-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback'
       onClick={() => navigate(-1)}
       {...props}>
       <svg

@@ -114,7 +114,7 @@ export default function UserPage() {
   }
 
   return (
-    <div className='relative'>
+    <div className='relative container-custom'>
       <BackButton />
       <div className='pt-8 pb-10 px-5 border-b border-[#919191]'>
         <UserInfo />
@@ -153,7 +153,7 @@ export default function UserPage() {
           isOpen={isHistoryOpen}
           toggle={toggleHistory}>
           <h3 className='font-bold text-[20px] leading-5 pb-8'>История поездок</h3>
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4 w-full'>
             {mock.map((obj) => {
               return (
                 <HistoryCard

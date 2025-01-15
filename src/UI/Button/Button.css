@@ -25,3 +25,6 @@
 .btn.small {
   width: 150px;
 }
+.btn.btn-form {
+  width: 100%;
+}

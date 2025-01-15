@@ -106,7 +106,7 @@ export default function RegistrationPage() {
       <form
         encType='multipart/form-data'
         onSubmit={handleSubmit}
-        className='flex flex-col gap-5 justify-center items-center mb-[114px]'
+        className='flex flex-col gap-5 justify-center items-center mb-[114px] container-custom'
         action='#'>
         <fieldset className='w-[121px] h-[121px] mb-10'>
           {/* className={`${avatar ? `` : "bg-[#B9B9B9]"}  w-[121px] h-[121px] rounded-full mb-10`} */}
