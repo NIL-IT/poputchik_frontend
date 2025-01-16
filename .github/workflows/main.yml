@@ -1,4 +1,4 @@
-name: Deploy nails-bot
+name: Deploy Frontend
 
 on:
   push:
@@ -11,10 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy repository to /var/www/Poputchik/frontend/
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Deploy and build project
         env:
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
@@ -22,36 +30,37 @@ jobs:
           PAT: ${{ secrets.PAT }}
         run: |
           sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
-          if [ -d /var/www/Poputchik/frontend/.git ]; then
-            cd /var/www/Poputchik/frontend/ && \
-            git fetch && \
-            git checkout main && \
-            git pull origin main
-          else
-            rm -rf /var/www/Poputchik/frontend//* && \
-            git clone https://$USERNAME:$PAT@github.com/NIL-IT/poputchik_frontend.git /var/www/Poputchik/frontend/ && \
-            cd /var/www/Poputchik/frontend/ && \
-            git checkout main
-          fi
-          "
-      - name: Build project using npm
-        env:
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-        run: |
-          sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
-          cd /var/www/Poputchik/frontend/ && \
-          npm install && \
-          npm run build
-          "
-      - name: Move built files to /var/www/Poputchik/frontend/
-        env:
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-        run: |
-          sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
-          rm -rf /var/www/Poputchik/frontend/* && \
-          cp -r /var/www/Poputchik/frontend/dist/* /var/www/Poputchik/frontend/
+            # Create directory if it doesn't exist
+            mkdir -p /var/www/Poputchik/frontend
+
+            # If git repository exists, pull latest changes
+            if [ -d /var/www/Poputchik/frontend/.git ]; then
+              cd /var/www/Poputchik/frontend && \
+              git fetch && \
+              git reset --hard origin/main
+            else
+              # Clone repository if it doesn't exist
+              rm -rf /var/www/Poputchik/frontend/* && \
+              git clone https://$PAT@github.com/NIL-IT/poputchik_frontend.git /var/www/Poputchik/frontend_temp && \
+              mv /var/www/Poputchik/frontend_temp/* /var/www/Poputchik/frontend/ && \
+              mv /var/www/Poputchik/frontend_temp/.* /var/www/Poputchik/frontend/ 2>/dev/null || true && \
+              rm -rf /var/www/Poputchik/frontend_temp
+            fi
+
+            # Install dependencies and build
+            cd /var/www/Poputchik/frontend && \
+            npm install && \
+            npm run build
+
+            # Backup current deployment if it exists
+            if [ -d /var/www/Poputchik/frontend/current ]; then
+              mv /var/www/Poputchik/frontend/current /var/www/Poputchik/frontend/previous
+            fi
+
+            # Move built files to deployment directory
+            mkdir -p /var/www/Poputchik/frontend/current && \
+            cp -r /var/www/Poputchik/frontend/dist/* /var/www/Poputchik/frontend/current/
+
+            # Cleanup old backup if everything is successful
+            rm -rf /var/www/Poputchik/frontend/previous
           "
