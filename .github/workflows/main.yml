@@ -2,9 +2,9 @@ name: Deploy Frontend
 
 on:
   push:
-    branches: [main]
+    branches: [preview]
   pull_request:
-    branches: [main]
+    branches: [preview]
 
 jobs:
   deploy:
@@ -31,16 +31,16 @@ jobs:
         run: |
           sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "
             # Create directory if it doesn't exist
-            mkdir -p /var/www/Poputchik/frontend
+            mkdir -p /var/www/Poputchik/preview
 
             # If git repository exists, pull latest changes
-            if [ -d /var/www/Poputchik/frontend/.git ]; then
-              cd /var/www/Poputchik/frontend && \
+            if [ -d /var/www/Poputchik/preview/.git ]; then
+              cd /var/www/Poputchik/preview && \
               git fetch && \
               git reset --hard origin/main
             else
               # Clone repository if it doesn't exist
-              rm -rf /var/www/Poputchik/frontend/* && \
+              rm -rf /var/www/Poputchik/preview/* && \
               git clone https://$PAT@github.com/NIL-IT/poputchik_frontend.git /var/www/Poputchik/frontend_temp && \
               mv /var/www/Poputchik/frontend_temp/* /var/www/Poputchik/frontend/ && \
               mv /var/www/Poputchik/frontend_temp/.* /var/www/Poputchik/frontend/ 2>/dev/null || true && \
@@ -48,19 +48,19 @@ jobs:
             fi
 
             # Install dependencies and build
-            cd /var/www/Poputchik/frontend && \
+            cd /var/www/Poputchik/preview && \
             npm install && \
             npm run build
 
             # Backup current deployment if it exists
-            if [ -d /var/www/Poputchik/frontend/current ]; then
-              mv /var/www/Poputchik/frontend/current /var/www/Poputchik/frontend/previous
+            if [ -d /var/www/Poputchik/preview/current ]; then
+              mv /var/www/Poputchik/preview/current /var/www/Poputchik/preview/previous
             fi
 
             # Move built files to deployment directory
-            mkdir -p /var/www/Poputchik/frontend/current && \
-            cp -r /var/www/Poputchik/frontend/dist/* /var/www/Poputchik/frontend/current/
+            mkdir -p /var/www/Poputchik/preview/current && \
+            cp -r /var/www/Poputchik/preview/dist/* /var/www/Poputchik/preview/current/
 
             # Cleanup old backup if everything is successful
-            rm -rf /var/www/Poputchik/frontend/previous
+            rm -rf /var/www/Poputchik/preview/previous
           "
