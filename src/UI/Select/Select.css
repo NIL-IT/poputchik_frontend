@@ -1,0 +1,32 @@
+.select-wrapper {
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 20px;
+  top: 23px;
+}
+
+.select-placeholder {
+  color: #a5a5a5;
+}
+
+.select-option {
+  color: var(--dark-color);
+}
+
+.input {
+  padding: 17px 20px;
+  background-color: inherit;
+  border: 1px solid #b8b8b8;
+  border-radius: 8px;
+  font-size: 14px;
+  height: 50px;
+  outline: none;
+  width: 100%;
+  appearance: none;
+  cursor: pointer;
+}

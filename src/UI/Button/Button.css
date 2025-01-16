@@ -1,5 +1,5 @@
 .btn {
-  background: var(--orange-color);
+  /* background: var(--orange-color); */
   font-weight: 700;
   border-radius: 5px;
   font-size: 16px;
@@ -12,6 +12,10 @@
 .btn.large {
   height: 54px;
   width: 350px;
+}
+
+.btn.black {
+  background-color: black;
 }
 
 .btn.medium {

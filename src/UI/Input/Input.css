@@ -39,3 +39,43 @@
   width: 25px;
   height: 18px;
 }
+
+.PhoneInput.grey .PhoneInputInput {
+  color: #a8a8a8;
+}
+.input.tel.grey::before {
+  content: "Номер телефона";
+  position: absolute;
+  color: #a8a8a8;
+  font-size: 16px;
+  line-height: 23px;
+  font-weight: 500;
+  left: 122px;
+  top: 13px;
+}
+
+.input-select {
+  padding: 17px 20px;
+  background-color: inherit;
+  border: 1px solid #b8b8b8;
+  border-radius: 8px;
+  color: var(--dark-color);
+  font-size: 14px;
+  height: 50px;
+  outline: none;
+  width: 100%;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  cursor: pointer;
+}
+
+.input-select:hover {
+  border-color: #a8a8a8;
+}
+
+.input-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
