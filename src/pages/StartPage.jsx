@@ -2,7 +2,7 @@ import FooterBlock from "../components/FooterBlock";
 import Background from "../assets/welcome/startScreen.png";
 export default function StartPage() {
   return (
-    <div className='flex justify-center items-center h-screen'>
+    <div className='flex justify-center items-center h-screen container-custom'>
       <img
         className='pb-[180px]'
         src={Background}

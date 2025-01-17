@@ -22,8 +22,12 @@
 
 body {
   background-color: var(--grey-color);
-  max-width: 390px;
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
+}
+
+.container-custom {
+  max-width: 390px;
+  margin: 0 auto;
 }
