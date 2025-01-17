@@ -1,13 +1,21 @@
 import "./Profile.css";
 import message from "../../assets/icons/message.svg";
+import { useModal } from "../../state/ModalStore";
 export default function Profile({ driver }) {
+  const { setSelectedDriver, toggleProfile } = useModal();
+  const openProfile = () => {
+    setSelectedDriver(driver);
+    toggleProfile(true);
+  };
   if (!driver) {
     return null;
   }
   const { name, rating, avatar, comments } = driver;
   return (
     <div className='profile'>
-      <div className='profile-info'>
+      <div
+        className='profile-info'
+        onClick={() => openProfile()}>
         <img
           className='profile-img'
           src={avatar}

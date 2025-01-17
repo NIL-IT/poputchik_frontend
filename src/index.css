@@ -158,8 +158,11 @@ body {
   top: 12px;
   left: 15px;
 }
-
 .searchBig-container {
+  width: 100%;
+  padding: 0 20px;
+}
+.searchBig-wrapper {
   width: 100%;
   padding: 0 20px;
   position: relative;
@@ -196,4 +199,9 @@ body {
   height: 20px;
   right: 30px;
   top: 20px;
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(10px);
 }

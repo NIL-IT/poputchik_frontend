@@ -1,5 +1,4 @@
 .btn {
-  /* background: var(--orange-color); */
   font-weight: 700;
   border-radius: 5px;
   font-size: 16px;
@@ -24,7 +23,4 @@
 
 .btn.small {
   width: 150px;
-}
-.btn.btn-form {
-  width: 100%;
 }

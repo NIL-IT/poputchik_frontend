@@ -2,9 +2,9 @@ import Header from "../UI/Header/Header";
 import { useState } from "react";
 import DriverList from "../components/DriverList";
 import CreateTrip from "../components/CreateTrip";
-import MainModals from "../components/MainModals";
 import MapComponent from "../components/MapComponent";
 import SearchComponent from "../components/SearchComponent";
+import { useModal } from "../state/ModalStore";
 
 export default function MainPage() {
   const mock = [
@@ -115,13 +115,11 @@ export default function MainPage() {
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
-
   return (
     <div className='bg-black h-screen relative'>
       <Header />
       <SearchComponent />
       <MapComponent />
-      <MainModals />
       {isCreating ? (
         <CreateTrip />
       ) : (

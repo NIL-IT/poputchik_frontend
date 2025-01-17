@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useUserStore } from "../state/UserStore";
-
+export const API_KEY = "6339ca58-3537-4f94-b069-a82968dfb362";
 export async function registration(data, role) {
   const response = await axios({
     method: "post",
@@ -19,7 +19,6 @@ async function getUserById(id) {
   const resp = await axios.get(`http://localhost:8082/users/${id}`);
   const setCurrentUser = useUserStore.getState().setCurrentUser;
   setCurrentUser(resp.data);
-  console.log(resp.data);
   return resp.data;
 }
 

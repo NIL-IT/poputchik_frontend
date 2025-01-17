@@ -4,9 +4,12 @@ import Profile from "../UI/Profile/Profile";
 import { useModal } from "../state/ModalStore";
 import { useTrip } from "../state/TripStore";
 import Button from "../UI/Button/Button";
+import HistoryCard from "../UI/HistoryCard/HistoryCard";
+import FeedBack from "./FeedBack";
+import ProfileModal from "./ProfileModal";
 
 export default function MainModals() {
-  const mock = [
+  const mockDrivers = [
     {
       id: 1,
       name: "Сергей",
@@ -108,11 +111,32 @@ export default function MainModals() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
+  const mockHistory = [
+    {
+      id: 1,
+      from: "Новосибирск",
+      to: "Барнаул",
+      date: "2024-10-16",
+      driver: {
+        id: 1,
+        name: "Сергей",
+        phone: "+7 900 123-45-67",
+        avatar: "https://i.pravatar.cc/150?img=1",
+        email: "sergey@example.com",
+        city: "Москва",
+        rating: 4.8,
+        comments: ["Great driver!", "Very professional"],
+      },
+      price: 500,
+      status: "Активна",
+    },
+  ];
   const { isDriversOpen, toggleDrivers } = useModal();
   const { isCalendarOpen, toggleCalendar } = useModal();
   const { isPriceOpen, togglePrice } = useModal();
   const { persons, increaseTripPerson, decreaseTripPerson, price, setTripPrice } = useTrip();
   const { isPersonOpen, togglePersonModal } = useModal();
+  const { isActiveDrivesOpen, toggleActiveDrive, isFeedBackOpen, toggleFeedback, isProfileOpen } = useModal();
 
   function CloseCalendar() {
     toggleCalendar(false);
@@ -121,100 +145,144 @@ export default function MainModals() {
   function closeDrivers() {
     toggleDrivers(false);
   }
+
+  function closeFeedback() {
+    document.body.classList.remove("overflow-y-hidden");
+    toggleFeedback(false);
+  }
+
   return (
     <>
-      <FullScreenList
-        isOpen={isDriversOpen}
-        toggle={closeDrivers}>
-        <h3 className='font-bold text-[20px] leading-5 pb-8'>Список водителей</h3>
-        <div className='flex flex-col gap-4'>
-          {mock.map((obj) => {
-            return (
-              <Profile
-                key={obj.id}
-                driver={obj}
-              />
-            );
-          })}
-        </div>
-      </FullScreenList>
-      <FullScreenList
-        isOpen={isCalendarOpen}
-        toggle={CloseCalendar}
-        isCreating>
-        <CalendarComponent />
-      </FullScreenList>
-      <FullScreenList
-        isCreating
-        isNumbers
-        isOpen={isPersonOpen}
-        toggle={() => togglePersonModal(false)}>
-        <h3 className='text-left w-[250px] font-bold text-[24px] leading-[25.44px]'>Количество бронируемых мест</h3>
-        <div className='flex justify-between items-center w-full'>
-          <button
-            className='flex items-center justify-center rounded-full w-[34px] h-[34px] border border-[#9B9B9B]'
-            onClick={() => decreaseTripPerson()}>
-            <svg
-              width='26'
-              height='2'
-              viewBox='0 0 26 2'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'>
-              <path
-                d='M1.6665 1H24.3332'
-                stroke='#9B9B9B'
-                strokeWidth='1.5'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-          </button>
-          <span className='text-[64px] leading-[67.84px]'>{persons}</span>
-          <button
-            className='flex items-center justify-center rounded-full w-[34px] h-[34px] border border-black'
-            onClick={() => increaseTripPerson()}>
-            <svg
-              width='26'
-              height='26'
-              viewBox='0 0 26 26'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'>
-              <path
-                d='M12.9998 1.66675V24.3334M1.6665 13.0001H24.3332'
-                stroke='black'
-                strokeWidth='1.5'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-          </button>
-        </div>
-        <Button
-          size={"large"}
-          onClick={() => togglePersonModal(false)}>
-          Подтвердить
-        </Button>
-      </FullScreenList>
-      <FullScreenList
-        isCreating
-        isNumbers
-        isOpen={isPriceOpen}
-        toggle={() => togglePrice(false)}>
-        <h3 className='text-left w-[250px] font-bold text-[24px] leading-[25.44px]'>Стоимость поездки</h3>
-        <div className='flex justify-center items-center w-full'>
-          <input
-            type='number'
-            className='text-[64px] leading-[67.84px] w-[172px] border-b border-[#CACDD4] bg-inherit outline-none text-center'
-            onChange={(e) => setTripPrice(e.target.value)}
-            value={price}
-          />
-        </div>
-        <Button
-          size={"large"}
-          onClick={() => togglePrice(false)}>
-          Подтвердить
-        </Button>
-      </FullScreenList>
+      {isDriversOpen && (
+        <FullScreenList
+          isOpen={isDriversOpen}
+          toggle={closeDrivers}>
+          <h3 className='font-bold text-[20px] leading-5 pb-8'>Список водителей</h3>
+          <div className='flex flex-col gap-4'>
+            {mockDrivers.map((obj) => {
+              return (
+                <Profile
+                  key={obj.id}
+                  driver={obj}
+                />
+              );
+            })}
+          </div>
+        </FullScreenList>
+      )}
+      {isCalendarOpen && (
+        <FullScreenList
+          isOpen={isCalendarOpen}
+          toggle={CloseCalendar}
+          isCreating
+          isClose>
+          <CalendarComponent />
+        </FullScreenList>
+      )}
+      {isPersonOpen && (
+        <FullScreenList
+          isCreating
+          isNumbers
+          isClose
+          isOpen={isPersonOpen}
+          toggle={() => togglePersonModal(false)}>
+          <h3 className='text-left w-[250px] font-bold text-[24px] leading-[25.44px]'>Количество бронируемых мест</h3>
+          <div className='flex justify-between items-center w-[350px]'>
+            <button
+              className='flex items-center justify-center rounded-full w-[34px] h-[34px] border border-[#9B9B9B]'
+              onClick={() => decreaseTripPerson()}>
+              <svg
+                width='26'
+                height='2'
+                viewBox='0 0 26 2'
+                fill='none'
+                xmlns='http://www.w3.org/2000/svg'>
+                <path
+                  d='M1.6665 1H24.3332'
+                  stroke='#9B9B9B'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+              </svg>
+            </button>
+            <span className='text-[64px] leading-[67.84px]'>{persons}</span>
+            <button
+              className='flex items-center justify-center rounded-full w-[34px] h-[34px] border border-black'
+              onClick={() => increaseTripPerson()}>
+              <svg
+                width='26'
+                height='26'
+                viewBox='0 0 26 26'
+                fill='none'
+                xmlns='http://www.w3.org/2000/svg'>
+                <path
+                  d='M12.9998 1.66675V24.3334M1.6665 13.0001H24.3332'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+              </svg>
+            </button>
+          </div>
+          <Button
+            size={"large"}
+            onClick={() => togglePersonModal(false)}>
+            Подтвердить
+          </Button>
+        </FullScreenList>
+      )}
+      {isPriceOpen && (
+        <FullScreenList
+          isCreating
+          isNumbers
+          isClose
+          isOpen={isPriceOpen}
+          toggle={() => togglePrice(false)}>
+          <h3 className='text-left w-[250px] font-bold text-[24px] leading-[25.44px]'>Стоимость поездки</h3>
+          <div className='flex justify-center items-center w-[350px]'>
+            <input
+              type='number'
+              className='text-[64px] leading-[67.84px] w-[172px] border-b border-[#CACDD4] bg-inherit outline-none text-center'
+              onChange={(e) => setTripPrice(e.target.value)}
+              value={price}
+            />
+          </div>
+          <Button
+            size={"large"}
+            onClick={() => togglePrice(false)}>
+            Подтвердить
+          </Button>
+        </FullScreenList>
+      )}
+      {isActiveDrivesOpen && (
+        <FullScreenList
+          isClose
+          toggle={toggleActiveDrive}
+          isOpen={isActiveDrivesOpen}>
+          <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
+          <div className='flex flex-col gap-4 w-full'>
+            {mockHistory.map((obj) => {
+              return (
+                <HistoryCard
+                  key={obj.id}
+                  drive={obj}
+                />
+              );
+            })}
+          </div>
+        </FullScreenList>
+      )}
+      {isFeedBackOpen && (
+        <>
+          <div
+            className='absolute top-0 left-0 backdrop-blur  h-[30%] block w-full blur-sm z-30'
+            onClick={() => closeFeedback()}></div>
+          <FeedBack />
+        </>
+      )}
+      {isProfileOpen && <ProfileModal />}
     </>
   );
 }

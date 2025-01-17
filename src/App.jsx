@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StartPage from "./pages/StartPage";
-import RegistrationPage from "./pages/RegistrationPage";
+import RegistrationPage from "./components/Registration";
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserPage from "./pages/UserPage";
 import { useEffect } from "react";
 import { useUserStore } from "./state/UserStore";
 import { useUserById } from "./api/api";
+import MainModals from "./components/MainModals";
 
 function App() {
-  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
+  const { setCurrentUser } = useUserStore();
   const user = useUserById("4321");
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
@@ -17,6 +18,7 @@ function App() {
       setCurrentUser(JSON.parse(storedUser));
     }
   }, [setCurrentUser]);
+
   return (
     <Router>
       <Routes>
@@ -28,15 +30,6 @@ function App() {
             </div>
           }
         />
-        {/* <Route
-          path='/search'
-          element={<SearchComponent />}
-        /> */}
-        <Route
-          path='/registration'
-          element={<RegistrationPage />}
-        />
-
         <Route
           path='/main'
           element={
@@ -54,6 +47,7 @@ function App() {
           }
         />
       </Routes>
+      <MainModals />
     </Router>
   );
 }

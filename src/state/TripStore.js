@@ -4,7 +4,7 @@ export const useTrip = create((set) => ({
   tripFrom: "",
   setTripFrom: (value) => set({ tripFrom: value }),
   tripTo: "",
-  setTripTo: (value) => set({ setTripTo: value }),
+  setTripTo: (value) => set({ tripTo: value }),
   date: "",
   setTripDate: (value) => set({ date: value }),
   persons: 1,
