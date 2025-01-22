@@ -1,49 +1,69 @@
-import FooterBlock from "../UI/Footer/Footer";
-import Button from "../UI/Button/Button";
-import Switcher from "../UI/Switcher/Switcher";
-import Background from "../assets/welcome/startScreen.png";
+import Registration from "../components/Registration";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
+import { useState } from "react";
+import Switcher from "../UI/Switcher/Switcher";
+import Welcome from "../components/Welcome";
+import Button from "../UI/Button/Button";
+
 export default function StartPage() {
-  const { changeCurrentRole } = useUserStore();
+  const { currentUser, changeCurrentRole, currentRole } = useUserStore();
   const navigate = useNavigate();
-  const { currentUser } = useUserStore();
+  const [isAuth, setAuth] = useState(false);
+  const [toReg, setToReg] = useState(false);
+  const [step, setStep] = useState(0);
+  const [switcherPos, setSwitcherPos] = useState(-1);
   const navigateToRegister = (value) => {
-    if (!currentUser) {
-      navigate("/registration");
-    } else {
+    if (currentUser && currentUser.name) {
+      // navigate("/registration");
+      setAuth(true);
       navigate("/main");
+    } else {
+      setToReg(true);
+      setSwitcherPos((prev) => prev + 1);
     }
     changeCurrentRole(value);
   };
+
+  const backFunc = () => {
+    if (step > 0) {
+      setStep((prev) => prev - 1);
+
+      setSwitcherPos((prev) => prev - 1);
+    } else if (step == 0) {
+      setToReg(false);
+
+      setSwitcherPos((prev) => prev - 1);
+    }
+  };
+
+  const nextStep = () => {
+    if (step < 2) {
+      setStep((prev) => prev + 1);
+      setSwitcherPos((prev) => prev + 1);
+    }
+  };
+
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <img
-        className='pb-[180px]'
-        src={Background}
-        alt='Приветственная картинка'
-      />
-      <FooterBlock
-        className={"bg-[#f6f6f6] shadow-custom w-full z-10 pt-12 pb-6 px-5 flex flex-col items-center justify-center"}>
-        <h1 className='text-[24px] pb-7 font-bold'>Приложение для совместных поездок</h1>
-        <p className='pb-[60px]'>
-          Есть возможность создавать маршруты, искать активные поездки, бронировать их и взаимодействовать между собой
-          через чат.
-        </p>
-        <div className='flex gap-5 pb-9'>
+    <div className='relative min-h-screen flex flex-col items-center '>
+      {!toReg ? (
+        <Welcome func={navigateToRegister} />
+      ) : (
+        <>
+          <Registration
+            backFunc={backFunc}
+            step={step}
+          />
           <Button
-            size='small'
-            onClick={() => navigateToRegister("passenger")}>
-            Я попутчик
+            type='submit'
+            classNames='absolute bottom-10'
+            size={"large"}
+            onClick={() => nextStep()}>
+            Сохранить
           </Button>
-          <Button
-            size='small'
-            onClick={() => navigateToRegister("driver")}>
-            Я водитель
-          </Button>
-        </div>
-        <Switcher isActive={false} />
-      </FooterBlock>
+        </>
+      )}
+      <Switcher position={switcherPos} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import Search from "../Search/Search";
 export default function Header() {
   const { currentUser } = useUserStore();
   return (
-    <div className='px-5 py-8 flex justify-between items-center absolute w-full'>
+    <div className='px-5 py-8 flex justify-between items-center absolute w-full z-10'>
       <div className='flex w-full justify-between'>
         <Burger />
         <Search />

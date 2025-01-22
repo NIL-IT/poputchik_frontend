@@ -18,7 +18,7 @@
   color: var(--dark-color);
 }
 
-.input {
+.select.input {
   padding: 17px 20px;
   background-color: inherit;
   border: 1px solid #b8b8b8;

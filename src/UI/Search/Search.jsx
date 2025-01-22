@@ -1,5 +1,7 @@
+import { useModal } from "../../state/ModalStore";
 import "./Search.css";
 export default function Search() {
+  const { isSearch, toggleSearch } = useModal();
   return (
     <div className='search'>
       <svg
@@ -17,6 +19,8 @@ export default function Search() {
         />
       </svg>
       <input
+        readOnly
+        onClick={() => toggleSearch(true)}
         className='search-input'
         type='text'
         placeholder='Поиск'

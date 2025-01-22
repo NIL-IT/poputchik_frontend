@@ -1,4 +1,6 @@
 import "./Select.css";
+import "../Input/Input.css";
+
 import { useState } from "react";
 
 export default function Select({ selectedValue, options, placeholder, onChange }) {

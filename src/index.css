@@ -26,13 +26,13 @@
 }
 
 .container-custom {
-  max-width: 350px;
+  max-width: 390px;
   margin: 0 auto;
 }
 
 body {
   background-color: var(--grey-color);
-  max-width: 390px;
+  /* max-width: 390px; */
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
@@ -106,4 +106,102 @@ body {
   background-image: url("./assets/icons/edit.svg");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.create .first .input:first-child {
+  border-radius: 0;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.create .input {
+  border-radius: 0;
+  padding-left: 49px;
+  border-bottom: none;
+}
+
+.create div {
+  position: relative;
+}
+
+.create div::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 15px;
+  left: 15px;
+}
+
+.create .geo::before {
+  background: url("./assets/icons/geo-create.svg");
+}
+
+.create .btn {
+  border-radius: 0;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.create .date::before {
+  background: url("./assets/icons/calendar.svg");
+}
+
+.create .person::before {
+  background: url("./assets/icons/user.svg");
+}
+
+.create .price::before {
+  content: "₽";
+  font-size: 24px;
+  color: #2c2c2c;
+  top: 12px;
+  left: 15px;
+}
+.searchBig-container {
+  width: 100%;
+  padding: 0 20px;
+}
+.searchBig-wrapper {
+  width: 100%;
+  padding: 0 20px;
+  position: relative;
+}
+
+.searchBig-input {
+  width: 100%;
+  height: 60px;
+  background: #efefef;
+  color: #414141;
+  font-size: 16px;
+  line-height: 18.4px;
+  border-radius: 8px;
+  padding-left: 34px;
+  padding-right: 34px;
+}
+
+.searchBig-input:focus {
+  outline: none;
+}
+
+.searchBig-label {
+  position: absolute;
+  background: url("./assets/icons/geo-search.svg") center no-repeat;
+  width: 24px;
+  height: 24px;
+  left: 30px;
+  top: 18px;
+}
+.searchBig-close {
+  position: absolute;
+  background: url("./assets/icons/miniClose.svg");
+  width: 20px;
+  height: 20px;
+  right: 30px;
+  top: 20px;
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(10px);
 }

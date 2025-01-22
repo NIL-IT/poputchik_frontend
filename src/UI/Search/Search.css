@@ -2,6 +2,19 @@
   position: relative;
 }
 
+.search input {
+  background: white;
+  border-radius: 8px;
+  padding: 8px 16px;
+  padding-left: 48px;
+  border: 1px solid #cecece;
+  width: 212px;
+  height: 40px;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 18.4px;
+}
+
 .search-ico {
   position: absolute;
   top: 8px;
@@ -24,4 +37,10 @@
   color: #64748b;
   font-size: 16px;
   line-height: 18.4px;
+}
+
+.MuiFormControl-root {
+  background: white;
+  width: 212px;
+  height: 40px;
 }

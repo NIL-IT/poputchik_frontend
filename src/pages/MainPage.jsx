@@ -1,10 +1,10 @@
 import Header from "../UI/Header/Header";
-import Profile from "../UI/Profile/Profile";
-import Map from "../components/Map";
 import { useState } from "react";
-import FullScreenList from "../UI/FullScreenList/FullScreenList";
 import DriverList from "../components/DriverList";
 import CreateTrip from "../components/CreateTrip";
+import MapComponent from "../components/MapComponent";
+import SearchComponent from "../components/SearchComponent";
+import { useModal } from "../state/ModalStore";
 
 export default function MainPage() {
   const mock = [
@@ -111,40 +111,20 @@ export default function MainPage() {
   ];
   const [isCreating, setIsCreating] = useState(false);
   const nerbiest = mock.slice(0, 2);
-  const [isFullScreen, setIsFullScreen] = useState(false);
 
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
-
-  function toggleFullScreen() {
-    setIsFullScreen((prev) => !prev);
-  }
   return (
     <div className='bg-black h-screen relative'>
       <Header />
-      <Map></Map>
-      <FullScreenList
-        isOpen={isFullScreen}
-        toggle={toggleFullScreen}>
-        <h3 className='font-bold text-[20px] leading-5 pb-8'>Список водителей</h3>
-        <div className='flex flex-col gap-4'>
-          {mock.map((obj) => {
-            return (
-              <Profile
-                key={obj.id}
-                driver={obj}
-              />
-            );
-          })}
-        </div>
-      </FullScreenList>
+      <SearchComponent />
+      <MapComponent />
       {isCreating ? (
         <CreateTrip />
       ) : (
         <DriverList
           list={nerbiest}
-          toggle={toggleFullScreen}
           toggleCreating={toggleCreating}
           isCreating={isCreating}
         />
