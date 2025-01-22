@@ -136,7 +136,8 @@ export default function MainModals() {
   const { isPriceOpen, togglePrice } = useModal();
   const { persons, increaseTripPerson, decreaseTripPerson, price, setTripPrice } = useTrip();
   const { isPersonOpen, togglePersonModal } = useModal();
-  const { isActiveDrivesOpen, toggleActiveDrive, isFeedBackOpen, toggleFeedback, isProfileOpen } = useModal();
+  const { isActiveDrivesOpen, toggleActiveDrive, isFeedBackOpen, toggleFeedback, isProfileOpen, bookedDrive } =
+    useModal();
 
   function CloseCalendar() {
     toggleCalendar(false);

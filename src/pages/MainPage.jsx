@@ -5,6 +5,7 @@ import CreateTrip from "../components/CreateTrip";
 import MapComponent from "../components/MapComponent";
 import SearchComponent from "../components/SearchComponent";
 import { useModal } from "../state/ModalStore";
+import DriveInfo from "../components/DriveInfo";
 
 export default function MainPage() {
   const mock = [
@@ -110,17 +111,37 @@ export default function MainPage() {
     },
   ];
   const [isCreating, setIsCreating] = useState(false);
+  const { bookedModal } = useModal();
+
   const nerbiest = mock.slice(0, 2);
 
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
+
+  function renderContent() {
+    if (isCreating) {
+      return <CreateTrip />;
+    } else if (bookedModal) {
+      return <DriveInfo />;
+    } else {
+      return (
+        <DriverList
+          list={nerbiest}
+          toggleCreating={toggleCreating}
+          isCreating={isCreating}
+        />
+      );
+    }
+  }
+
   return (
     <div className='bg-black h-screen relative'>
       <Header />
       <SearchComponent />
       <MapComponent />
-      {isCreating ? (
+      {renderContent()}
+      {/* {isCreating ? (
         <CreateTrip />
       ) : (
         <DriverList
@@ -128,7 +149,7 @@ export default function MainPage() {
           toggleCreating={toggleCreating}
           isCreating={isCreating}
         />
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,17 +1,29 @@
 import { useModal } from "../../state/ModalStore";
+import { useTrip } from "../../state/TripStore";
 import "./HistoryCard.css";
 export default function HistoryCard({ drive }) {
-  const { toggleFeedback } = useModal();
+  const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
+  const { setBookedDrive, bookedDrive } = useTrip();
   function openFeedback() {
     document.body.classList.add("overflow-y-hidden");
     toggleFeedback(true);
+  }
+
+  function chooseDrive() {
+    if (drive.status == "Активна") {
+      setBookedDrive(drive);
+      toggleActiveDrive(false);
+      toggleBookedModal(true);
+    }
   }
 
   if (!drive) {
     return null;
   }
   return (
-    <div className='history'>
+    <div
+      className='history'
+      onClick={() => chooseDrive()}>
       <div className='history-wrapper'>
         <div className='history-path'>
           <span className='history-from'>{drive.from}</span>
