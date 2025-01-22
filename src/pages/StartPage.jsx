@@ -7,7 +7,7 @@ import Welcome from "../components/Welcome";
 import Button from "../UI/Button/Button";
 
 export default function StartPage() {
-  const { currentUser, changeCurrentRole, currentRole } = useUserStore();
+  const { currentUser, changeCurrentRole, currentRole, setCurrentUser } = useUserStore();
   const navigate = useNavigate();
   const [isAuth, setAuth] = useState(false);
   const [toReg, setToReg] = useState(false);
@@ -15,7 +15,6 @@ export default function StartPage() {
   const [switcherPos, setSwitcherPos] = useState(-1);
   const navigateToRegister = (value) => {
     if (currentUser && currentUser.name) {
-      // navigate("/registration");
       setAuth(true);
       navigate("/main");
     } else {
@@ -38,9 +37,33 @@ export default function StartPage() {
   };
 
   const nextStep = () => {
-    if (step < 2) {
+    if (step < 1 && currentRole == "passenger") {
       setStep((prev) => prev + 1);
       setSwitcherPos((prev) => prev + 1);
+    } else if (step < 2 && currentRole == "driver") {
+      setStep((prev) => prev + 1);
+      setSwitcherPos((prev) => prev + 1);
+    }
+    if (currentRole == "passenger" && step == 1) {
+      setCurrentUser({
+        name: "Антон Татарченко",
+        phone: "+79999999999",
+        profile_photo: "https://i.pravatar.cc/150?img=4",
+        email: "xd@mail.ru",
+        city: "Новосибирск",
+      });
+      setAuth(true);
+      navigate("/main");
+    } else if (currentRole == "driver" && step == 2) {
+      setCurrentUser({
+        name: "Антон Татарченко",
+        phone: "+79999999999",
+        profile_photo: "https://i.pravatar.cc/150?img=4",
+        email: "xd@mail.ru",
+        city: "Новосибирск",
+      });
+      setAuth(true);
+      navigate("/main");
     }
   };
 

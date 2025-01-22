@@ -34,7 +34,7 @@ export default function UserInfo() {
       <fieldset className='w-full flex flex-col justify-center items-center gap-5 mb-5'>
         <Input
           readOnly
-          value={currentUser.phone_number}
+          value={currentUser.phone}
         />
         <Input
           readOnly
