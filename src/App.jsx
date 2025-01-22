@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useUserStore } from "./state/UserStore";
 import { useUserById } from "./api/api";
 import MainModals from "./components/MainModals";
+import PreviewPage from "./pages/PreviewPage";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -27,6 +28,14 @@ function App() {
           element={
             <div className='container-custom'>
               <StartPage />
+            </div>
+          }
+        />
+        <Route
+          path='/preview'
+          element={
+            <div className='container-custom'>
+              <PreviewPage />
             </div>
           }
         />
