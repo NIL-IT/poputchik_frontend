@@ -16,5 +16,5 @@ export const useUserStore = create((set) => ({
 //   profile_photo: "https://i.pravatar.cc/150?img=4",
 //   email: "xd@mail.ru",
 //   city: "Новосибирск",
-
+// }
 // localStorage.setItem("currentUser", JSON.stringify(user));
