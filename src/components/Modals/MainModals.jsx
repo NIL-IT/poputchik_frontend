@@ -1,12 +1,13 @@
-import FullScreenList from "../UI/FullScreenList/FullScreenList";
-import CalendarComponent from "../UI/Calendar/Calendar";
-import Profile from "../UI/Profile/Profile";
-import { useModal } from "../state/ModalStore";
-import { useTrip } from "../state/TripStore";
-import Button from "../UI/Button/Button";
-import HistoryCard from "../UI/HistoryCard/HistoryCard";
+import FullScreenList from "../../UI/FullScreenList/FullScreenList";
+import CalendarComponent from "../../UI/Calendar/Calendar";
+import Profile from "../../UI/Profile/Profile";
+import { useModal } from "../../state/ModalStore";
+import { useTrip } from "../../state/TripStore";
+import Button from "../../UI/Button/Button";
+import HistoryCard from "../../UI/HistoryCard/HistoryCard";
 import FeedBack from "./FeedBack";
 import ProfileModal from "./ProfileModal";
+import { useTripsList } from "../../api/api";
 
 export default function MainModals() {
   const mockDrivers = [
@@ -111,33 +112,14 @@ export default function MainModals() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-  const mockHistory = [
-    {
-      id: 1,
-      from: "Новосибирск",
-      to: "Барнаул",
-      date: "2024-10-16",
-      driver: {
-        id: 1,
-        name: "Сергей",
-        phone: "+7 900 123-45-67",
-        avatar: "https://i.pravatar.cc/150?img=1",
-        email: "sergey@example.com",
-        city: "Москва",
-        rating: 4.8,
-        comments: ["Great driver!", "Very professional"],
-      },
-      price: 500,
-      status: "Активна",
-    },
-  ];
+  const activeDrives = useTripsList("село Майма");
   const { isDriversOpen, toggleDrivers } = useModal();
   const { isCalendarOpen, toggleCalendar } = useModal();
   const { isPriceOpen, togglePrice } = useModal();
-  const { persons, increaseTripPerson, decreaseTripPerson, price, setTripPrice } = useTrip();
+  const { persons, increaseTripPerson, decreaseTripPerson, price, setTripPrice, bookedDrive } = useTrip();
   const { isPersonOpen, togglePersonModal } = useModal();
-  const { isActiveDrivesOpen, toggleActiveDrive, isFeedBackOpen, toggleFeedback, isProfileOpen } = useModal();
-
+  const { isActiveDrivesOpen, toggleActiveDrive, isFeedBackOpen, toggleFeedback, isProfileOpen, bookedModal } =
+    useModal();
   function CloseCalendar() {
     toggleCalendar(false);
   }
@@ -263,14 +245,15 @@ export default function MainModals() {
           isOpen={isActiveDrivesOpen}>
           <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
           <div className='flex flex-col gap-4 w-full'>
-            {mockHistory.map((obj) => {
-              return (
-                <HistoryCard
-                  key={obj.id}
-                  drive={obj}
-                />
-              );
-            })}
+            {activeDrives &&
+              activeDrives.map((obj) => {
+                return (
+                  <HistoryCard
+                    key={obj.id}
+                    drive={obj}
+                  />
+                );
+              })}
           </div>
         </FullScreenList>
       )}

@@ -1,4 +1,3 @@
-import UserInfo from "../components/UserInfo";
 import BackButton from "../UI/BackButton";
 import Button from "../UI/Button/Button";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
@@ -6,106 +5,16 @@ import FullScreenList from "../UI/FullScreenList/FullScreenList";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
-import FeedBack from "../components/FeedBack";
+
 import { useModal } from "../state/ModalStore";
+import UserInfo from "../components/UserInfo";
+import FeedBack from "../components/Modals/FeedBack";
 
 export default function UserPage() {
   const navigate = useNavigate();
   const { changeCurrentRole } = useUserStore();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const { isFeedBackOpen } = useModal();
-  const mock = [
-    {
-      id: 1,
-      from: "Новосибирск",
-      to: "Барнаул",
-      date: "2024-10-16",
-      driver: {
-        id: 1,
-        name: "Сергей",
-        phone: "+7 900 123-45-67",
-        avatar: "https://i.pravatar.cc/150?img=1",
-        email: "sergey@example.com",
-        city: "Москва",
-        rating: 4.8,
-        comments: ["Great driver!", "Very professional"],
-      },
-      price: 500,
-      status: "Завершена",
-    },
-    {
-      id: 2,
-      from: "Москва",
-      to: "Казань",
-      date: "2024-10-17",
-      driver: {
-        id: 2,
-        name: "Василий",
-        phone: "+7 900 765-43-21",
-        avatar: "https://i.pravatar.cc/150?img=2",
-        email: "vasiliy@example.com",
-        city: "Санкт-Петербург",
-        rating: 4.6,
-        comments: ["On time!", "Friendly"],
-      },
-      price: 1500,
-      status: "Отменена",
-    },
-    {
-      id: 3,
-      from: "Санкт-Петербург",
-      to: "Вологда",
-      date: "2024-10-18",
-      driver: {
-        id: 3,
-        name: "Александр",
-        phone: "+7 900 567-89-01",
-        avatar: "https://i.pravatar.cc/150?img=3",
-        email: "alexander@example.com",
-        city: "Новосибирск",
-        rating: 4.7,
-        comments: ["Excellent service", "Very clean car"],
-      },
-      price: 1200,
-      status: "Завершена",
-    },
-    {
-      id: 4,
-      from: "Екатеринбург",
-      to: "Челябинск",
-      date: "2024-10-19",
-      driver: {
-        id: 4,
-        name: "Олег",
-        phone: "+7 900 234-56-78",
-        avatar: "https://i.pravatar.cc/150?img=4",
-        email: "oleg@example.com",
-        city: "Казань",
-        rating: 4.5,
-        comments: ["Would recommend!", "Efficient"],
-      },
-      price: 800,
-      status: "Отменена",
-    },
-    {
-      id: 5,
-      from: "Красноярск",
-      to: "Томск",
-      date: "2024-10-20",
-      driver: {
-        id: 5,
-        name: "Евгений",
-        phone: "+7 900 345-67-89",
-        avatar: "https://i.pravatar.cc/150?img=5",
-        email: "evgeniy@example.com",
-        city: "Екатеринбург",
-        rating: 4.9,
-        comments: ["Amazing driver!", "Fast and safe"],
-      },
-      price: 900,
-      status: "Завершена",
-    },
-  ];
 
   function toggleHistory() {
     setIsHistoryOpen((prev) => !prev);
@@ -153,10 +62,10 @@ export default function UserPage() {
               </svg>
             </button>
           </div>
-          <HistoryCard drive={mock[0]} />
+          {/* <HistoryCard drive={mock[0]} /> */}
         </div>
       </div>
-      <FullScreenList
+      {/* <FullScreenList
         isOpen={isHistoryOpen}
         toggle={toggleHistory}>
         <h3 className='font-bold text-[20px] leading-5 pb-8'>История поездок</h3>
@@ -170,7 +79,7 @@ export default function UserPage() {
             );
           })}
         </div>
-      </FullScreenList>
+      </FullScreenList> */}
       {isFeedBackOpen && (
         <>
           <div className='absolute top-0 left-0 backdrop-blur  h-[30%] block w-full blur-sm'></div>

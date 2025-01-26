@@ -3,42 +3,35 @@ import { API_KEY } from "../../api/api";
 import "./SearchList.css";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
-export default function SearchList({ value, setValue }) {
+import { useMap } from "../../state/MapRoutesStore";
+export default function SearchList({ value, setValue, options, setOptions }) {
   const { setTripFrom, tripFrom, setTripTo, tripTo } = useTrip();
   const { toggleSearch, setActiveInput, activeInput } = useModal();
-  const [options, setOptions] = useState([]);
+  const { cities, setCenter } = useMap();
   const selectALocation = (value) => {
     setValue(value);
     if (activeInput === "from" && value !== tripTo) {
-      setTripFrom(value);
+      setTripFrom({
+        name: value.name,
+        coordinates: {
+          lattitude: Number(value.Point.pos.split(" ")[1]),
+          longitude: Number(value.Point.pos.split(" ")[0]),
+        },
+      });
     } else if (activeInput === "to" && value !== tripFrom) {
-      setTripTo(value);
+      setTripTo({
+        name: value.name,
+        coordinates: {
+          lattitude: Number(value.Point.pos.split(" ")[1]),
+          longitude: Number(value.Point.pos.split(" ")[0]),
+        },
+      });
     }
     setActiveInput("");
     toggleSearch(false);
     setValue("");
+    setOptions([]);
   };
-  useEffect(() => {
-    (async () => {
-      try {
-        if (value) {
-          const res = await fetch(
-            `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&format=json&geocode=${value}&lang=ru_RU&kind=locality`,
-          );
-          const data = await res.json();
-          const collection = data.response.GeoObjectCollection.featureMember
-            .filter((item) => item.GeoObject.metaDataProperty.GeocoderMetaData.kind === "locality")
-            .map((item) => item.GeoObject);
-
-          setOptions(() => collection);
-        } else if (value.length < 1) {
-          setOptions([]);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, [value]);
 
   return (
     <div className='searchList-wrapper '>
