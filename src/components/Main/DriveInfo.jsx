@@ -1,10 +1,26 @@
-import { useTrip } from "../state/TripStore";
-import Button from "../UI/Button/Button";
-import Footer from "../UI/Footer/Footer";
+import { useEffect } from "react";
+import { useUserById } from "../../api/api";
+import { useTrip } from "../../state/TripStore";
+import Button from "../../UI/Button/Button";
+import Footer from "../../UI/Footer/Footer";
+import { useMap } from "../../state/MapRoutesStore";
 
 export default function DriveInfo() {
   const { bookedDrive } = useTrip();
-  const { driver } = bookedDrive;
+  const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
+  const driver = useUserById(bookedDrive.driver_id).data;
+  console.log(bookedDrive);
+
+  const startCoordinates = bookedDrive.start_address.coordinates;
+  const endCoordinates = bookedDrive.end_address.coordinates;
+  console.log(startCoordinates, endCoordinates);
+
+  useEffect(() => {
+    setStartPoint([startCoordinates.longitude, startCoordinates.latitude]);
+    setEndPoint([endCoordinates.longitude, endCoordinates.latitude]);
+
+    setIsRouteEnabled(true);
+  }, []);
   return (
     <Footer className={"bg-[#f6f6f6] w-full z-10 flex flex-col items-center "}>
       <div className=''>
@@ -12,12 +28,12 @@ export default function DriveInfo() {
           <div className='flex text-left'>
             <img
               className='w-[50px] h-[50px] rounded-full mr-4'
-              src={driver.avatar}
+              src={driver.profile_photo}
             />
             <div className='text-[#343B71] font-medium text-[17px] leading-5'>
               <h3 className='pb-3  '>{driver.name}</h3>
               <div className=''>
-                <p className='profile-stars'>{driver.rating}</p>
+                <p className='profile-stars'>123</p>
               </div>
             </div>
           </div>
@@ -95,8 +111,8 @@ export default function DriveInfo() {
         </div>
         <div className='border-b border-[#EFEFF4]'>
           <div className='history-path my-5 '>
-            <span className='history-from'>{bookedDrive.from}</span>
-            <span className='history-to'>{bookedDrive.to}</span>
+            <span className='history-from'>{bookedDrive.start_address.name}</span>
+            <span className='history-to'>{bookedDrive.end_address.name}</span>
           </div>
         </div>
         <div className='w-full flex justify-between py-5 border-b border-[#EFEFF4]'>
@@ -127,11 +143,11 @@ export default function DriveInfo() {
           <div className='flex justify-between w-full font-bold text-[16px] leading-[18.4px] text-[#242E42]'>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Дистанция</span>
-              <span>195 км</span>
+              <span>{routeDistance}</span>
             </div>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Время</span>
-              <span>3 ч 50</span>
+              <span>{routeDuration}</span>
             </div>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Цена</span>

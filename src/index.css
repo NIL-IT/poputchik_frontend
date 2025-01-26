@@ -13,13 +13,8 @@
   color-scheme: light dark;
   color: #181818;
   background-color: #fff;
-  /* font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  position: relative;
-  -moz-osx-font-smoothing: grayscale;
-} */
 }
+
 #root {
   margin: 0 auto;
   text-align: center;
@@ -32,7 +27,6 @@
 
 body {
   background-color: var(--grey-color);
-  /* max-width: 390px; */
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
@@ -63,22 +57,21 @@ body {
   height: 121px;
   background: #b9b9b9;
   border-radius: 50%;
-  /* 
-  width: 31px;
-  height: 31px; */
-
   font-size: 0;
-
   cursor: pointer;
+}
+
+.img-upload__label.docs {
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
 }
 
 .img-upload__label::after {
   content: "";
   position: absolute;
-
   bottom: 0px;
   right: 8px;
-
   width: 31px;
   height: 31px;
   background-color: var(--orange-color);
@@ -88,6 +81,10 @@ body {
   background-image: url("./assets/icons/camera.svg");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.img-upload__label.docs::after {
+  right: 0;
 }
 
 .change-file .img-upload__label {
@@ -204,4 +201,9 @@ body {
 .backdrop-blur {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+.PhoneInputCountryIcon--border {
+  box-shadow: none !important;
+  background-color: none !important;
 }

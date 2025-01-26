@@ -1,23 +1,28 @@
+import { useUserById } from "../../api/api";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
+import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
 export default function HistoryCard({ drive }) {
   const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
   const { setBookedDrive, bookedDrive } = useTrip();
-  function openFeedback() {
+  function openFeedback(event) {
+    event.stopPropagation();
+    window.scrollTo(0, 0);
     document.body.classList.add("overflow-y-hidden");
     toggleFeedback(true);
   }
-
-  function chooseDrive() {
-    if (drive.status == "Активна") {
+  const driver = useUserById(drive.driver_id).data;
+  function chooseDrive(event) {
+    if (drive.state == "active") {
       setBookedDrive(drive);
       toggleActiveDrive(false);
       toggleBookedModal(true);
+      event.stopPropagation();
     }
   }
 
-  if (!drive) {
+  if (!drive || !driver) {
     return null;
   }
   return (
@@ -26,26 +31,23 @@ export default function HistoryCard({ drive }) {
       onClick={() => chooseDrive()}>
       <div className='history-wrapper'>
         <div className='history-path'>
-          <span className='history-from'>{drive.from}</span>
-          <span className='history-to'>{drive.to}</span>
+          <span className='history-from'>{drive.start_address.name}</span>
+          <span className='history-to'>{drive.end_address.name}</span>
         </div>
         <div className='history-info'>
-          <div className='history-date'>{drive.date}</div>
+          <div className='history-date'>{formatDate(drive.departure_time)}</div>
           <div className='history-driver'>
-            <div className='history-rating'>{drive.driver.rating}</div>
+            <div className='history-rating'>123</div>
             <img
               className='history-img'
-              src={drive.driver.avatar}
+              src={driver.profile_photo}
             />
           </div>
         </div>
       </div>
       <div className='history-footer'>
         <div className='history-price'>{drive.price}руб</div>
-        <span
-          onClick={() => {
-            openFeedback();
-          }}>
+        <span onClick={openFeedback}>
           <svg
             width='22'
             height='20'
@@ -58,7 +60,7 @@ export default function HistoryCard({ drive }) {
             />
           </svg>
         </span>
-        <div className='history-status'>{drive.status}</div>
+        <div className='history-status'>{getStatus(drive.state)}</div>
       </div>
     </div>
   );

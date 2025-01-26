@@ -1,18 +1,17 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StartPage from "./pages/StartPage";
-
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserPage from "./pages/UserPage";
 import { useEffect } from "react";
 import { useUserStore } from "./state/UserStore";
 import { useUserById } from "./api/api";
-import MainModals from "./components/MainModals";
 import PreviewPage from "./pages/PreviewPage";
+import MainModals from "./components/Modals/MainModals";
 
 function App() {
   const { setCurrentUser } = useUserStore();
-  const user = useUserById("4321");
+  const user = useUserById("1");
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {

@@ -1,6 +1,6 @@
-import { useModal } from "../state/ModalStore";
-import FullScreenList from "../UI/FullScreenList/FullScreenList";
-import ReviewCard from "../UI/ReviewCard/ReviewCard";
+import { useModal } from "../../state/ModalStore";
+import FullScreenList from "../../UI/FullScreenList/FullScreenList";
+import ReviewCard from "../../UI/ReviewCard/ReviewCard";
 
 export default function ProfileModal() {
   const { selectedDriver, isProfileOpen, toggleProfile } = useModal();

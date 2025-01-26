@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useModal } from "../state/ModalStore";
-import Button from "../UI/Button/Button";
+import { useModal } from "../../state/ModalStore";
+import Button from "../../UI/Button/Button";
 
 export default function FeedBack() {
   const [grade, setGrade] = useState(-1);

@@ -1,11 +1,13 @@
 import Header from "../UI/Header/Header";
-import { useState } from "react";
-import DriverList from "../components/DriverList";
-import CreateTrip from "../components/CreateTrip";
-import MapComponent from "../components/MapComponent";
-import SearchComponent from "../components/SearchComponent";
 import { useModal } from "../state/ModalStore";
-import DriveInfo from "../components/DriveInfo";
+import BackButton from "../UI/BackButton";
+import CreateTrip from "../components/Main/CreateTrip";
+import DriveInfo from "../components/Main/DriveInfo";
+import DriverList from "../components/Main/DriverList";
+import SearchComponent from "../components/Main/SearchComponent";
+import MapComponent from "../components/Main/MapComponent";
+import { useTrip } from "../state/TripStore";
+import { useMap } from "../state/MapRoutesStore";
 
 export default function MainPage() {
   const mock = [
@@ -110,11 +112,38 @@ export default function MainPage() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-  const [isCreating, setIsCreating] = useState(false);
-  const { bookedModal } = useModal();
-
+  const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
+  const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
+  const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
+  function clearCreatingData() {
+    setTripFrom({
+      name: "",
+      coordinates: {
+        latitude: "",
+        longitude: "",
+      },
+    });
+    setTripTo({
+      name: "",
+      coordinates: {
+        latitude: "",
+        longitude: "",
+      },
+    });
+    setTripDate("");
+    setPersons(1);
+    setTripPrice(500);
+    setIsCreating(false);
+    setIsRouteEnabled(false);
+    setStartPoint([]);
+    setEndPoint([]);
+  }
+  function clearBookedData() {
+    setIsRouteEnabled(false);
+    setStartPoint([]);
+    setEndPoint([]);
+  }
   const nerbiest = mock.slice(0, 2);
-
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
@@ -135,21 +164,22 @@ export default function MainPage() {
     }
   }
 
+  function onButtonClick() {
+    if (bookedModal) {
+      toggleBookedModal(false);
+      clearBookedData();
+    } else if (isCreating) {
+      setIsCreating(false);
+      clearCreatingData();
+    }
+  }
+  // сделать стейт на поиск через геокодер
   return (
     <div className='bg-black h-screen relative'>
-      <Header />
+      {isCreating || bookedModal ? <BackButton onClick={() => onButtonClick()} /> : <Header />}
       <SearchComponent />
       <MapComponent />
       {renderContent()}
-      {/* {isCreating ? (
-        <CreateTrip />
-      ) : (
-        <DriverList
-          list={nerbiest}
-          toggleCreating={toggleCreating}
-          isCreating={isCreating}
-        />
-      )} */}
     </div>
   );
 }

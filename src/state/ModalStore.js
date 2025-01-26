@@ -33,4 +33,7 @@ export const useModal = create((set) => ({
 
   bookedModal: false,
   toggleBookedModal: (value) => set({ bookedModal: value }),
+
+  isCreating: false,
+  setIsCreating: (value) => set({ isCreating: value }),
 }));
