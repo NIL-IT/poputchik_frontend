@@ -20,19 +20,17 @@ export async function registration(data, role) {
   }
 }
 async function getUserById(id) {
-  const resp = await axios.get(`${url}/users/${id}`);
-  const setCurrentUser = useUserStore.getState().setCurrentUser;
-  setCurrentUser(resp.data);
-  return resp.data;
+  return axios.get(`${url}/users/${id}`);
 }
 
 export function useUserById(id) {
-  const { data, isError, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id),
+    select: (data) => data.data,
   });
 
-  return { data, isError, isLoading };
+  return { data };
 }
 
 async function getTripsList(city) {

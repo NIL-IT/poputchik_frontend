@@ -11,15 +11,16 @@ import MainModals from "./components/Modals/MainModals";
 import { useMap } from "./state/MapRoutesStore";
 
 function App() {
-  const { setCurrentUser } = useUserStore();
+  const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
-  const user = useUserById("1");
+  const user = useUserById("2").data;
+  console.log(currentUser);
+  useEffect(() => {
+    setCurrentUser(user);
+  }, []);
   // useEffect(() => {
-  //   const storedUser = localStorage.getItem("currentUser");
-  //   if (storedUser) {
-  //     setCurrentUser(JSON.parse(storedUser));
-  //   }
-  // }, [setCurrentUser]);
+  //   setCurrentUser(user);
+  // }, []);
 
   // useEffect(() => {
   //   const tg = window.Telegram.WebApp;

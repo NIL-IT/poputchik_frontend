@@ -4,16 +4,17 @@ import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
 import { useMap } from "../../state/MapRoutesStore";
+import { useUserStore } from "../../state/UserStore";
 
 export default function DriveInfo() {
+  const { currentUser } = useUserStore();
   const { bookedDrive } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
   const driver = useUserById(bookedDrive.driver_id).data;
-  console.log(bookedDrive);
+  console.log(currentUser);
 
   const startCoordinates = bookedDrive.start_address.coordinates;
   const endCoordinates = bookedDrive.end_address.coordinates;
-  console.log(startCoordinates, endCoordinates);
 
   useEffect(() => {
     setStartPoint([startCoordinates.longitude, startCoordinates.latitude]);

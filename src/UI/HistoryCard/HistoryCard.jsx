@@ -1,11 +1,13 @@
 import { useUserById } from "../../api/api";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
+import { useUserStore } from "../../state/UserStore";
 import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
 export default function HistoryCard({ drive }) {
   const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
   const { setBookedDrive, bookedDrive } = useTrip();
+  const { currentRole } = useUserStore();
   function openFeedback(event) {
     event.stopPropagation();
     window.scrollTo(0, 0);
@@ -14,7 +16,7 @@ export default function HistoryCard({ drive }) {
   }
   const driver = useUserById(drive.driver_id).data;
   function chooseDrive(event) {
-    if (drive.state == "active") {
+    if (drive.state == "active" && currentRole == "passenger") {
       setBookedDrive(drive);
       toggleActiveDrive(false);
       toggleBookedModal(true);

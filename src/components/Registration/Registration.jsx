@@ -90,7 +90,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
       if (isValid) {
         const formData = new FormData();
-        formData.append("telegram_id", "1");
+        formData.append("telegram_id", "2");
         formData.append("profile_photo", avatar);
         formData.append("name", name);
         formData.append("phone_number", phone);
@@ -108,6 +108,7 @@ export default function Registration({ backFunc, step, nextStep }) {
         }
 
         try {
+          console.log("first");
           await registration(formData, currentRole).then(() => navigate("/main"));
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
