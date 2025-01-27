@@ -27,7 +27,6 @@ function App() {
   //   tg.expand();
   //   // console.log(tg);
   // }, []);
-  const [location, setLocation] = useState({ latitude: null, longitude: null });
   const requestLocation = () => {
     const tg = window.Telegram.WebApp;
 
@@ -40,10 +39,6 @@ function App() {
     if (tg.LocationManager.isLocationAvailable) {
       tg.LocationManager.getLocation((data) => {
         if (data) {
-          setLocation({
-            latitude: data.latitude,
-            longitude: data.longitude,
-          });
           setCenter([data.latitude, data.longitude]);
           console.log("Location received:", data);
         } else {
