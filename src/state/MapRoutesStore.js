@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 export const useMap = create((set) => ({
-  cities: "",
-  setCities: (cities) => set({ cities }),
+  city: "",
+  setCity: (city) => set({ city }),
   center: [51.9582, 85.9603],
   setCenter: (center) => set({ center: center }),
   userLocation: "",

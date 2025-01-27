@@ -1,4 +1,5 @@
-import { useTripsList } from "../../api/api";
+import { useDriversTripsList, useTripsList } from "../../api/api";
+import { useMap } from "../../state/MapRoutesStore";
 import { useModal } from "../../state/ModalStore";
 import { useUserStore } from "../../state/UserStore";
 import Button from "../../UI/Button/Button";
@@ -6,9 +7,10 @@ import Footer from "../../UI/Footer/Footer";
 import Profile from "../../UI/Profile/Profile";
 
 export default function DriverList({ list, toggleCreating }) {
-  const { currentRole } = useUserStore();
-  const activeDrives = useTripsList("село Майма");
-
+  const { currentRole, currentUser } = useUserStore();
+  const { city } = useMap();
+  const activeDrives = currentRole == "passenger" ? useTripsList(city) : useDriversTripsList(currentUser.id, "active");
+  console.log(currentRole, activeDrives);
   const { toggleDrivers, toggleActiveDrive } = useModal();
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
@@ -50,7 +52,7 @@ export default function DriverList({ list, toggleCreating }) {
             Активные поездки
           </Button>
           <span className='absolute w-4 h-4 border-[2px] border-white bg-[#FF2C20] text-white rounded-full text-[12px] leading-4 flex items-center justify-center -right-2 -top-2'>
-            {activeDrives.length}
+            {activeDrives ? activeDrives.length : 0}
           </span>
         </div>
         <Button
