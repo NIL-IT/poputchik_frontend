@@ -7,14 +7,16 @@ import { useMap } from "../../state/MapRoutesStore";
 export default function SearchList({ value, setValue, options, setOptions }) {
   const { setTripFrom, tripFrom, setTripTo, tripTo } = useTrip();
   const { toggleSearch, setActiveInput, activeInput } = useModal();
-  const { cities, setCenter } = useMap();
+  const { cities, setCenter, center } = useMap();
   const selectALocation = (value) => {
     setValue(value);
+
+    console.log(center);
     if (activeInput === "from" && value !== tripTo) {
       setTripFrom({
         name: value.name,
         coordinates: {
-          lattitude: Number(value.Point.pos.split(" ")[1]),
+          latitude: Number(value.Point.pos.split(" ")[1]),
           longitude: Number(value.Point.pos.split(" ")[0]),
         },
       });
@@ -22,10 +24,12 @@ export default function SearchList({ value, setValue, options, setOptions }) {
       setTripTo({
         name: value.name,
         coordinates: {
-          lattitude: Number(value.Point.pos.split(" ")[1]),
+          latitude: Number(value.Point.pos.split(" ")[1]),
           longitude: Number(value.Point.pos.split(" ")[0]),
         },
       });
+    } else {
+      setCenter([Number(value.Point.pos.split(" ")[1]), Number(value.Point.pos.split(" ")[0])]);
     }
     setActiveInput("");
     toggleSearch(false);

@@ -68,8 +68,8 @@ export default function CreateTrip() {
   }
   useEffect(() => {
     if (tripFrom.name.length > 0 && tripTo.name.length > 0) {
-      setStartPoint([tripFrom.coordinates.lattitude, tripFrom.coordinates.longitude]);
-      setEndPoint([tripTo.coordinates.lattitude, tripTo.coordinates.longitude]);
+      setStartPoint([tripFrom.coordinates.latitude, tripFrom.coordinates.longitude]);
+      setEndPoint([tripTo.coordinates.latitude, tripTo.coordinates.longitude]);
 
       setIsRouteEnabled(true);
     }

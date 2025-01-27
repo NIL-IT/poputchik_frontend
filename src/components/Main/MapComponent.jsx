@@ -13,6 +13,13 @@ const MapComponent = () => {
     center: center,
     zoom: defaultZoom,
   };
+  const moveToCoordinates = (coordinates) => {
+    if (mapRef.current && coordinates) {
+      mapRef.current.setCenter(coordinates, defaultZoom, {
+        duration: 300,
+      });
+    }
+  };
 
   const buildRoute = async (ymaps) => {
     if (startPoint && endPoint && mapRef.current) {
@@ -23,7 +30,6 @@ const MapComponent = () => {
         },
         { boundsAutoApply: true },
       );
-
       mapRef.current.geoObjects.removeAll();
       mapRef.current.geoObjects.add(multiRoute);
       multiRoute.model.events.add("requestsuccess", () => {
@@ -31,13 +37,13 @@ const MapComponent = () => {
         if (activeRoute) {
           const distance = activeRoute.properties.get("distance");
           const duration = activeRoute.properties.get("duration");
-
           setRouteDistance(distance.text);
           setRouteDuration(duration.text);
         }
       });
     }
   };
+
   useEffect(() => {
     if (isRouteEnabled && ymapsRef.current) {
       buildRoute(ymapsRef.current);
@@ -47,6 +53,11 @@ const MapComponent = () => {
       setRouteDuration(null);
     }
   }, [isRouteEnabled, startPoint, endPoint]);
+
+  useEffect(() => {
+    moveToCoordinates(center);
+  }, [center]);
+
   return (
     <YMaps query={{ apikey: API_KEY, load: ["multiRouter.MultiRoute"] }}>
       <div style={{ width: "100%", height: "60%" }}>

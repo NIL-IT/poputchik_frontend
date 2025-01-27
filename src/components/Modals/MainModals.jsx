@@ -8,6 +8,7 @@ import HistoryCard from "../../UI/HistoryCard/HistoryCard";
 import FeedBack from "./FeedBack";
 import ProfileModal from "./ProfileModal";
 import { useTripsList } from "../../api/api";
+import { useMap } from "../../state/MapRoutesStore";
 
 export default function MainModals() {
   const mockDrivers = [
@@ -112,7 +113,8 @@ export default function MainModals() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-  const activeDrives = useTripsList("село Майма");
+  const { city } = useMap();
+  const activeDrives = useTripsList(city);
   const { isDriversOpen, toggleDrivers } = useModal();
   const { isCalendarOpen, toggleCalendar } = useModal();
   const { isPriceOpen, togglePrice } = useModal();
@@ -238,7 +240,7 @@ export default function MainModals() {
           </Button>
         </FullScreenList>
       )}
-      {isActiveDrivesOpen && (
+      {activeDrives && isActiveDrivesOpen && (
         <FullScreenList
           isClose
           toggle={toggleActiveDrive}

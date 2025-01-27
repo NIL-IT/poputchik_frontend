@@ -218,7 +218,7 @@ export default function Registration({ backFunc, step, nextStep }) {
             />
             <Select
               selectedValue={city}
-              options={["Новосибирск", "Томск"]}
+              options={["село Майма", "Горно-Алтайск", "село Манжерок", "село Ая"]}
               placeholder='Город'
               value={city}
               onChange={handleCityChange}
