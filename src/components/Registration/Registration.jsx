@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
 import Select from "../../UI/Select/Select";
-import { registration, useUserById } from "../../api/api";
+import { getUserById, registration, useUserById } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
@@ -130,7 +130,13 @@ export default function Registration({ backFunc, step, nextStep }) {
         }
 
         try {
-          await registration(formData, currentRole).then(() => navigate("/main"));
+          await registration(formData, currentRole);
+
+          const { data } = await getUserById(userId);
+
+          setCurrentUser(data);
+
+          navigate("/main");
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
         }

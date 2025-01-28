@@ -9,6 +9,7 @@ import { API_KEY, getUserById, useUserById } from "./api/api";
 import PreviewPage from "./pages/PreviewPage";
 import MainModals from "./components/Modals/MainModals";
 import { useMap } from "./state/MapRoutesStore";
+import HistoryPage from "./pages/HistoryPage";
 
 function App() {
   const { setCurrentUser, currentUser } = useUserStore();
@@ -144,6 +145,14 @@ function App() {
             <ProtectedRoute>
               <UserPage />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/'
+          element={
+            <div className='container-custom'>
+              <HistoryPage />
+            </div>
           }
         />
       </Routes>

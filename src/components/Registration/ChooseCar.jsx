@@ -79,7 +79,6 @@ export default function ChooseCar({ selectedCar, setSelectedCar, setCarNumber, s
             </svg>
           </span>
         </div>
-
         <div
           className='relative w-[90px] h-[90px] rounded-[16px] flex justify-center items-center bg-white'
           onClick={() => setSelectedCar("truck")}>
@@ -133,7 +132,7 @@ export default function ChooseCar({ selectedCar, setSelectedCar, setCarNumber, s
               height='8'
               viewBox='0 0 10 8'
               fill='none'
-              className={selectedCar == 2 ? "block" : "hidden"}
+              className={selectedCar == "truck" ? "block" : "hidden"}
               xmlns='http://www.w3.org/2000/svg'>
               <path
                 d='M3.57078 5.8375L8.51453 0.89375C8.63119 0.777083 8.7673 0.71875 8.92286 0.71875C9.07841 0.71875 9.21453 0.777083 9.33119 0.89375C9.44786 1.01042 9.50619 1.14906 9.50619 1.30967C9.50619 1.47028 9.44786 1.60872 9.33119 1.725L3.97911 7.09167C3.86244 7.20833 3.72633 7.26667 3.57078 7.26667C3.41522 7.26667 3.27911 7.20833 3.16244 7.09167L0.654109 4.58333C0.537442 4.46667 0.481442 4.32822 0.486109 4.168C0.490776 4.00778 0.551637 3.86914 0.668692 3.75208C0.785748 3.63503 0.924387 3.57669 1.08461 3.57708C1.24483 3.57747 1.38328 3.63581 1.49994 3.75208L3.57078 5.8375Z'
