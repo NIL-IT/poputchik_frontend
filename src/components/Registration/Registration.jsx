@@ -10,6 +10,7 @@ import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
 import { useMap } from "../../state/MapRoutesStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser } = useUserStore();
@@ -20,6 +21,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState(null);
+  const queryClient = useQueryClient();
 
   const [carNumber, setCarNumber] = useState("");
   const [carModel, setCarModel] = useState("");
@@ -34,6 +36,8 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [passportPhoto, setPassportPhoto] = useState("");
   const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState("");
+
+  setCurrentUser(useUserById(userId).data);
 
   const navigate = useNavigate();
   const regex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
@@ -134,10 +138,16 @@ export default function Registration({ backFunc, step, nextStep }) {
 
         try {
           console.log("first");
-          await registration(formData, currentRole).then(() => {
-            setCurrentUser(useUserById(userId).data);
-            navigate("/main");
-          });
+          await registration(formData, currentRole);
+          await queryClient.invalidateQueries(["user", userId]);
+
+          // Обновляем Zustander
+          if (user) {
+            setCurrentUser(user);
+          }
+
+          // Перенаправление
+          navigate("/main");
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
         }
