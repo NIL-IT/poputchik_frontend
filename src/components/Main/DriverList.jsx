@@ -52,7 +52,7 @@ export default function DriverList({ list, toggleCreating }) {
       <div className='flex justify-center items-center gap-5 pb-6'>
         <div className='relative'>
           <Button
-            size={"medium"}
+            size={currentRole == "driver" ? "medium" : "large"}
             onClick={() => toggleActiveDrive(true)}>
             Активные поездки
           </Button>
@@ -60,11 +60,13 @@ export default function DriverList({ list, toggleCreating }) {
             {activeDrives ? activeDrives.length : 0}
           </span>
         </div>
-        <Button
-          size={"medium"}
-          onClick={() => toggleCreating()}>
-          Создать поездку
-        </Button>
+        {currentRole === "driver" && (
+          <Button
+            size={"medium"}
+            onClick={() => toggleCreating()}>
+            Создать поездку
+          </Button>
+        )}
       </div>
     </Footer>
   );
