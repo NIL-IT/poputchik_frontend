@@ -25,7 +25,7 @@ function App() {
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
-      useUserById(userData.id).then((user) => setCurrentUser(user));
+      // useUserById(userData.id).then((user) => setCurrentUser(user));
     }
 
     // tg.WebApp.requestLocation({ can_write: true }, (isAvailable) => {
