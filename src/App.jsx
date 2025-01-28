@@ -27,7 +27,11 @@ function App() {
 
     tg.ready();
     tg.expand();
-
+    tg.setHeaderColor("secondary_bg_color");
+    tg.setViewportSettings({
+      is_expanded: true,
+      is_state_stable: true,
+    });
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
@@ -118,76 +122,78 @@ function App() {
   //   fetchData();
   // }, []);
   return (
-    <Router>
-      <Routes>
-        <Route
-          path='/'
-          element={
-            <div className='container-custom'>
-              <StartPage />
-            </div>
-          }
-        />
-        <Route
-          path='/preview'
-          element={
-            <div className='container-custom'>
-              <PreviewPage />
-            </div>
-          }
-        />
+    <div className='main-container'>
+      <Router>
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <div className='container-custom'>
+                <StartPage />
+              </div>
+            }
+          />
+          <Route
+            path='/preview'
+            element={
+              <div className='container-custom'>
+                <PreviewPage />
+              </div>
+            }
+          />
 
-        <Route
-          path='/main'
-          element={
-            <ProtectedRoute>
-              <MainPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/user'
-          element={
-            <ProtectedRoute>
-              <UserPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/activeDrives'
-          element={
-            <div className='container-custom'>
-              <ActiveDrivesPage />
-            </div>
-          }
-        />
-        <Route
-          path='/history'
-          element={
-            <div className='container-custom'>
-              <HistoryPage />
-            </div>
-          }
-        />
-        <Route
-          path='/userReview'
-          element={
-            <div className='container-custom'>
-              <UserReviews />
-            </div>
-          }
-        />
-        <Route
-          path='/peopleList'
-          element={
-            <div className='container-custom'>
-              <PeopleList />
-            </div>
-          }
-        />
-      </Routes>
-      <MainModals />
-    </Router>
+          <Route
+            path='/main'
+            element={
+              <ProtectedRoute>
+                <MainPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/user'
+            element={
+              <ProtectedRoute>
+                <UserPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/activeDrives'
+            element={
+              <div className='container-custom'>
+                <ActiveDrivesPage />
+              </div>
+            }
+          />
+          <Route
+            path='/history'
+            element={
+              <div className='container-custom'>
+                <HistoryPage />
+              </div>
+            }
+          />
+          <Route
+            path='/userReview'
+            element={
+              <div className='container-custom'>
+                <UserReviews />
+              </div>
+            }
+          />
+          <Route
+            path='/peopleList'
+            element={
+              <div className='container-custom'>
+                <PeopleList />
+              </div>
+            }
+          />
+        </Routes>
+        <MainModals />
+      </Router>
+    </div>
   );
 }
 

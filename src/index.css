@@ -19,7 +19,12 @@
   margin: 0 auto;
   text-align: center;
 }
-
+.main-container {
+  min-width: 100vw;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+}
 .container-custom {
   max-width: 390px;
   margin: 0 auto;
