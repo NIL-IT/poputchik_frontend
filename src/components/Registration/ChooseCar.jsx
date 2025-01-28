@@ -1,6 +1,14 @@
 import Input from "../../UI/Input/Input";
 
-export default function ChooseCar({ selectedCar, setSelectedCar, setCarNumber, setCarModel, setCarMake, setCarColor }) {
+export default function ChooseCar({
+  selectedCar,
+  setSelectedCar,
+  setCarNumber,
+  setCarModel,
+  setCarMake,
+  setCarColor,
+  errors,
+}) {
   return (
     <div className='flex flex-col gap-5'>
       <div className='relative flex justify-between'>
@@ -145,19 +153,27 @@ export default function ChooseCar({ selectedCar, setSelectedCar, setCarNumber, s
       <Input
         onChange={(e) => setCarNumber(e.target.value)}
         placeholder={"Номер"}
+        required
       />
+      {errors.carNumber && <p className='text-red-500 text-sm'>{errors.carNumber}</p>}
       <Input
         onChange={(e) => setCarMake(e.target.value)}
         placeholder={"Марка"}
+        required
       />
+      {errors.carMake && <p className='text-red-500 text-sm'>{errors.carMake}</p>}
       <Input
         onChange={(e) => setCarModel(e.target.value)}
         placeholder={"Модель"}
+        required
       />
+      {errors.carModel && <p className='text-red-500 text-sm'>{errors.carModel}</p>}
       <Input
         onChange={(e) => setCarColor(e.target.value)}
         placeholder={"Цвет"}
+        required
       />
+      {errors.carColor && <p className='text-red-500 text-sm'>{errors.carColor}</p>}
     </div>
   );
 }
