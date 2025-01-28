@@ -17,8 +17,17 @@ export default function StartPage() {
   const [switcherPos, setSwitcherPos] = useState(-1);
   const navigateToRegister = (value) => {
     if (currentUser && currentUser.name) {
-      setAuth(true);
-      navigate("/main");
+      if (value == "passenger" && !currentUser.passenger_profile) {
+        setToReg(true);
+        setSwitcherPos((prev) => prev + 1);
+      } else if (value == "driver" && !currentUser.driver_profile) {
+        setToReg(true);
+        setSwitcherPos((prev) => prev + 1);
+        setStep(1);
+      } else {
+        setAuth(true);
+        navigate("/main");
+      }
     } else {
       setToReg(true);
       setSwitcherPos((prev) => prev + 1);

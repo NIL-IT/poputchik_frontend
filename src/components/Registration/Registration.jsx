@@ -12,7 +12,7 @@ import Button from "../../UI/Button/Button";
 import { useMap } from "../../state/MapRoutesStore";
 
 export default function Registration({ backFunc, step, nextStep }) {
-  const { currentRole, setCurrentUser } = useUserStore();
+  const { currentRole, setCurrentUser, currentUser } = useUserStore();
   const { center } = useMap();
   const [userId, setUserId] = useState(null);
   const [phone, setPhone] = useState("");
@@ -46,11 +46,9 @@ export default function Registration({ backFunc, step, nextStep }) {
     }
 
     tg.ready();
-
     if (tg.initDataUnsafe) {
       const chatId = tg.initDataUnsafe.chat?.id;
       const userId = tg.initDataUnsafe.user?.id;
-
       if (chatId) {
         console.log("Working in chat context, ID:", chatId);
         setUserId(chatId);
@@ -61,14 +59,18 @@ export default function Registration({ backFunc, step, nextStep }) {
     }
   }, []);
 
-  // Установка текущего пользователя
   useEffect(() => {
-    if (userId) {
-      const userData = useUserById(userId).data;
-      setCurrentUser(userData);
+    if (currentUser && currentRole == "driver") {
+      setAvatar(currentUser.profile_photo);
+      setPassportPhoto(currentUser.passport_photo);
+      setCity(currentUser.city);
+      setName(currentUser.name);
+      setPhone(currentUser.phone_number);
+      setEmail(currentUser.email);
+      setVisibleAvatarPhoto(currentUser.profile_photo);
+      setVisiblePassportPhoto(currentUser.passport_photo);
     }
   }, [userId, setCurrentUser]);
-
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
 
@@ -89,49 +91,54 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let isValid = true;
-
-    if (!name || !regex.test(name)) {
-      setFormError("Имя обязательно и должно быть корректным");
-      isValid = false;
-    } else if (!isValidPhoneNumber(phone)) {
-      setFormError("Неверный номер телефона");
-      isValid = false;
-    } else if (!email) {
-      setFormError("Почта обязательна");
-      isValid = false;
+    if (step < 1 && currentRole == "passenger") {
+      nextStep();
+    } else if (step < 2 && currentRole == "driver") {
+      nextStep();
     } else {
-      setFormError("");
-    }
+      let isValid = true;
 
-    if (isValid) {
-      const formData = new FormData();
-      formData.append("telegram_id", userId);
-      formData.append("profile_photo", avatar);
-      formData.append("name", name);
-      formData.append("phone_number", phone);
-      formData.append("email", email);
-      formData.append("city", city);
-      formData.append("passport_photo", passportPhoto);
-      if (currentRole === "driver") {
-        formData.append("driver_license", driverLicensePhoto);
-        formData.append("car_number", carNumber);
-        formData.append("car_model", carModel);
-        formData.append("car_make", carMake);
-        formData.append("car_color", carColor);
-        formData.append("car_type", carType);
+      if (!name || !regex.test(name)) {
+        setFormError("Имя обязательно и должно быть корректным");
+        isValid = false;
+      } else if (!isValidPhoneNumber(phone)) {
+        setFormError("Неверный номер телефона");
+        isValid = false;
+      } else if (!email) {
+        setFormError("Почта обязательна");
+        isValid = false;
+      } else {
+        setFormError("");
       }
 
-      try {
-        await registration(formData, currentRole);
+      if (isValid) {
+        const formData = new FormData();
+        formData.append("telegram_id", userId);
+        formData.append("profile_photo", avatar);
+        formData.append("name", name);
+        formData.append("phone_number", phone);
+        formData.append("email", email);
+        formData.append("city", city);
+        formData.append("passport_photo", passportPhoto);
+        if (currentRole === "driver") {
+          formData.append("driver_license", driverLicensePhoto);
+          formData.append("car_number", carNumber);
+          formData.append("car_model", carModel);
+          formData.append("car_make", carMake);
+          formData.append("car_color", carColor);
+          formData.append("car_type", carType);
+        }
 
-        navigate("/main");
-      } catch (error) {
-        setFormError(error.message || "Неизвестная ошибка");
+        try {
+          await registration(formData, currentRole);
+
+          navigate("/main");
+        } catch (error) {
+          setFormError(error.message || "Неизвестная ошибка");
+        }
       }
     }
   };
-
   const renderTitle = () => {
     if (step === 0) return `Профиль (${userId || "N/A"})`;
     if (step === 1) return `Данные ${userId}`;
