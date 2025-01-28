@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useDriversTripsList, useTripsList } from "../../api/api";
 import { useMap } from "../../state/MapRoutesStore";
 import { useModal } from "../../state/ModalStore";
@@ -10,6 +11,7 @@ export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
   const { city } = useMap();
   const hasDriverProfile = currentUser.driver_profile?.id;
+  const navigate = useNavigate();
   const activeDrives =
     currentRole === "passenger"
       ? useTripsList("село Майма")
@@ -35,7 +37,7 @@ export default function DriverList({ list, toggleCreating }) {
       </div>
       <div
         className='flex max-w-[350px] justify-end items-end text-right text-[14px] leading-[16.1px] margin-[0 auto] pb-4'
-        onClick={() => toggleDrivers(true)}>
+        onClick={() => navigate("/peopleList")}>
         <p className='pr-5'>Смотреть весь список</p>
         <svg
           width='19'
@@ -54,7 +56,7 @@ export default function DriverList({ list, toggleCreating }) {
         <div className='relative'>
           <Button
             size={currentRole == "driver" ? "medium" : "large"}
-            onClick={() => toggleActiveDrive(true)}>
+            onClick={() => navigate("/activeDrives")}>
             Активные поездки
           </Button>
           <span className='absolute w-4 h-4 border-[2px] border-white bg-[#FF2C20] text-white rounded-full text-[12px] leading-4 flex items-center justify-center -right-2 -top-2'>

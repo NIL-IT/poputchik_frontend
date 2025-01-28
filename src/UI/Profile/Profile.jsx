@@ -1,11 +1,13 @@
 import "./Profile.css";
 import message from "../../assets/icons/message.svg";
 import { useModal } from "../../state/ModalStore";
+import { useNavigate } from "react-router-dom";
 export default function Profile({ driver }) {
   const { setSelectedDriver, toggleProfile } = useModal();
+  const navigate = useNavigate();
   const openProfile = () => {
     setSelectedDriver(driver);
-    toggleProfile(true);
+    navigate("/userReview");
   };
   if (!driver) {
     return null;

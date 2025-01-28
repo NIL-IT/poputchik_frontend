@@ -10,12 +10,16 @@ import PreviewPage from "./pages/PreviewPage";
 import MainModals from "./components/Modals/MainModals";
 import { useMap } from "./state/MapRoutesStore";
 import HistoryPage from "./pages/HistoryPage";
+import ActiveDrivesPage from "./pages/ActiveDrivesPage";
+import UserReviews from "./pages/UserReviews";
+import PeopleList from "./pages/PeopleList";
 
 function App() {
   const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-  const { data: user } = useUserById(userId);
+  const login = "1233128012";
+  const { data: user } = useUserById(login);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -131,6 +135,7 @@ function App() {
             </div>
           }
         />
+
         <Route
           path='/main'
           element={
@@ -148,10 +153,34 @@ function App() {
           }
         />
         <Route
-          path='/'
+          path='/activeDrives'
+          element={
+            <div className='container-custom'>
+              <ActiveDrivesPage />
+            </div>
+          }
+        />
+        <Route
+          path='/history'
           element={
             <div className='container-custom'>
               <HistoryPage />
+            </div>
+          }
+        />
+        <Route
+          path='/userReview'
+          element={
+            <div className='container-custom'>
+              <UserReviews />
+            </div>
+          }
+        />
+        <Route
+          path='/peopleList'
+          element={
+            <div className='container-custom'>
+              <PeopleList />
             </div>
           }
         />

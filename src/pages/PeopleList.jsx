@@ -1,16 +1,10 @@
-import Header from "../UI/Header/Header";
-import { useModal } from "../state/ModalStore";
+import Profile from "../UI/Profile/Profile";
 import BackButton from "../UI/BackButton";
-import CreateTrip from "../components/Main/CreateTrip";
-import DriveInfo from "../components/Main/DriveInfo";
-import DriverList from "../components/Main/DriverList";
-import SearchComponent from "../components/Main/SearchComponent";
-import MapComponent from "../components/Main/MapComponent";
-import { useTrip } from "../state/TripStore";
-import { useMap } from "../state/MapRoutesStore";
+import { useNavigate } from "react-router-dom";
 
-export default function MainPage() {
-  const mock = [
+export default function PeopleList() {
+  const navigate = useNavigate();
+  const mockDrivers = [
     {
       id: 1,
       name: "Сергей",
@@ -112,74 +106,20 @@ export default function MainPage() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-  const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
-  const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
-  const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
-  function clearCreatingData() {
-    setTripFrom({
-      name: "",
-      coordinates: {
-        latitude: "",
-        longitude: "",
-      },
-    });
-    setTripTo({
-      name: "",
-      coordinates: {
-        latitude: "",
-        longitude: "",
-      },
-    });
-    setTripDate("");
-    setPersons(1);
-    setTripPrice(500);
-    setIsCreating(false);
-    setIsRouteEnabled(false);
-    setStartPoint([]);
-    setEndPoint([]);
-  }
-  function clearBookedData() {
-    setIsRouteEnabled(false);
-    setStartPoint([]);
-    setEndPoint([]);
-  }
-  const nerbiest = mock.slice(0, 2);
-  function toggleCreating() {
-    setIsCreating((prev) => !prev);
-  }
-
-  function renderContent() {
-    if (isCreating) {
-      return <CreateTrip />;
-    } else if (bookedModal) {
-      return <DriveInfo />;
-    } else {
-      return (
-        <DriverList
-          list={nerbiest}
-          toggleCreating={toggleCreating}
-          isCreating={isCreating}
-        />
-      );
-    }
-  }
-
-  function onButtonClick() {
-    if (bookedModal) {
-      toggleBookedModal(false);
-      clearBookedData();
-    } else if (isCreating) {
-      setIsCreating(false);
-      clearCreatingData();
-    }
-  }
-
   return (
-    <div className='bg-black h-screen relative'>
-      {isCreating || bookedModal ? <BackButton onClick={() => onButtonClick()} /> : <Header />}
-      <SearchComponent />
-      <MapComponent />
-      {renderContent()}
+    <div className='relative pt-10 pb-5'>
+      <BackButton onClick={() => navigate(-1)} />
+      <h3 className='font-bold text-[20px] leading-5 pb-8 '>Список водителей</h3>
+      <div className='flex flex-col gap-4'>
+        {mockDrivers.map((obj) => {
+          return (
+            <Profile
+              key={obj.id}
+              driver={obj}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

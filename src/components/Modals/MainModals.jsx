@@ -113,8 +113,6 @@ export default function MainModals() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-  const { city } = useMap();
-  const activeDrives = useTripsList(city);
   const { isDriversOpen, toggleDrivers } = useModal();
   const { isCalendarOpen, toggleCalendar } = useModal();
   const { isPriceOpen, togglePrice } = useModal();
@@ -126,10 +124,6 @@ export default function MainModals() {
     toggleCalendar(false);
   }
 
-  function closeDrivers() {
-    toggleDrivers(false);
-  }
-
   function closeFeedback() {
     document.body.classList.remove("overflow-y-hidden");
     toggleFeedback(false);
@@ -137,23 +131,9 @@ export default function MainModals() {
 
   return (
     <>
-      {isDriversOpen && (
-        <FullScreenList
-          isOpen={isDriversOpen}
-          toggle={closeDrivers}>
-          <h3 className='font-bold text-[20px] leading-5 pb-8'>Список водителей</h3>
-          <div className='flex flex-col gap-4'>
-            {mockDrivers.map((obj) => {
-              return (
-                <Profile
-                  key={obj.id}
-                  driver={obj}
-                />
-              );
-            })}
-          </div>
-        </FullScreenList>
-      )}
+      {/* {isDriversOpen && (
+        
+      )} */}
       {isCalendarOpen && (
         <FullScreenList
           isOpen={isCalendarOpen}
@@ -240,25 +220,9 @@ export default function MainModals() {
           </Button>
         </FullScreenList>
       )}
-      {activeDrives && activeDrives.length > 0 && isActiveDrivesOpen && (
-        <FullScreenList
-          isClose
-          toggle={toggleActiveDrive}
-          isOpen={isActiveDrivesOpen}>
-          <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
-          <div className='flex flex-col gap-4 w-full'>
-            {activeDrives &&
-              activeDrives.map((obj) => {
-                return (
-                  <HistoryCard
-                    key={obj.id}
-                    drive={obj}
-                  />
-                );
-              })}
-          </div>
-        </FullScreenList>
-      )}
+      {/* {activeDrives && activeDrives.length > 0 && isActiveDrivesOpen && (
+        
+      )} */}
       {isFeedBackOpen && (
         <>
           <div
@@ -267,7 +231,7 @@ export default function MainModals() {
           <FeedBack />
         </>
       )}
-      {isProfileOpen && <ProfileModal />}
+      {/* {isProfileOpen && <ProfileModal />} */}
     </>
   );
 }
