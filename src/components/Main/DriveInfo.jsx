@@ -16,7 +16,7 @@ export default function DriveInfo() {
 
   const startCoordinates = bookedDrive.start_address.coordinates;
   const endCoordinates = bookedDrive.end_address.coordinates;
-  console.log(currentUser);
+
   function bookingByPassenger(e) {
     e.preventDefault();
 

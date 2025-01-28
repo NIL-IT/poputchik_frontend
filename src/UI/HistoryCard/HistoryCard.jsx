@@ -15,7 +15,6 @@ export default function HistoryCard({ drive }) {
     toggleFeedback(true);
   }
   const driver = useUserById(drive.driver_id).data;
-  console.log(drive);
   function chooseDrive(event) {
     if (drive.state == "active" && currentRole == "passenger" && currentUser.passenger_profile) {
       setBookedDrive(drive);

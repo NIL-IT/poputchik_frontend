@@ -10,8 +10,6 @@ export default function SearchList({ value, setValue, options, setOptions }) {
   const { cities, setCenter, center } = useMap();
   const selectALocation = (value) => {
     setValue(value);
-
-    console.log(center);
     if (activeInput === "from" && value !== tripTo) {
       setTripFrom({
         name: value.name,
