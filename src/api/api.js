@@ -26,7 +26,8 @@ async function getUserById(id) {
 export function useUserById(id) {
   const { data } = useQuery({
     queryKey: ["user", id],
-    queryFn: () => getUserById(id),
+    queryFn: () => (id ? getUserById(id) : null),
+    enabled: !!id,
     select: (data) => data.data,
   });
 

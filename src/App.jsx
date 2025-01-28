@@ -14,6 +14,7 @@ function App() {
   const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
+  const { data: user } = useUserById(userId); // Хук на верхнем уровне
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -26,38 +27,36 @@ function App() {
     if (userData?.id) {
       setUserId(userData.id);
     }
-
-    // tg.WebApp.requestLocation({ can_write: true }, (isAvailable) => {
-    //   if (isAvailable) {
-    //     const lat = tg.WebApp.latitude;
-    //     const lon = tg.WebApp.longitude;
-    //     setCenter([lat, lon]);
-    //   } else {
-    //     console.log("Геолокация недоступна");
-    //   }
-    // });
   }, []);
-  // const requestLocation = () => {
-  //   const tg = window.Telegram.WebApp;
 
-  //   if (tg.LocationManager && !tg.LocationManager.isInited) {
-  //     tg.LocationManager.init(() => {
-  //       console.log("LocationManager initialized");
-  //     });
-  //   }
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user, setCurrentUser]);
 
-  //   if (tg.LocationManager.isLocationAvailable) {
-  //     tg.LocationManager.getLocation((data) => {
-  //       if (data) {
-  //         setCenter([data.latitude, data.longitude]);
-  //         console.log("Location received:", data);
-  //       } else {
-  //         console.log("first");
-  //       }
-  //     });
-  //   } else {
-  //     console.log("second");
-  //   }
+  const requestLocation = () => {
+    const tg = window.Telegram.WebApp;
+
+    if (tg.LocationManager && !tg.LocationManager.isInited) {
+      tg.LocationManager.init(() => {
+        console.log("LocationManager initialized");
+      });
+    }
+
+    if (tg.LocationManager.isLocationAvailable) {
+      tg.LocationManager.getLocation((data) => {
+        if (data) {
+          setCenter([data.latitude, data.longitude]);
+          console.log("Location received:", data);
+        } else {
+          console.log("first");
+        }
+      });
+    } else {
+      console.log("second");
+    }
+  };
   //   // if (navigator.geolocation) {
   //   //   navigator.geolocation.getCurrentPosition(
   //   //     (position) => {
@@ -102,7 +101,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // await requestLocation();
+      await requestLocation();
       await getCityByCoordinates();
     };
 

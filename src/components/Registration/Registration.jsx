@@ -9,9 +9,11 @@ import { registration, useUserById } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
+import { useMap } from "../../state/MapRoutesStore";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser } = useUserStore();
+  const { center } = useMap();
   const [userId, setUserId] = useState(null);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
@@ -61,7 +63,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   function renderTitle() {
     if (step == 0) {
-      return `Профиль ${userId}`;
+      return `Профиль ${(userId, center)}`;
     } else if (step == 1) {
       return `Данные ${userId}`;
     } else if (step == 2) {
