@@ -38,41 +38,41 @@ function App() {
     //   }
     // });
   }, []);
-  const requestLocation = () => {
-    const tg = window.Telegram.WebApp;
+  // const requestLocation = () => {
+  //   const tg = window.Telegram.WebApp;
 
-    if (tg.LocationManager && !tg.LocationManager.isInited) {
-      tg.LocationManager.init(() => {
-        console.log("LocationManager initialized");
-      });
-    }
+  //   if (tg.LocationManager && !tg.LocationManager.isInited) {
+  //     tg.LocationManager.init(() => {
+  //       console.log("LocationManager initialized");
+  //     });
+  //   }
 
-    if (tg.LocationManager.isLocationAvailable) {
-      tg.LocationManager.getLocation((data) => {
-        if (data) {
-          setCenter([data.latitude, data.longitude]);
-          console.log("Location received:", data);
-        } else {
-          console.log("first");
-        }
-      });
-    } else {
-      console.log("second");
-    }
-    // if (navigator.geolocation) {
-    //   navigator.geolocation.getCurrentPosition(
-    //     (position) => {
-    //       setCenter([position.coords.latitude, position.coords.longitude]);
-    //       console.log(center);
-    //     },
-    //     (error) => {
-    //       console.error("Ошибка получения геолокации:", error.message);
-    //     },
-    //   );
-    // } else {
-    //   console.error("Геолокация не поддерживается вашим браузером.");
-    // }
-  };
+  //   if (tg.LocationManager.isLocationAvailable) {
+  //     tg.LocationManager.getLocation((data) => {
+  //       if (data) {
+  //         setCenter([data.latitude, data.longitude]);
+  //         console.log("Location received:", data);
+  //       } else {
+  //         console.log("first");
+  //       }
+  //     });
+  //   } else {
+  //     console.log("second");
+  //   }
+  //   // if (navigator.geolocation) {
+  //   //   navigator.geolocation.getCurrentPosition(
+  //   //     (position) => {
+  //   //       setCenter([position.coords.latitude, position.coords.longitude]);
+  //   //       console.log(center);
+  //   //     },
+  //   //     (error) => {
+  //   //       console.error("Ошибка получения геолокации:", error.message);
+  //   //     },
+  //   //   );
+  //   // } else {
+  //   //   console.error("Геолокация не поддерживается вашим браузером.");
+  //   // }
+  // };
 
   const getCityByCoordinates = async () => {
     try {
@@ -103,7 +103,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await requestLocation();
+      // await requestLocation();
       await getCityByCoordinates();
     };
 
