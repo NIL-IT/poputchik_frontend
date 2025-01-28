@@ -144,8 +144,8 @@ export default function Registration({ backFunc, step, nextStep }) {
     }
   };
   const renderTitle = () => {
-    if (step === 0) return `Профиль (${userId || "N/A"})`;
-    if (step === 1) return `Данные ${center}`;
+    if (step === 0) return `Профиль`;
+    if (step === 1) return `Данные`;
     if (step === 2) return "Автомобиль";
   };
 
