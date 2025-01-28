@@ -39,9 +39,11 @@ export default function Registration({ backFunc, step, nextStep }) {
   const nameRegex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  function urlToFile(url) {
-    const blob = url.blob();
-    const filename = url.split("/").pop().split("#")[0].split("?")[0];
+  async function urlToFile(url) {
+    // Даже если URL строка, данные нужно получить через fetch
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const filename = url.split("/").pop().split(/[#?]/)[0];
     return new File([blob], filename, { type: blob.type });
   }
 
@@ -55,16 +57,20 @@ export default function Registration({ backFunc, step, nextStep }) {
   }, []);
 
   useEffect(() => {
-    if (currentUser && currentRole === "driver") {
-      setAvatar(urlToFile(currentUser.profile_photo));
-      setPassportPhoto(currentUser.passport_photo);
-      setCity(currentUser.city);
-      setName(currentUser.name);
-      setPhone(currentUser.phone_number);
-      setEmail(currentUser.email);
-      setVisibleAvatarPhoto(currentUser.profile_photo);
-      setVisiblePassportPhoto(currentUser.passport_photo);
-    }
+    const loadData = async () => {
+      if (currentUser && currentRole === "driver") {
+        const profile_photo = await urlToFile(currentUser.profile_photo);
+        setAvatar(profile_photo);
+        setPassportPhoto(currentUser.passport_photo);
+        setCity(currentUser.city);
+        setName(currentUser.name);
+        setPhone(currentUser.phone_number);
+        setEmail(currentUser.email);
+        setVisibleAvatarPhoto(currentUser.profile_photo);
+        setVisiblePassportPhoto(currentUser.passport_photo);
+      }
+    };
+    loadData();
   }, [currentUser, currentRole]);
 
   const validateStep = () => {
