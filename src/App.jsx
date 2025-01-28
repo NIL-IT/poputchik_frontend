@@ -34,42 +34,46 @@ function App() {
     }
   }, [user, setCurrentUser]);
 
-  const requestLocation = () => {
+  const requestLocation = async () => {
     const tg = window.Telegram.WebApp;
 
-    if (tg.LocationManager && !tg.LocationManager.isInited) {
-      tg.LocationManager.init(() => {
-        console.log("LocationManager initialized");
-      });
+    if (!tg || !tg.LocationManager) {
+      console.error("Telegram WebApp или LocationManager недоступен");
+      return false;
+    }
+
+    if (!tg.LocationManager.isInited) {
+      await new Promise((resolve) => tg.LocationManager.init(resolve));
+      console.log("LocationManager инициализирован");
     }
 
     if (tg.LocationManager.isLocationAvailable) {
       tg.LocationManager.getLocation((data) => {
         if (data) {
           setCenter([data.latitude, data.longitude]);
-          console.log("Location received:", data);
+          console.log("Location получен:", data);
+          return true;
         } else {
-          console.log("first");
+          console.error("Не удалось получить геолокацию");
+          return false;
         }
       });
     } else {
-      console.log("second");
+      console.warn("Геолокация недоступна через Telegram");
+      return false;
     }
   };
-  //   // if (navigator.geolocation) {
-  //   //   navigator.geolocation.getCurrentPosition(
-  //   //     (position) => {
-  //   //       setCenter([position.coords.latitude, position.coords.longitude]);
-  //   //       console.log(center);
-  //   //     },
-  //   //     (error) => {
-  //   //       console.error("Ошибка получения геолокации:", error.message);
-  //   //     },
-  //   //   );
-  //   // } else {
-  //   //   console.error("Геолокация не поддерживается вашим браузером.");
-  //   // }
-  // };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const success = await requestLocation();
+      if (success) {
+        await getCityByCoordinates();
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const getCityByCoordinates = async () => {
     try {
@@ -85,7 +89,6 @@ function App() {
         )?.name;
 
         if (cityName) {
-          console.log(cityName);
           setCity(cityName);
         } else {
           console.log("Не удалось найти название города");
@@ -98,14 +101,14 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await requestLocation();
-      await getCityByCoordinates();
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await requestLocation();
+  //     await getCityByCoordinates();
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   return (
     <Router>
       <Routes>
