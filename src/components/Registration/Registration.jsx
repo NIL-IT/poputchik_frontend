@@ -16,6 +16,8 @@ export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser } = useUserStore();
   const { center } = useMap();
   const [userId, setUserId] = useState(null);
+  const { data: user } = useUserById(userId);
+
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,8 +38,6 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [passportPhoto, setPassportPhoto] = useState("");
   const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState("");
-
-  setCurrentUser(useUserById(userId).data);
 
   const navigate = useNavigate();
   const regex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
