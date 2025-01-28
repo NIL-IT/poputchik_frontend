@@ -240,7 +240,7 @@ export default function MainModals() {
           </Button>
         </FullScreenList>
       )}
-      {activeDrives && isActiveDrivesOpen && (
+      {activeDrives.length > 0 && isActiveDrivesOpen && (
         <FullScreenList
           isClose
           toggle={toggleActiveDrive}
