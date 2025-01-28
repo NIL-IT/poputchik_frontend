@@ -107,7 +107,7 @@ export default function PeopleList() {
     },
   ];
   return (
-    <div className='relative pt-10 pb-5'>
+    <div className='relative pt-10 pb-5 flex flex-col justify-center items-center'>
       <BackButton onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8 '>Список водителей</h3>
       <div className='flex flex-col gap-4'>

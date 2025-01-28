@@ -10,11 +10,11 @@ export default function ActiveDrivesPage() {
   const activeDrives = city.length > 0 ? useTripsList(city) : [];
   console.log(city);
   return (
-    <div className='pt-10 relative'>
+    <div className='pt-10 relative flex flex-col justify-center items-center'>
       <CloseBtn onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
       <div className='flex flex-col gap-4 w-full'>
-        {activeDrives ? (
+        {activeDrives.length > 0 ? (
           activeDrives.map((obj) => {
             return (
               <HistoryCard

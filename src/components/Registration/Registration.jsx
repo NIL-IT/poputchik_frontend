@@ -119,8 +119,8 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.append("phone_number", phone);
         formData.append("email", email);
         formData.append("city", city);
-        formData.append("passport_photo", passportPhoto);
         if (currentRole === "driver") {
+          formData.append("passport_photo", passportPhoto);
           formData.append("driver_license", driverLicensePhoto);
           formData.append("car_number", carNumber);
           formData.append("car_model", carModel);
