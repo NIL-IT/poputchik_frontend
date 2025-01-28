@@ -39,6 +39,12 @@ export default function Registration({ backFunc, step, nextStep }) {
   const nameRegex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  async function urlToFile(url) {
+    const blob = url.blob();
+    const filename = url.split("/").pop().split("#")[0].split("?")[0];
+    return new File([blob], filename, { type: blob.type });
+  }
+
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (tg?.initDataUnsafe) {
@@ -50,7 +56,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   useEffect(() => {
     if (currentUser && currentRole === "driver") {
-      setAvatar(currentUser.profile_photo);
+      setAvatar(urlToFile(currentUser.profile_photo));
       setPassportPhoto(currentUser.passport_photo);
       setCity(currentUser.city);
       setName(currentUser.name);
@@ -112,12 +118,11 @@ export default function Registration({ backFunc, step, nextStep }) {
     try {
       const formData = new FormData();
       formData.append("telegram_id", userId);
-      formData.append("profile_photo", avatar);
-      formData.append("name", name);
       formData.append("phone_number", phone);
-      formData.append("email", email);
+      formData.append("name", name);
       formData.append("city", city);
-
+      formData.append("email", email);
+      formData.append("profile_photo", avatar);
       if (currentRole === "driver") {
         formData.append("passport_photo", passportPhoto);
         formData.append("driver_license", driverLicensePhoto);
@@ -127,7 +132,15 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.append("car_color", carColor);
         formData.append("car_type", carType);
       }
-
+      console.log(
+        formData.get("passport_photo"),
+        formData.get("driver_license"),
+        formData.get("car_number"),
+        formData.get("car_model"),
+        formData.get("car_make"),
+        formData.get("car_color"),
+        formData.get("car_type"),
+      );
       await registration(formData, currentRole);
       const { data } = await getUserById(userId);
       setCurrentUser(data);
@@ -257,7 +270,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
         {step === 1 && currentRole === "driver" && (
           <>
-            <div className='flex flex-col gap-10 items-center'>
+            <div className='flex flex-col gap-10 items-center justify-center'>
               <fieldset className='relative'>
                 <input
                   id='upload-passport'
@@ -271,6 +284,8 @@ export default function Registration({ backFunc, step, nextStep }) {
                   className='img-upload__label img-upload__control docs'
                   style={{
                     backgroundImage: passportPhoto && `url(${visiblePassportPhoto})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}>
                   Загрузить
                 </label>
@@ -278,7 +293,7 @@ export default function Registration({ backFunc, step, nextStep }) {
                 {formError.passport && <p className='text-red-500 text-sm mt-1 text-center'>{formError.passport}</p>}
               </fieldset>
 
-              <fieldset className='relative'>
+              <fieldset className='relative w-[200px]'>
                 <input
                   id='upload-license'
                   type='file'
@@ -291,6 +306,8 @@ export default function Registration({ backFunc, step, nextStep }) {
                   className='img-upload__label img-upload__control docs'
                   style={{
                     backgroundImage: driverLicensePhoto && `url(${visibleLicensePhoto})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}>
                   Загрузить
                 </label>
