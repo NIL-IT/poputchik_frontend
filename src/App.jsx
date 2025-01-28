@@ -76,6 +76,7 @@ function App() {
       const success = await requestLocation();
       if (success) {
         await getCityByCoordinates();
+        setCity();
       }
     };
 

@@ -1,14 +1,9 @@
 import FullScreenList from "../../UI/FullScreenList/FullScreenList";
 import CalendarComponent from "../../UI/Calendar/Calendar";
-import Profile from "../../UI/Profile/Profile";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
-import HistoryCard from "../../UI/HistoryCard/HistoryCard";
 import FeedBack from "./FeedBack";
-import ProfileModal from "./ProfileModal";
-import { useTripsList } from "../../api/api";
-import { useMap } from "../../state/MapRoutesStore";
 
 export default function MainModals() {
   const mockDrivers = [
@@ -131,9 +126,6 @@ export default function MainModals() {
 
   return (
     <>
-      {/* {isDriversOpen && (
-        
-      )} */}
       {isCalendarOpen && (
         <FullScreenList
           isOpen={isCalendarOpen}
@@ -220,9 +212,7 @@ export default function MainModals() {
           </Button>
         </FullScreenList>
       )}
-      {/* {activeDrives && activeDrives.length > 0 && isActiveDrivesOpen && (
-        
-      )} */}
+
       {isFeedBackOpen && (
         <>
           <div
@@ -231,7 +221,6 @@ export default function MainModals() {
           <FeedBack />
         </>
       )}
-      {/* {isProfileOpen && <ProfileModal />} */}
     </>
   );
 }

@@ -1,4 +1,3 @@
-import FullScreenList from "../UI/FullScreenList/FullScreenList";
 import { useTripsList } from "../api/api";
 import { useMap } from "../state/MapRoutesStore";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
@@ -8,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 export default function ActiveDrivesPage() {
   const { city } = useMap();
   const navigate = useNavigate();
-  const activeDrives = useTripsList(city);
-
+  const activeDrives = city.length > 0 ? useTripsList(city) : [];
+  console.log(city);
   return (
     <div className='pt-10 relative'>
       <CloseBtn onClick={() => navigate(-1)} />
