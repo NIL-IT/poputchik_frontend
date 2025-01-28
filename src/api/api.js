@@ -40,9 +40,9 @@ async function getTripsList(city) {
 
 export function useTripsList(city) {
   const { data } = useQuery({
-    queryKey: ["tripsList"],
+    queryKey: ["tripsList", city],
     queryFn: () => getTripsList(city),
-    select: (data) => data.data,
+    select: (data) => data?.data || [],
   });
   return data;
 }

@@ -130,9 +130,7 @@ export default function Registration({ backFunc, step, nextStep }) {
         }
 
         try {
-          await registration(formData, currentRole);
-
-          navigate("/main");
+          await registration(formData, currentRole).then(() => navigate("/main"));
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
         }
@@ -141,7 +139,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   };
   const renderTitle = () => {
     if (step === 0) return `Профиль (${userId || "N/A"})`;
-    if (step === 1) return `Данные ${userId}`;
+    if (step === 1) return `Данные ${center}`;
     if (step === 2) return "Автомобиль";
   };
 

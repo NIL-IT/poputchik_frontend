@@ -15,6 +15,7 @@ function App() {
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
   const { data: user } = useUserById(userId);
+
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
@@ -51,6 +52,7 @@ function App() {
       tg.LocationManager.getLocation((data) => {
         if (data) {
           setCenter([data.latitude, data.longitude]);
+          console.log(data);
           console.log("Location получен:", data);
           return true;
         } else {
