@@ -3,16 +3,16 @@ import "react-phone-number-input/style.css";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "../../UI/Select/Select";
-import { registration } from "../../api/api";
+import { registration, useUserById } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
 
 export default function Registration({ backFunc, step, nextStep }) {
-  const { currentRole } = useUserStore();
-
+  const { currentRole, setCurrentUser } = useUserStore();
+  const [userId, setUserId] = useState(null);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,11 +36,34 @@ export default function Registration({ backFunc, step, nextStep }) {
   const navigate = useNavigate();
   const regex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
 
+  useEffect(() => {
+    const tg = window.Telegram.WebApp;
+    if (!tg) {
+      console.log("Not in Telegram environment");
+      return;
+    }
+
+    tg.ready();
+
+    if (tg.initDataUnsafe) {
+      const chatId = tg.initDataUnsafe.chat?.id;
+      const userId = tg.initDataUnsafe.user?.id;
+
+      if (chatId) {
+        console.log("Working in chat context, ID:", chatId);
+        setUserId(chatId);
+      } else if (userId) {
+        console.log("Personal chat with user ID:", userId);
+        setUserId(userId);
+      }
+    }
+  }, []);
+
   function renderTitle() {
     if (step == 0) {
-      return "Профиль";
+      return `Профиль ${userId}`;
     } else if (step == 1) {
-      return "Данные";
+      return `Данные ${userId}`;
     } else if (step == 2) {
       return "Автомобиль";
     }
@@ -90,7 +113,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
       if (isValid) {
         const formData = new FormData();
-        formData.append("telegram_id", "2");
+        formData.append("telegram_id", userId);
         formData.append("profile_photo", avatar);
         formData.append("name", name);
         formData.append("phone_number", phone);
@@ -109,7 +132,10 @@ export default function Registration({ backFunc, step, nextStep }) {
 
         try {
           console.log("first");
-          await registration(formData, currentRole).then(() => navigate("/main"));
+          await registration(formData, currentRole).then(() => {
+            setCurrentUser(useUserById(userId).data);
+            navigate("/main");
+          });
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
         }

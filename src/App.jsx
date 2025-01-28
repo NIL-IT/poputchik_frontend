@@ -13,21 +13,34 @@ import { useMap } from "./state/MapRoutesStore";
 function App() {
   const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
-  const user = useUserById("2").data;
-  console.log(currentUser);
-  useEffect(() => {
-    setCurrentUser(user);
-  }, []);
-  // useEffect(() => {
-  //   setCurrentUser(user);
-  // }, []);
+  const [userId, setUserId] = useState(null);
 
   // useEffect(() => {
-  //   const tg = window.Telegram.WebApp;
-  //   tg.ready(); // Оповещает Telegram о готовности Web App
-  //   tg.expand();
-  //   // console.log(tg);
-  // }, []);
+  //   if (user) {
+
+  //   }
+  //   console.log(user, currentUser);
+  // }, [user]);
+
+  useEffect(() => {
+    const tg = window.Telegram.WebApp;
+    if (!tg) {
+      console.log("Not in Telegram environment");
+      return;
+    }
+
+    tg.ready();
+
+    if (tg.initDataUnsafe) {
+      const userId = tg.initDataUnsafe.user?.id;
+      if (userId) {
+        console.log("Personal chat with user ID:", userId);
+        setUserId(userId);
+        setCurrentUser(useUserById(userId).data);
+      }
+    }
+    // const user = useUserById(userId).data;
+  }, []);
   const requestLocation = () => {
     const tg = window.Telegram.WebApp;
 
@@ -43,7 +56,6 @@ function App() {
           setCenter([data.latitude, data.longitude]);
           console.log("Location received:", data);
         } else {
-          // Ошибка получения местоположения
           console.log("first");
         }
       });

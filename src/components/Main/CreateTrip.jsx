@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import { createTripByDriver } from "../../api/api";
 import { useMap } from "../../state/MapRoutesStore";
 import { formatDate } from "../../utils/utils";
+import { useUserStore } from "../../state/UserStore";
 export default function CreateTrip() {
   const { tripFrom, tripTo, date, persons, price } = useTrip();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { toggleCalendar, togglePersonModal, togglePrice, toggleSearch, setActiveInput, setIsCreating } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
+  const { currentUser } = useUserStore();
   const [formError, setFormError] = useState("");
 
   function openSearch(value) {
@@ -47,7 +49,7 @@ export default function CreateTrip() {
     e.preventDefault();
     if (tripFrom.name.length > 0 && tripTo.name.length > 0 && date && persons && price) {
       const trip = {
-        driver_id: 1,
+        driver_id: currentUser.driver_profile.id,
         start_address: tripFrom,
         end_address: tripTo,
         departure_time: date,

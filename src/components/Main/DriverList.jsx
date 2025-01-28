@@ -9,9 +9,13 @@ import Profile from "../../UI/Profile/Profile";
 export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
   const { city } = useMap();
+  const hasDriverProfile = currentUser.driver_profile?.id;
   const activeDrives =
-    currentRole == "passenger" ? useTripsList("село Майма") : useDriversTripsList(currentUser.id, "active");
-  console.log(currentRole, activeDrives);
+    currentRole === "passenger"
+      ? useTripsList("село Майма")
+      : hasDriverProfile
+      ? useDriversTripsList(currentUser.driver_profile.id, "active")
+      : null;
   const { toggleDrivers, toggleActiveDrive } = useModal();
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
