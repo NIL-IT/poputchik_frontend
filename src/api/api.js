@@ -4,7 +4,7 @@ import { useUserStore } from "../state/UserStore";
 
 export const API_KEY = "6339ca58-3537-4f94-b069-a82968dfb362";
 
-const url = "http://localhost:8082";
+const url = "https://testingnil8.ru/api";
 
 export async function registration(data, role) {
   const response = await axios({
