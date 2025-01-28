@@ -15,31 +15,28 @@ function App() {
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
 
-  // useEffect(() => {
-  //   if (user) {
-
-  //   }
-  //   console.log(user, currentUser);
-  // }, [user]);
-
   useEffect(() => {
     const tg = window.Telegram.WebApp;
-    if (!tg) {
-      console.log("Not in Telegram environment");
-      return;
-    }
+    if (!tg) return;
 
     tg.ready();
+    tg.expand();
 
-    if (tg.initDataUnsafe) {
-      const userId = tg.initDataUnsafe.user?.id;
-      if (userId) {
-        console.log("Personal chat with user ID:", userId);
-        setUserId(userId);
-        setCurrentUser(useUserById(userId).data);
-      }
+    const userData = tg.initDataUnsafe?.user;
+    if (userData?.id) {
+      setUserId(userData.id);
+      useUserById(userData.id).then((user) => setCurrentUser(user));
     }
-    // const user = useUserById(userId).data;
+
+    tg.WebApp.requestLocation({ can_write: true }, (isAvailable) => {
+      if (isAvailable) {
+        const lat = tg.WebApp.latitude;
+        const lon = tg.WebApp.longitude;
+        setCenter([lat, lon]);
+      } else {
+        console.log("Геолокация недоступна");
+      }
+    });
   }, []);
   const requestLocation = () => {
     const tg = window.Telegram.WebApp;
