@@ -39,7 +39,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   const nameRegex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  async function urlToFile(url) {
+  function urlToFile(url) {
     const blob = url.blob();
     const filename = url.split("/").pop().split("#")[0].split("?")[0];
     return new File([blob], filename, { type: blob.type });
