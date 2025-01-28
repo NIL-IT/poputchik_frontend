@@ -18,8 +18,8 @@ function App() {
   const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-  const login = "1233128012";
-  const { data: user } = useUserById(login);
+  // const login = "1233128012";
+  const { data: user } = useUserById(userId);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
