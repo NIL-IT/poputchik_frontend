@@ -28,15 +28,15 @@ function App() {
       useUserById(userData.id).then((user) => setCurrentUser(user));
     }
 
-    tg.WebApp.requestLocation({ can_write: true }, (isAvailable) => {
-      if (isAvailable) {
-        const lat = tg.WebApp.latitude;
-        const lon = tg.WebApp.longitude;
-        setCenter([lat, lon]);
-      } else {
-        console.log("Геолокация недоступна");
-      }
-    });
+    // tg.WebApp.requestLocation({ can_write: true }, (isAvailable) => {
+    //   if (isAvailable) {
+    //     const lat = tg.WebApp.latitude;
+    //     const lon = tg.WebApp.longitude;
+    //     setCenter([lat, lon]);
+    //   } else {
+    //     console.log("Геолокация недоступна");
+    //   }
+    // });
   }, []);
   const requestLocation = () => {
     const tg = window.Telegram.WebApp;
