@@ -5,7 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import UserPage from "./pages/UserPage";
 import { useEffect, useState } from "react";
 import { useUserStore } from "./state/UserStore";
-import { API_KEY, useUserById } from "./api/api";
+import { API_KEY, getUserById, useUserById } from "./api/api";
 import PreviewPage from "./pages/PreviewPage";
 import MainModals from "./components/Modals/MainModals";
 import { useMap } from "./state/MapRoutesStore";
@@ -14,8 +14,7 @@ function App() {
   const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-  const { data: user } = useUserById(userId); // Хук на верхнем уровне
-
+  const { data: user } = useUserById(userId);
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;

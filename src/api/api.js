@@ -19,7 +19,7 @@ export async function registration(data, role) {
     throw new Error(response.data);
   }
 }
-async function getUserById(id) {
+export async function getUserById(id) {
   return axios.get(`${url}/users/${id}`);
 }
 

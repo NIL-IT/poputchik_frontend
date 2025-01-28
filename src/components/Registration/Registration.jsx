@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
 import Select from "../../UI/Select/Select";
-import { registration, useUserById } from "../../api/api";
+import { getUserById, registration, useUserById } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
@@ -14,16 +14,15 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser } = useUserStore();
+  const queryClient = useQueryClient();
   const { center } = useMap();
   const [userId, setUserId] = useState(null);
   const { data: user } = useUserById(userId);
-
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState(null);
-  const queryClient = useQueryClient();
 
   const [carNumber, setCarNumber] = useState("");
   const [carModel, setCarModel] = useState("");
@@ -38,6 +37,8 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [passportPhoto, setPassportPhoto] = useState("");
   const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState("");
+
+  setCurrentUser(useUserById(userId).data);
 
   const navigate = useNavigate();
   const regex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
@@ -138,16 +139,15 @@ export default function Registration({ backFunc, step, nextStep }) {
 
         try {
           console.log("first");
-          await registration(formData, currentRole);
-          await queryClient.invalidateQueries(["user", userId]);
-
-          // Обновляем Zustander
-          if (user) {
-            setCurrentUser(user);
-          }
-
-          // Перенаправление
-          navigate("/main");
+          await registration(formData, currentRole).then(async () => {
+            const response = await getUserById(userId);
+            const userData = response.data;
+            setCurrentUser(userData);
+            if (user) {
+              setCurrentUser(user);
+            }
+            navigate("/main");
+          });
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
         }
