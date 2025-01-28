@@ -28,10 +28,7 @@ function App() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor("secondary_bg_color");
-    tg.setViewportSettings({
-      is_expanded: true,
-      is_state_stable: true,
-    });
+
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
