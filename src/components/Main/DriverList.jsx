@@ -17,6 +17,7 @@ export default function DriverList({ list, toggleCreating }) {
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : null;
   const { toggleDrivers, toggleActiveDrive } = useModal();
+  console.log(activeDrives);
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
