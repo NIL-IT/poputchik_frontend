@@ -57,7 +57,7 @@ export default function CreateTrip() {
         price: parseInt(price),
         state: "active",
         distance: routeDistance,
-        travelTime: routeDuration,
+        travel_time: routeDuration,
       };
       console.log(JSON.stringify(trip));
 

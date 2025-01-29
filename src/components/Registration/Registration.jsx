@@ -148,6 +148,9 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.get("car_type"),
       );
       await registration(formData, currentRole);
+      if (!currentUser.passenger_profile) {
+        await registration(formData, "passenger");
+      }
       const { data } = await getUserById(userId);
       setCurrentUser(data);
       navigate("/main");
