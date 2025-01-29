@@ -12,7 +12,7 @@ export default function CreateTrip() {
   const { tripFrom, tripTo, date, persons, price } = useTrip();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { toggleCalendar, togglePersonModal, togglePrice, toggleSearch, setActiveInput, setIsCreating } = useModal();
-  const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
+  const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
   const { currentUser } = useUserStore();
   const [formError, setFormError] = useState("");
 
@@ -56,6 +56,8 @@ export default function CreateTrip() {
         seats_available: parseInt(persons),
         price: parseInt(price),
         state: "active",
+        distance: routeDistance,
+        travelTime: routeDuration,
       };
       console.log(JSON.stringify(trip));
 
