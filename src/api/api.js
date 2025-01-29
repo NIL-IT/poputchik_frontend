@@ -22,7 +22,9 @@ export async function registration(data, role) {
 export async function getUserById(id) {
   return axios.get(`${url}/users/${id}`);
 }
-
+export async function getDriverUser(id) {
+  return axios.get(`${url}/users/driver/${id}`);
+}
 export function useUserById(id) {
   const { data } = useQuery({
     queryKey: ["user", id],

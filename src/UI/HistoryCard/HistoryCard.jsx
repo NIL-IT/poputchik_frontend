@@ -1,4 +1,4 @@
-import { useUserById } from "../../api/api";
+import { getDriverUser, getUserById, useUserById } from "../../api/api";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useUserStore } from "../../state/UserStore";
@@ -14,7 +14,8 @@ export default function HistoryCard({ drive }) {
     document.body.classList.add("overflow-y-hidden");
     toggleFeedback(true);
   }
-  const driver = useUserById(drive.driver_id).data;
+  const driver = getDriverUser(drive.driver_id);
+  console.log(driver);
   function chooseDrive(event) {
     if (drive.state == "active" && currentRole == "passenger" && currentUser.passenger_profile) {
       setBookedDrive(drive);
