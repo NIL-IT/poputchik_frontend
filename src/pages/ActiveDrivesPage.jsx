@@ -15,13 +15,13 @@ export default function ActiveDrivesPage() {
       ? useTripsList("село Майма")
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
-      : null;
+      : [];
   console.log(city);
   return (
     <div className='pt-10 relative flex flex-col justify-center items-center'>
       <CloseBtn onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
-      <div className='flex flex-col gap-4 w-full'>
+      <div className='flex flex-col gap-4 w-full items-center justify-center'>
         {activeDrives ? (
           activeDrives.map((obj) => {
             return (
