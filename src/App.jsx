@@ -117,7 +117,7 @@ function App() {
   //   fetchData();
   // }, []);
   return (
-    <div>
+    <div className='container'>
       <Router>
         <Routes>
           <Route

@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 :root {
   font-family: Arial, sans-serif;
   line-height: 1.15;
