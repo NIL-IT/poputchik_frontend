@@ -106,19 +106,24 @@ export default function PeopleList() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
+  console.log(mockDrivers);
   return (
-    <div className='relative pt-10 pb-5 flex flex-col justify-center items-center'>
+    <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>
       <BackButton onClick={() => navigate(-1)} />
-      <h3 className='font-bold text-[20px] leading-5 pb-8 '>Список водителей</h3>
-      <div className='flex flex-col gap-4'>
-        {mockDrivers.map((obj) => {
-          return (
-            <Profile
-              key={obj.id}
-              driver={obj}
-            />
-          );
-        })}
+      <h3 className='font-bold text-[20px] leading-5 pb-8'>Список водителей</h3>
+      <div className='flex flex-col gap-4 w-full justify-center items-center'>
+        {mockDrivers.length > 0 ? (
+          mockDrivers.map((obj) => {
+            return (
+              <Profile
+                key={obj.id}
+                driver={obj}
+              />
+            );
+          })
+        ) : (
+          <>Активных водителей сейчас нет</>
+        )}
       </div>
     </div>
   );
