@@ -1,8 +1,15 @@
+import { useState } from "react";
 import { useUserStore } from "../state/UserStore";
 import Input from "../UI/Input/Input";
+import Select from "../UI/Select/Select";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 
-export default function UserInfo() {
+export default function UserInfo({ isEditable, value, setCity, setPhone, setMail, setProfilePhoto }) {
   const { currentUser } = useUserStore();
+
+  const handleCityChange = (value) => setCity(value);
+  const handlePhoneChange = (value) => setPhone(value);
+
   return (
     <div className='flex flex-col justify-center items-center '>
       <div className='edit flex flex-col justify-center items-center mb-8'>
@@ -12,7 +19,7 @@ export default function UserInfo() {
             className='visually-hidden'
             type='file'
             accept='image/*'
-            disabled
+            disabled={!isEditable}
           />
           <label
             style={{
@@ -32,17 +39,28 @@ export default function UserInfo() {
         <h1 className='font-bold text-[24px] leading-6 pt-6'>{currentUser.name}</h1>
       </div>
       <fieldset className='w-full flex flex-col justify-center items-center gap-5 mb-5'>
-        <Input
-          readOnly
-          value={currentUser.phone_number}
+        <PhoneInput
+          className={`input tel ${value.phone?.length <= 2 ? "grey" : ""}`}
+          placeholder='Номер телефона'
+          value={value.phone}
+          onChange={handlePhoneChange}
+          international
+          defaultCountry='RU'
+          maxLength='16'
+          disabled={!isEditable}
         />
         <Input
-          readOnly
-          value={currentUser.email}
+          type={"email"}
+          readOnly={!isEditable}
+          value={value.mail}
+          onChange={(e) => setMail(e.target.value)}
         />
-        <Input
-          readOnly
-          value={currentUser.city}
+        <Select
+          readOnly={!isEditable}
+          selectedValue={value.city}
+          options={["село Майма", "Горно-Алтайск", "село Манжерок", "село Ая"]}
+          placeholder='Город'
+          onChange={handleCityChange}
         />
       </fieldset>
     </div>

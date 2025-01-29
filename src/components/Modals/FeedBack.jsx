@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useModal } from "../../state/ModalStore";
 import Button from "../../UI/Button/Button";
-
+import { useTrip } from "../../state/TripStore";
+import { createReviewByDriver } from "../../api/api";
 export default function FeedBack() {
   const [grade, setGrade] = useState(-1);
+  const [error, setError] = useState("");
+  const [feedbackText, setFeedbackText] = useState("");
+  const { setFeedbackTarget, feedbackTarget } = useTrip();
   const { toggleFeedback } = useModal();
   function renderReview() {
     switch (grade) {
@@ -25,7 +29,32 @@ export default function FeedBack() {
   function closeFeedback() {
     document.body.classList.remove("overflow-y-hidden");
     toggleFeedback(false);
+    setFeedbackTarget("");
+    console.log("закрылось или отправилось");
   }
+
+  async function postFeedback() {
+    if (grade > 1 && feedbackText.length > 0) {
+      const now = new Date();
+      const isoString = now.toISOString();
+      const feedback = {
+        driver_id: feedbackTarget,
+        rating: grade,
+        comment: feedbackText,
+        created_at: isoString,
+      };
+      console.log(JSON.stringify(feedback));
+
+      try {
+        await createReviewByDriver(feedback).then(() => closeFeedback());
+      } catch (error) {
+        setError(error.message || "Неизвестная ошибка");
+      }
+    } else {
+      setError("Заполните форму");
+    }
+  }
+
   return (
     <div className='absolute bottom-0 flex flex-col items-center w-full h-[70%] bg-white rounded-tl-[24] rounded-tr-[24] z-30 '>
       <div className='relative container-custom pt-[66px] w-full px-5 '>
@@ -70,9 +99,13 @@ export default function FeedBack() {
           className='border border-[#B8B8B8] text-[14px] leading-[19px] min-h-[180px] w-full bg-inherit mt-10 px-2 pt-5'
           name=''
           id=''
-          placeholder='Напишите отзыв'></textarea>
+          placeholder='Напишите отзыв'
+          onChange={(e) => setFeedbackText(e.target.value)}
+          value={feedbackText}></textarea>
       </div>
+      {error && <span className='font-bold text-red-600'>{error}</span>}
       <Button
+        onClick={postFeedback}
         size={"large"}
         classNames={"absolute bottom-4"}>
         Отправить

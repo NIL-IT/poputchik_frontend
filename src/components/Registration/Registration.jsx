@@ -40,7 +40,6 @@ export default function Registration({ backFunc, step, nextStep }) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   async function urlToFile(url) {
-    // Даже если URL строка, данные нужно получить через fetch
     const response = await fetch(url);
     const blob = await response.blob();
     const filename = url.split("/").pop().split(/[#?]/)[0];

@@ -8,7 +8,7 @@ import "./HistoryCard.css";
 import { useMap } from "../../state/MapRoutesStore";
 export default function HistoryCard({ drive }) {
   const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
-  const { setBookedDrive, bookedDrive } = useTrip();
+  const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { currentRole, currentUser } = useUserStore();
   const { setIsRouteEnabled, isRouteEnabled } = useMap();
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ export default function HistoryCard({ drive }) {
     event.stopPropagation();
     window.scrollTo(0, 0);
     document.body.classList.add("overflow-y-hidden");
+    setFeedbackTarget(drive.driver_id);
     toggleFeedback(true);
   }
   const driver = useDriverById(drive.driver_id).data;

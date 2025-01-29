@@ -1,23 +1,49 @@
 import BackButton from "../UI/BackButton";
 import Button from "../UI/Button/Button";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
-import FullScreenList from "../UI/FullScreenList/FullScreenList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
+import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { useModal } from "../state/ModalStore";
 import UserInfo from "../components/UserInfo";
 import FeedBack from "../components/Modals/FeedBack";
+import { getUserById, updateUser, useDriversTripsList, usePassengerTripsList, useUserById } from "../api/api";
 
 export default function UserPage() {
   const navigate = useNavigate();
-  const { changeCurrentRole } = useUserStore();
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const { changeCurrentRole, currentRole, updateCurrentUser, currentUser } = useUserStore();
   const { isFeedBackOpen } = useModal();
 
+  const [profilePhoto, setProfilePhoto] = useState(currentUser.profile_photo);
+  const [phone, setPhone] = useState(currentUser.phone_number);
+  const [mail, setMail] = useState(currentUser.email);
+  const [city, setCity] = useState(currentUser.city);
+  const value = {
+    profilePhoto,
+    phone,
+    mail,
+    city,
+  };
+  const [error, setError] = useState();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [isEditable, setIsEditable] = useState(false);
+
+  const hasDriverProfile = currentUser.driver_profile?.id;
+  const historyList =
+    currentRole === "passenger"
+      ? usePassengerTripsList(currentUser.passenger_profile.id, "finished")
+      : hasDriverProfile
+      ? useDriversTripsList(currentUser.driver_profile.id, "finished")
+      : [];
+
+  const [userId, setUserId] = useState(currentUser.telegram_id);
+
   function toggleHistory() {
-    setIsHistoryOpen((prev) => !prev);
+    navigate("/history");
   }
 
   function toSelectRole() {
@@ -25,21 +51,87 @@ export default function UserPage() {
     changeCurrentRole("");
   }
 
+  async function urlToFile(url) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const filename = url.split("/").pop().split(/[#?]/)[0];
+    return new File([blob], filename, { type: blob.type });
+  }
+
+  function validation() {
+    const errors = {};
+
+    if (!isValidPhoneNumber(phone)) errors.phone = "Неверный формат телефона";
+    if (!mail || !emailRegex.test(mail)) errors.email = "Некорректная почта";
+    return Object.keys(errors).length === 0;
+  }
+
+  async function updateUserData() {
+    const profile_photo = await urlToFile(profilePhoto);
+    const updates = {
+      phone_number: phone,
+      city: city,
+      email: mail,
+      profile_photo: URL.createObjectURL(profile_photo),
+    };
+    updateCurrentUser(updates);
+    console.log(currentUser);
+  }
+
+  async function editHandler() {
+    if (isEditable) {
+      if (phone !== currentUser.phone_number || mail !== currentUser.email || city !== currentUser.city) {
+        if (!validation()) return;
+        const tgId = currentUser.telegram_id;
+        console.log(tgId);
+        const profile_photo = await urlToFile(profilePhoto);
+
+        try {
+          const formData = new FormData();
+          formData.append("telegram_id", tgId);
+          formData.append("phone_number", phone);
+          formData.append("city", city);
+          formData.append("email", mail);
+          formData.append("profile_photo", profile_photo);
+          console.log(formData.get("telegram_id"));
+          await updateUser(formData);
+          updateUserData();
+        } catch (error) {
+          setError({ general: error.message || "Неизвестная ошибка" });
+          console.log(error);
+        }
+      }
+    }
+
+    setIsEditable((prev) => !prev);
+  }
   return (
     <div className=''>
       <div className='container-custom relative'>
         <div className='pt-8 pb-10 px-5 border-b border-[#919191] '>
           <BackButton />
-
-          <UserInfo />
+          <UserInfo
+            isEditable={isEditable}
+            value={value}
+            setCity={setCity}
+            setPhone={setPhone}
+            setMail={setMail}
+            setProfilePhoto={setProfilePhoto}
+          />
           <div className='flex gap-5'>
-            <Button size={"medium"}>Редактировать</Button>
             <Button
-              onClick={toSelectRole}
-              size={"medium"}
-              classNames={"black"}>
-              Выйти
+              onClick={editHandler}
+              size={!isEditable ? "medium" : "large"}>
+              {!isEditable ? "Редактировать" : "Завершить Редактирование"}
             </Button>
+            {!isEditable && (
+              <Button
+                onClick={toSelectRole}
+                size={"medium"}
+                classNames={"black"}>
+                Выйти
+              </Button>
+            )}
           </div>
         </div>
         <div className='p-5'>
@@ -62,24 +154,9 @@ export default function UserPage() {
               </svg>
             </button>
           </div>
-          {/* <HistoryCard drive={mock[0]} /> */}
+          {historyList && <HistoryCard drive={historyList[0]} />}
         </div>
       </div>
-      {/* <FullScreenList
-        isOpen={isHistoryOpen}
-        toggle={toggleHistory}>
-        <h3 className='font-bold text-[20px] leading-5 pb-8'>История поездок</h3>
-        <div className='flex flex-col gap-4 container-custom w-full container-custom px-5'>
-          {mock.map((obj) => {
-            return (
-              <HistoryCard
-                key={obj.id}
-                drive={obj}
-              />
-            );
-          })}
-        </div>
-      </FullScreenList> */}
       {isFeedBackOpen && (
         <>
           <div className='absolute top-0 left-0 backdrop-blur  h-[30%] block w-full blur-sm'></div>

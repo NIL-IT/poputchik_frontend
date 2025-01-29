@@ -32,4 +32,7 @@ export const useTrip = create((set) => ({
 
   bookedDrive: {},
   setBookedDrive: (value) => set({ bookedDrive: value }),
+
+  feedbackTarget: "",
+  setFeedbackTarget: (value) => set({ feedbackTarget: value }),
 }));

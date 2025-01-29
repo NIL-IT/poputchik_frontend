@@ -74,13 +74,13 @@ export async function createTripByDriver(data) {
   }
 }
 
-async function getActiveDrviersTrips(id, state) {
+async function getDrviersTrips(id, state) {
   return axios.get(`${url}/trips/driver/${id}?trip_status=${state}`);
 }
 export function useDriversTripsList(id, state) {
   const { data } = useQuery({
     queryKey: ["tripsList"],
-    queryFn: () => getActiveDrviersTrips(id, state),
+    queryFn: () => getDrviersTrips(id, state),
     select: (data) => data.data,
   });
   return data;
@@ -96,6 +96,46 @@ export async function bookedTripByPassenger(passenger_id, trip_id, seats_to_book
     },
   });
   if (response.status !== 201) {
+    throw new Error(response.data);
+  }
+}
+
+async function getPassengerTrips(id, state) {
+  return axios.get(`${url}/trips/passenger/${id}?trip_status=${state}`);
+}
+export function usePassengerTripsList(id, state) {
+  const { data } = useQuery({
+    queryKey: ["tripsList"],
+    queryFn: () => getPassengerTrips(id, state),
+    select: (data) => data.data,
+  });
+  return data;
+}
+
+export async function createReviewByDriver(data) {
+  const response = await axios({
+    method: "post",
+    url: `${url}/reviews/`,
+    data: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.status !== 201) {
+    throw new Error(response.data);
+  }
+}
+//
+export async function updateUser(data) {
+  const response = await axios({
+    method: "put",
+    url: `${url}/users/update_user`,
+    data: data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  if (response.status !== 200) {
     throw new Error(response.data);
   }
 }

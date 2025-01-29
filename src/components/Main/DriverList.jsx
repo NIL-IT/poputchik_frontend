@@ -15,7 +15,7 @@ export default function DriverList({ list, toggleCreating }) {
   const navigate = useNavigate();
   const activeDrives =
     currentRole === "passenger"
-      ? useTripsList("село Майма")
+      ? useTripsList(currentUser.city)
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : null;

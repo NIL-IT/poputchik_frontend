@@ -6,15 +6,9 @@ export const useUserStore = create((set) => ({
     set({ currentUser: user });
   },
   currentRole: "",
-  changeCurrentUser: () => {},
+  updateCurrentUser: (updates) =>
+    set((state) => ({
+      currentUser: { ...state.currentUser, ...updates },
+    })),
   changeCurrentRole: (role) => set({ currentRole: role }),
 }));
-
-// JSON.parse(localStorage.getItem("currentUser")) || {
-//   name: "Антон Татарченко",
-//   phone: "+132131231",
-//   profile_photo: "https://i.pravatar.cc/150?img=4",
-//   email: "xd@mail.ru",
-//   city: "Новосибирск",
-// }
-// localStorage.setItem("currentUser", JSON.stringify(user));

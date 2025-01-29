@@ -157,7 +157,9 @@ function App() {
             path='/activeDrives'
             element={
               <div className='container-custom'>
-                <ActiveDrivesPage />
+                <ProtectedRoute>
+                  <ActiveDrivesPage />
+                </ProtectedRoute>
               </div>
             }
           />
@@ -165,7 +167,9 @@ function App() {
             path='/history'
             element={
               <div className='container-custom'>
-                <HistoryPage />
+                <ProtectedRoute>
+                  <HistoryPage />
+                </ProtectedRoute>
               </div>
             }
           />
@@ -173,7 +177,9 @@ function App() {
             path='/userReview'
             element={
               <div className='container-custom'>
-                <UserReviews />
+                <ProtectedRoute>
+                  <UserReviews />
+                </ProtectedRoute>
               </div>
             }
           />
@@ -181,7 +187,9 @@ function App() {
             path='/peopleList'
             element={
               <div className='container-custom'>
-                <PeopleList />
+                <ProtectedRoute>
+                  <PeopleList />
+                </ProtectedRoute>
               </div>
             }
           />

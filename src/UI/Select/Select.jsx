@@ -3,7 +3,7 @@ import "../Input/Input.css";
 
 import { useState } from "react";
 
-export default function Select({ selectedValue, options, placeholder, onChange }) {
+export default function Select({ selectedValue, options, placeholder, onChange, readOnly }) {
   return (
     <div className='select-wrapper'>
       <svg
@@ -22,6 +22,7 @@ export default function Select({ selectedValue, options, placeholder, onChange }
         />
       </svg>
       <select
+        disabled={readOnly}
         className={`input select ${selectedValue === "" ? "select-placeholder" : "select-option"}`}
         value={selectedValue}
         onChange={(e) => onChange(e.target.value)}
