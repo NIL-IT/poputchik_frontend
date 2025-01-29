@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { bookedTripByPassenger, useUserById } from "../../api/api";
+import { bookedTripByPassenger, useDriverById, useUserById } from "../../api/api";
 import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -12,7 +12,7 @@ export default function DriveInfo() {
   const { bookedDrive } = useTrip();
   const { toggleBookedModal } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
-  const driver = useUserById(bookedDrive.driver_id).data;
+  const driver = useDriverById(bookedDrive.driver_id).data;
 
   const startCoordinates = bookedDrive.start_address.coordinates;
   const endCoordinates = bookedDrive.end_address.coordinates;
@@ -152,11 +152,11 @@ export default function DriveInfo() {
           <div className='flex justify-between w-full font-bold text-[16px] leading-[18.4px] text-[#242E42]'>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Дистанция</span>
-              <span>{routeDistance}</span>
+              <span>{bookedDrive.distance}</span>
             </div>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Время</span>
-              <span>{routeDuration}</span>
+              <span>{bookedDrive.travel_time}</span>
             </div>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Цена</span>

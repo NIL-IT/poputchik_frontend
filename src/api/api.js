@@ -25,6 +25,18 @@ export async function getUserById(id) {
 export async function getDriverUser(id) {
   return axios.get(`${url}/users/driver/${id}`);
 }
+
+export function useDriverById(id) {
+  const { data } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => (id ? getDriverUser(id) : null),
+    enabled: !!id,
+    select: (data) => data.data,
+  });
+
+  return { data };
+}
+
 export function useUserById(id) {
   const { data } = useQuery({
     queryKey: ["user", id],

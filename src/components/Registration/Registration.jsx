@@ -149,7 +149,7 @@ export default function Registration({ backFunc, step, nextStep }) {
       );
       await registration(formData, currentRole);
       setCurrentUser(data);
-      if (!currentUser.passenger_profile) {
+      if (currentRole == "driver") {
         await registration(formData, "passenger");
       }
       const { data } = await getUserById(userId);

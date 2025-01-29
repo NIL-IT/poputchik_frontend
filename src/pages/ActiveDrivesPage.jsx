@@ -12,21 +12,21 @@ export default function ActiveDrivesPage() {
   const hasDriverProfile = currentUser.driver_profile?.id;
   const activeDrives =
     currentRole === "passenger"
-      ? useTripsList(city)
+      ? useTripsList("село Майма")
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : null;
-  console.log(activeDrives);
+  console.log(city);
   return (
     <div className='pt-10 relative flex flex-col justify-center items-center'>
       <CloseBtn onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
       <div className='flex flex-col gap-4 w-full'>
-        {activeDrives.length > 0 ? (
+        {activeDrives ? (
           activeDrives.map((obj) => {
             return (
               <div key={obj.id}>
-                <HistoryCard drive={obj} />1
+                <HistoryCard drive={obj} />
               </div>
             );
           })

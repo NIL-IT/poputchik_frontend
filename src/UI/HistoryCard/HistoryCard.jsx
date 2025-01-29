@@ -1,4 +1,5 @@
-import { getDriverUser, getUserById, useUserById } from "../../api/api";
+import { useNavigate } from "react-router-dom";
+import { getDriverUser, getUserById, useDriverById, useUserById } from "../../api/api";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useUserStore } from "../../state/UserStore";
@@ -8,30 +9,31 @@ export default function HistoryCard({ drive }) {
   const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
   const { setBookedDrive, bookedDrive } = useTrip();
   const { currentRole, currentUser } = useUserStore();
+  const navigate = useNavigate();
   function openFeedback(event) {
     event.stopPropagation();
     window.scrollTo(0, 0);
     document.body.classList.add("overflow-y-hidden");
     toggleFeedback(true);
   }
-  const driver = getDriverUser(drive.driver_id);
-  console.log(driver);
+  const driver = useDriverById(drive.driver_id).data;
+
   function chooseDrive(event) {
-    if (drive.state == "active" && currentRole == "passenger" && currentUser.passenger_profile) {
+    event.stopPropagation();
+    if (drive.state == "active" && currentRole == "passenger" && !!currentUser.passenger_profile) {
       setBookedDrive(drive);
       toggleActiveDrive(false);
       toggleBookedModal(true);
-      event.stopPropagation();
+      navigate("/main");
     }
   }
-
   if (!drive || !driver) {
     return null;
   }
   return (
     <div
       className='history'
-      onClick={() => chooseDrive()}>
+      onClick={(e) => chooseDrive(e)}>
       <div className='history-wrapper'>
         <div className='history-path'>
           <span className='history-from'>{drive.start_address.name}</span>
