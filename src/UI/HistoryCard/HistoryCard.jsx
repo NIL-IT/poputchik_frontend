@@ -5,10 +5,12 @@ import { useTrip } from "../../state/TripStore";
 import { useUserStore } from "../../state/UserStore";
 import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
+import { useMap } from "../../state/MapRoutesStore";
 export default function HistoryCard({ drive }) {
   const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
   const { setBookedDrive, bookedDrive } = useTrip();
   const { currentRole, currentUser } = useUserStore();
+  const { setIsRouteEnabled, isRouteEnabled } = useMap();
   const navigate = useNavigate();
   function openFeedback(event) {
     event.stopPropagation();
@@ -25,6 +27,8 @@ export default function HistoryCard({ drive }) {
       toggleActiveDrive(false);
       toggleBookedModal(true);
       navigate("/main");
+      console.log(isRouteEnabled);
+      setIsRouteEnabled(true);
     }
   }
   if (!drive || !driver) {

@@ -18,7 +18,6 @@ function App() {
   const { setCurrentUser, currentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-  // const login = "1662316939";
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -77,7 +76,6 @@ function App() {
       const success = await requestLocation();
       if (success) {
         await getCityByCoordinates();
-        setCity();
       }
     };
 

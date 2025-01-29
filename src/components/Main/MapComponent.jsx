@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { YMaps, Map } from "@pbe/react-yandex-maps";
 import { API_KEY } from "../../api/api";
 import { useMap } from "../../state/MapRoutesStore";
@@ -7,6 +7,7 @@ const MapComponent = () => {
   const mapRef = useRef(null);
   const ymapsRef = useRef(null);
   const { center, startPoint, endPoint, isRouteEnabled, setRouteDistance, setRouteDuration } = useMap();
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const defaultZoom = 13;
 
   const mapState = {
@@ -22,6 +23,7 @@ const MapComponent = () => {
   };
 
   const buildRoute = async (ymaps) => {
+    if (!mapRef.current || !startPoint || !endPoint) return;
     if (startPoint && endPoint && mapRef.current) {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
         {
@@ -45,14 +47,17 @@ const MapComponent = () => {
   };
 
   useEffect(() => {
-    if (isRouteEnabled && ymapsRef.current) {
+    console.log(isRouteEnabled, ymapsRef.current);
+    if (isRouteEnabled && ymapsRef.current && startPoint && endPoint) {
+      console.log("Building route...");
       buildRoute(ymapsRef.current);
     } else if (!isRouteEnabled && ymapsRef.current) {
-      mapRef.current.geoObjects.removeAll();
+      console.log("Clearing route...");
+      mapRef.current?.geoObjects.removeAll();
       setRouteDistance(null);
       setRouteDuration(null);
     }
-  }, [isRouteEnabled, startPoint, endPoint]);
+  }, [isRouteEnabled, startPoint, endPoint, isMapLoaded]);
 
   useEffect(() => {
     moveToCoordinates(center);
@@ -67,6 +72,7 @@ const MapComponent = () => {
           height='100%'
           onLoad={(ymaps) => {
             ymapsRef.current = ymaps;
+            setIsMapLoaded(true);
           }}
           instanceRef={(map) => {
             mapRef.current = map;

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { bookedTripByPassenger, useDriverById, useUserById } from "../../api/api";
+import { bookedTripByPassenger, useDriverById } from "../../api/api";
 import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -11,11 +11,8 @@ export default function DriveInfo() {
   const { currentUser } = useUserStore();
   const { bookedDrive } = useTrip();
   const { toggleBookedModal } = useModal();
-  const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
+  const { setIsRouteEnabled, isRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const driver = useDriverById(bookedDrive.driver_id).data;
-
-  const startCoordinates = bookedDrive.start_address.coordinates;
-  const endCoordinates = bookedDrive.end_address.coordinates;
 
   function bookingByPassenger(e) {
     e.preventDefault();
@@ -25,10 +22,21 @@ export default function DriveInfo() {
   }
 
   useEffect(() => {
-    setStartPoint([startCoordinates.latitude, startCoordinates.longitude]);
-    setEndPoint([endCoordinates.latitude, endCoordinates.longitude]);
+    if (!bookedDrive || !bookedDrive.start_address || !bookedDrive.end_address) return;
 
+    const start = bookedDrive.start_address.coordinates;
+    const end = bookedDrive.end_address.coordinates;
+
+    setStartPoint([start.latitude, start.longitude]);
+    setEndPoint([end.latitude, end.longitude]);
     setIsRouteEnabled(true);
+  }, [bookedDrive]);
+  useEffect(() => {
+    return () => {
+      setIsRouteEnabled(false);
+      setStartPoint(null);
+      setEndPoint(null);
+    };
   }, []);
   return (
     <Footer className={"bg-[#f6f6f6] w-full z-10 flex flex-col items-center "}>

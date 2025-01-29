@@ -12,7 +12,7 @@ export default function ActiveDrivesPage() {
   const hasDriverProfile = currentUser.driver_profile?.id;
   const activeDrives =
     currentRole === "passenger"
-      ? useTripsList("село Майма")
+      ? useTripsList(currentUser.city)
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : [];
