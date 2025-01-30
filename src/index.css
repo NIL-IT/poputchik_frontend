@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-body::-webkit-scrollbar {
+html::-webkit-scrollbar {
   width: 0;
   background: transparent;
 }
 
-body::-webkit-scrollbar-horizontal {
+html::-webkit-scrollbar-horizontal {
   height: 0;
   background: transparent;
 }
