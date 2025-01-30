@@ -9,14 +9,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { useModal } from "../state/ModalStore";
 import UserInfo from "../components/UserInfo";
 import FeedBack from "../components/Modals/FeedBack";
-import {
-  getUserById,
-  updateUser,
-  urlToFile,
-  useDriversTripsList,
-  usePassengerTripsList,
-  useUserById,
-} from "../api/api";
+import { updateUser, urlToFile, useDriversTripsList, usePassengerTripsList } from "../api/api";
 
 export default function UserPage() {
   const navigate = useNavigate();
@@ -52,6 +45,20 @@ export default function UserPage() {
   function toggleHistory() {
     navigate("/history");
   }
+
+  useEffect(() => {
+    const tg = window.Telegram.WebApp;
+    if (!tg) return;
+
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor("secondary_bg_color");
+
+    const userData = tg.initDataUnsafe?.user;
+    if (userData?.id) {
+      setUserId(userData.id);
+    }
+  }, []);
 
   function toSelectRole() {
     navigate("/");
