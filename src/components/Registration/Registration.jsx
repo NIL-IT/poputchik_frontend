@@ -147,11 +147,12 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.get("car_type"),
       );
       await registration(formData, currentRole);
-      setCurrentUser(data);
       if (currentRole == "driver") {
         await registration(formData, "passenger");
       }
       const { data } = await getUserById(userId);
+      setCurrentUser(data);
+
       navigate("/main");
     } catch (error) {
       setFormError({ general: error.message || "Неизвестная ошибка" });
