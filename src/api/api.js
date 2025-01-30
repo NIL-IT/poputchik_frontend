@@ -121,7 +121,7 @@ export async function createReviewByDriver(data) {
       "Content-Type": "application/json",
     },
   });
-  if (response.status !== 201) {
+  if (response.status !== 200) {
     throw new Error(response.data);
   }
 }
