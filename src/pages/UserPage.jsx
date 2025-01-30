@@ -46,20 +46,6 @@ export default function UserPage() {
     navigate("/history");
   }
 
-  useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    if (!tg) return;
-
-    tg.ready();
-    tg.expand();
-    tg.setHeaderColor("secondary_bg_color");
-
-    const userData = tg.initDataUnsafe?.user;
-    if (userData?.id) {
-      setUserId(userData.id);
-    }
-  }, []);
-
   function toSelectRole() {
     navigate("/");
     changeCurrentRole("");

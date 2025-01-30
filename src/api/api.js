@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useUserStore } from "../state/UserStore";
 
 export const API_KEY = "6339ca58-3537-4f94-b069-a82968dfb362";
 
@@ -19,6 +18,7 @@ export async function registration(data, role) {
     throw new Error(response.data);
   }
 }
+
 export async function getUserById(id) {
   return axios.get(`${url}/users/${id}`);
 }
@@ -125,7 +125,7 @@ export async function createReviewByDriver(data) {
     throw new Error(response.data);
   }
 }
-//
+
 export async function updateUser(data) {
   const response = await axios({
     method: "put",
