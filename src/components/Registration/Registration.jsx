@@ -131,7 +131,7 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.append("car_type", carType);
       }
       await registration(formData, currentRole);
-      if (currentRole == "driver") {
+      if (currentRole == "driver" && !currentUser.passenger_profile) {
         await registration(formData, "passenger");
       }
       const { data } = await getUserById(userId);
