@@ -139,3 +139,10 @@ export async function updateUser(data) {
     throw new Error(response.data);
   }
 }
+
+export async function urlToFile(url) {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const filename = url.split("/").pop().split(/[#?]/)[0];
+  return new File([blob], filename, { type: blob.type });
+}

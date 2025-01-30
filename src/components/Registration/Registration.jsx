@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
 import Select from "../../UI/Select/Select";
-import { getUserById, registration, useUserById } from "../../api/api";
+import { getUserById, registration, urlToFile, useUserById } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
@@ -38,13 +38,6 @@ export default function Registration({ backFunc, step, nextStep }) {
   const navigate = useNavigate();
   const nameRegex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  async function urlToFile(url) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const filename = url.split("/").pop().split(/[#?]/)[0];
-    return new File([blob], filename, { type: blob.type });
-  }
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -137,15 +130,6 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.append("car_color", carColor);
         formData.append("car_type", carType);
       }
-      console.log(
-        formData.get("passport_photo"),
-        formData.get("driver_license"),
-        formData.get("car_number"),
-        formData.get("car_model"),
-        formData.get("car_make"),
-        formData.get("car_color"),
-        formData.get("car_type"),
-      );
       await registration(formData, currentRole);
       if (currentRole == "driver") {
         await registration(formData, "passenger");

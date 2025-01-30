@@ -9,7 +9,14 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { useModal } from "../state/ModalStore";
 import UserInfo from "../components/UserInfo";
 import FeedBack from "../components/Modals/FeedBack";
-import { getUserById, updateUser, useDriversTripsList, usePassengerTripsList, useUserById } from "../api/api";
+import {
+  getUserById,
+  updateUser,
+  urlToFile,
+  useDriversTripsList,
+  usePassengerTripsList,
+  useUserById,
+} from "../api/api";
 
 export default function UserPage() {
   const navigate = useNavigate();
@@ -49,13 +56,6 @@ export default function UserPage() {
   function toSelectRole() {
     navigate("/");
     changeCurrentRole("");
-  }
-
-  async function urlToFile(url) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const filename = url.split("/").pop().split(/[#?]/)[0];
-    return new File([blob], filename, { type: blob.type });
   }
 
   function validation() {
