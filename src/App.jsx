@@ -26,12 +26,20 @@ function App() {
 
     tg.ready();
     tg.expand();
-    // tg.setHeaderColor("");
-    console.log(tg.isFullscreen);
+    tg.setHeaderColor("secondary_bg_color");
+
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
     }
+    tg.onEvent("viewportChanged", () => {
+      console.log("Viewport changed:", tg.isFullScreen());
+    });
+
+    if (!tg.isFullScreen()) {
+      tg.expand();
+    }
+    console.log(tg.isExpanded);
   }, []);
 
   useEffect(() => {
