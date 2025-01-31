@@ -27,19 +27,11 @@ function App() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor("secondary_bg_color");
-
+    tg.hide();
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
     }
-    tg.onEvent("viewportChanged", () => {
-      console.log("Viewport changed:", tg.isFullScreen());
-    });
-
-    if (!tg.isFullScreen()) {
-      tg.expand();
-    }
-    console.log(tg.isExpanded);
   }, []);
 
   useEffect(() => {
