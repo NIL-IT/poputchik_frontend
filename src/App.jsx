@@ -27,11 +27,14 @@ function App() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor("secondary_bg_color");
-    tg.hide();
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
     }
+    console.log("SafeArea:", tg.safeArea);
+    console.log("ContentSafeArea:", tg.contentSafeArea);
+    console.log("Viewport:", tg.viewport);
+    console.log("IsExpanded:", tg.isExpanded);
   }, []);
 
   useEffect(() => {
