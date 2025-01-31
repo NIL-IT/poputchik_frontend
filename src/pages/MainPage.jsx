@@ -8,6 +8,8 @@ import SearchComponent from "../components/Main/SearchComponent";
 import MapComponent from "../components/Main/MapComponent";
 import { useTrip } from "../state/TripStore";
 import { useMap } from "../state/MapRoutesStore";
+import { useUserStore } from "../state/UserStore";
+import { useDriverByCity } from "../api/api";
 
 export default function MainPage() {
   const mock = [
@@ -115,6 +117,9 @@ export default function MainPage() {
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
+  const { currentUser } = useUserStore();
+  const driverList = useDriverByCity(currentUser.city);
+
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -143,7 +148,7 @@ export default function MainPage() {
     setStartPoint([]);
     setEndPoint([]);
   }
-  const nerbiest = mock.slice(0, 2);
+  const nerbiest = driverList && driverList.slice(0, 2);
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
@@ -156,7 +161,7 @@ export default function MainPage() {
     } else {
       return (
         <DriverList
-          list={nerbiest}
+          list={driverList ? nerbiest : []}
           toggleCreating={toggleCreating}
           isCreating={isCreating}
         />

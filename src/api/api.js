@@ -146,3 +146,19 @@ export async function urlToFile(url) {
   const filename = url.split("/").pop().split(/[#?]/)[0];
   return new File([blob], filename, { type: blob.type });
 }
+
+async function getDriverByCity(city) {
+  return axios.get(`${url}/users/driver_city/${city}`);
+}
+export function useDriverByCity(city) {
+  const { data } = useQuery({
+    queryKey: ["driverCityList"],
+    queryFn: () => getDriverByCity(city),
+    select: (data) => data.data,
+  });
+  return data;
+}
+
+export async function getReviewsByDriverId(driver_id) {
+  return axios.get(`${url}/reviews/driver/${driver_id}`);
+}
