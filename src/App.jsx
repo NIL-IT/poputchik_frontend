@@ -26,18 +26,17 @@ function App() {
 
     tg.ready();
     tg.expand();
-    tg.setHeaderColor("secondary_bg_color");
+    tg.disableHeader();
 
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
     }
-    const handleVisibilityChange = () => {
-      document.visibilityState === "visible" && tg.expand();
-    };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    tg.onEvent("viewportChanged", () => {
+      tg.expand();
+      tg.disableHeader();
+    });
   }, []);
 
   useEffect(() => {
