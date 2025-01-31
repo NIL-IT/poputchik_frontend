@@ -26,17 +26,31 @@ function App() {
 
     tg.ready();
     tg.expand();
-    tg.disableHeader();
 
-    const userData = tg.initDataUnsafe?.user;
-    if (userData?.id) {
-      setUserId(userData.id);
+    tg.setBackgroundColor("#ffffff");
+    tg.setHeaderColor("secondary_bg_color");
+
+    if (typeof tg.hideHeader === "function") {
+      tg.hideHeader();
+    } else {
+      tg.setHeaderColor("secondary_bg_color");
+      document.documentElement.style.paddingTop = "0";
     }
 
-    tg.onEvent("viewportChanged", () => {
-      tg.expand();
-      tg.disableHeader();
-    });
+    const forceHideHeader = () => {
+      const headerElements = document.querySelectorAll(".tg-head, .tg-header");
+      headerElements.forEach((el) => (el.style.display = "none"));
+    };
+
+    forceHideHeader();
+    tg.onEvent("viewportChanged", forceHideHeader);
+
+    const userData = tg.initDataUnsafe?.user;
+    userData?.id && setUserId(userData.id);
+
+    return () => {
+      tg.offEvent("viewportChanged", forceHideHeader);
+    };
   }, []);
 
   useEffect(() => {
