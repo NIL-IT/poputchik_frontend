@@ -13,7 +13,6 @@ import HistoryPage from "./pages/HistoryPage";
 import ActiveDrivesPage from "./pages/ActiveDrivesPage";
 import UserReviews from "./pages/UserReviews";
 import PeopleList from "./pages/PeopleList";
-import CustomHeader from "./UI/CustomHeader/CustomHeader";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -28,6 +27,9 @@ function App() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor("secondary_bg_color");
+    if (tg.requestViewport) {
+      tg.requestViewport({ height: window.innerHeight, width: window.innerWidth });
+    }
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
       setUserId(userData.id);
@@ -118,7 +120,6 @@ function App() {
   // }, []);
   return (
     <div className='container'>
-      <CustomHeader />
       <Router>
         <Routes>
           <Route
