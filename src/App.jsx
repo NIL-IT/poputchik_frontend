@@ -26,31 +26,12 @@ function App() {
 
     tg.ready();
     tg.expand();
-
-    tg.setBackgroundColor("#ffffff");
-    tg.setHeaderColor("secondary_bg_color");
-
-    if (typeof tg.hideHeader === "function") {
-      tg.hideHeader();
-    } else {
-      tg.setHeaderColor("secondary_bg_color");
-      document.documentElement.style.paddingTop = "0";
-    }
-
-    const forceHideHeader = () => {
-      const headerElements = document.querySelectorAll(".tg-head, .tg-header");
-      headerElements.forEach((el) => (el.style.display = "none"));
-    };
-
-    forceHideHeader();
-    tg.onEvent("viewportChanged", forceHideHeader);
-
+    // tg.setHeaderColor("");
+    console.log(tg.isFullscreen);
     const userData = tg.initDataUnsafe?.user;
-    userData?.id && setUserId(userData.id);
-
-    return () => {
-      tg.offEvent("viewportChanged", forceHideHeader);
-    };
+    if (userData?.id) {
+      setUserId(userData.id);
+    }
   }, []);
 
   useEffect(() => {
