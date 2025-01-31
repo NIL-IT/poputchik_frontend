@@ -5,7 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import UserPage from "./pages/UserPage";
 import { useEffect, useState } from "react";
 import { useUserStore } from "./state/UserStore";
-import { API_KEY, getUserById, useUserById } from "./api/api";
+import { API_KEY, useUserById } from "./api/api";
 import PreviewPage from "./pages/PreviewPage";
 import MainModals from "./components/Modals/MainModals";
 import { useMap } from "./state/MapRoutesStore";
@@ -13,9 +13,10 @@ import HistoryPage from "./pages/HistoryPage";
 import ActiveDrivesPage from "./pages/ActiveDrivesPage";
 import UserReviews from "./pages/UserReviews";
 import PeopleList from "./pages/PeopleList";
+import CustomHeader from "./UI/CustomHeader/CustomHeader";
 
 function App() {
-  const { setCurrentUser, currentUser } = useUserStore();
+  const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
   const { data: user } = useUserById(userId);
@@ -31,10 +32,6 @@ function App() {
     if (userData?.id) {
       setUserId(userData.id);
     }
-    console.log("SafeArea:", tg.safeArea);
-    console.log("ContentSafeArea:", tg.contentSafeArea);
-    console.log("Viewport:", tg.viewport);
-    console.log("IsExpanded:", tg.isExpanded);
   }, []);
 
   useEffect(() => {
@@ -121,6 +118,7 @@ function App() {
   // }, []);
   return (
     <div className='container'>
+      <CustomHeader />
       <Router>
         <Routes>
           <Route
