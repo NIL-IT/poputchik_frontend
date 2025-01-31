@@ -26,7 +26,7 @@ function App() {
 
     tg.ready();
     tg.expand();
-    tg.setHeaderColor("transparent");
+    tg.setHeaderColor("secondary_bg_color");
 
     const userData = tg.initDataUnsafe?.user;
     if (userData?.id) {
