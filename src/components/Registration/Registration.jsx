@@ -121,6 +121,7 @@ export default function Registration({ backFunc, step, nextStep }) {
       formData.append("city", city);
       formData.append("email", email);
       formData.append("profile_photo", avatar);
+      formData.append("register_date", new Date().toISOString());
       if (currentRole === "driver") {
         formData.append("passport_photo", passportPhoto);
         formData.append("driver_license", driverLicensePhoto);
