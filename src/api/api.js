@@ -147,13 +147,13 @@ export async function urlToFile(url) {
   return new File([blob], filename, { type: blob.type });
 }
 
-async function getDriverByCity(city) {
-  return axios.get(`${url}/users/driver_city/${city}`);
+async function getPassengerByDriver(driver_id) {
+  return axios.get(`${url}/users/trip_passengers/${driver_id}`);
 }
-export function useDriverByCity(city) {
+export function usePassengerList(driver_id) {
   const { data } = useQuery({
-    queryKey: ["driverCityList"],
-    queryFn: () => getDriverByCity(city),
+    queryKey: ["passengerList"],
+    queryFn: () => getPassengerByDriver(driver_id),
     select: (data) => data.data,
   });
   return data;

@@ -258,3 +258,7 @@ body {
   box-shadow: none !important;
   background-color: none !important;
 }
+
+.balance-bg {
+  background: linear-gradient(103.17deg, #ef7828 3.53%, #ff990b 95.87%);
+}

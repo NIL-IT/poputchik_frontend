@@ -78,7 +78,7 @@ function CalendarComponent() {
   const handleDayClick = (day, monthIndex) => {
     const date = new Date(2025, monthIndex, day);
     setTripDate(date.toISOString());
-    setStep(1);
+    // setStep(1);
   };
   const handleTimeSubmit = () => {
     if (!tripDate) {
@@ -129,7 +129,7 @@ function CalendarComponent() {
               </div>
             </div>
           ))}
-        {step === 1 && (
+        {/* {step === 1 && (
           <div className=' flex justify-between flex-col '>
             <div className='flex justify-center items-center gap-4 mb-5'>
               <input
@@ -157,7 +157,7 @@ function CalendarComponent() {
               Подтвердить время
             </Button>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

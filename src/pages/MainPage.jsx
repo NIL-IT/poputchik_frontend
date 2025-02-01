@@ -9,7 +9,7 @@ import MapComponent from "../components/Main/MapComponent";
 import { useTrip } from "../state/TripStore";
 import { useMap } from "../state/MapRoutesStore";
 import { useUserStore } from "../state/UserStore";
-import { useDriverByCity } from "../api/api";
+import { usePassengerList } from "../api/api";
 
 export default function MainPage() {
   const mock = [
@@ -118,8 +118,8 @@ export default function MainPage() {
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const { currentUser } = useUserStore();
-  const driverList = useDriverByCity(currentUser.city);
-
+  const driverList = usePassengerList(currentUser.driver_profile.id);
+  console.log(driverList);
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -160,6 +160,7 @@ export default function MainPage() {
       return <DriveInfo />;
     } else {
       return (
+        //
         <DriverList
           list={driverList ? nerbiest : []}
           toggleCreating={toggleCreating}

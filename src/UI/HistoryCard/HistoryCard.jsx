@@ -35,6 +35,7 @@ export default function HistoryCard({ drive }) {
   if (!drive || !driver) {
     return null;
   }
+  console.log();
   return (
     <div
       className='history'
@@ -47,10 +48,10 @@ export default function HistoryCard({ drive }) {
         <div className='history-info'>
           <div className='history-date'>{formatDate(drive.departure_time)}</div>
           <div className='history-driver'>
-            <div className='history-rating'>123</div>
+            <div className='history-rating'>{driver.rating}</div>
             <img
               className='history-img'
-              src={driver.profile_photo}
+              src={driver.user.profile_photo}
             />
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
 import FeedBack from "./FeedBack";
+import FeedbackSummary from "./FeedbackSummary";
 
 export default function MainModals() {
   const mockDrivers = [
@@ -108,13 +109,12 @@ export default function MainModals() {
       comments: ["В целом хорошо.", "Небольшие недочеты."],
     },
   ];
-  const { isDriversOpen, toggleDrivers } = useModal();
+
   const { isCalendarOpen, toggleCalendar } = useModal();
   const { isPriceOpen, togglePrice } = useModal();
   const { persons, increaseTripPerson, decreaseTripPerson, price, setTripPrice, bookedDrive } = useTrip();
   const { isPersonOpen, togglePersonModal } = useModal();
-  const { isActiveDrivesOpen, toggleActiveDrive, isFeedBackOpen, toggleFeedback, isProfileOpen, bookedModal } =
-    useModal();
+  const { isFeedBackOpen, toggleFeedback, bookedModal, isFeedbackSummaryOpen, setIsFeedbackSummaryOpen } = useModal();
   function CloseCalendar() {
     toggleCalendar(false);
   }
@@ -122,6 +122,11 @@ export default function MainModals() {
   function closeFeedback() {
     document.body.classList.remove("overflow-y-hidden");
     toggleFeedback(false);
+  }
+
+  function closeFeedbackSumamry() {
+    document.body.classList.remove("overflow-y-hidden");
+    setIsFeedbackSummaryOpen(false);
   }
 
   return (
@@ -215,9 +220,6 @@ export default function MainModals() {
 
       {isFeedBackOpen && (
         <>
-          <div
-            className='absolute top-0 left-0 backdrop-blur  h-[30%] block w-full blur-sm z-30'
-            onClick={() => closeFeedback()}></div>
           <FeedBack />
         </>
       )}

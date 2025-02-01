@@ -1,13 +1,13 @@
 import Profile from "../UI/Profile/Profile";
 import BackButton from "../UI/BackButton";
 import { useNavigate } from "react-router-dom";
-import { useDriverByCity } from "../api/api";
 import { useUserStore } from "../state/UserStore";
+import { usePassengerList } from "../api/api";
 
 export default function PeopleList() {
   const navigate = useNavigate();
   const { currentUser } = useUserStore();
-  const driverList = useDriverByCity(currentUser.city);
+  const driverList = usePassengerList(currentUser.driver_profile.id);
   console.log(driverList);
   return (
     <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>

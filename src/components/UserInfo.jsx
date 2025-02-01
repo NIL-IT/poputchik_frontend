@@ -5,7 +5,7 @@ import Select from "../UI/Select/Select";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 
 export default function UserInfo({ isEditable, value, setCity, setPhone, setMail, setProfilePhoto }) {
-  const { currentUser } = useUserStore();
+  const { currentUser, currentRole } = useUserStore();
 
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
@@ -38,6 +38,14 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
         </div>
         <h1 className='font-bold text-[24px] leading-6 pt-6'>{currentUser.name}</h1>
       </div>
+      {currentRole === "driver" && (
+        <div className='w-full balance-bg py-8 rounded-[10px] mb-10'>
+          <h3 className='pb-7  text-[32px] leading-8 text-white'>Баланс, ₽</h3>
+          <button className='rounded-[20px] bg-white font-bold text-[16px] text-black px-10 py-4'>
+            Вывести средства
+          </button>
+        </div>
+      )}
       <fieldset className='w-full flex flex-col justify-center items-center gap-5 mb-5'>
         <PhoneInput
           className={`input tel ${value.phone?.length <= 2 ? "grey" : ""}`}

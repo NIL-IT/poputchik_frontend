@@ -10,23 +10,14 @@ export const useModal = create((set) => ({
   isPersonOpen: false,
   togglePersonModal: (state) => set({ isPersonOpen: state }),
 
-  isDriversOpen: false,
-  toggleDrivers: (state) => set({ isDriversOpen: state }),
-
   isSearchOpen: false,
   toggleSearch: (state) => set({ isSearchOpen: state }),
-  isActiveDrivesOpen: false,
-
-  toggleActiveDrive: (state) => set({ isActiveDrivesOpen: state }),
 
   activeInput: "",
   setActiveInput: (value) => set({ activeInput: value }),
 
   isFeedBackOpen: false,
   toggleFeedback: (value) => set({ isFeedBackOpen: value }),
-
-  isProfileOpen: false,
-  toggleProfile: (value) => set({ isProfileOpen: value }),
 
   selectedDriver: {},
   setSelectedDriver: (value) => set({ selectedDriver: value }),
@@ -36,4 +27,7 @@ export const useModal = create((set) => ({
 
   isCreating: false,
   setIsCreating: (value) => set({ isCreating: value }),
+
+  isFeedbackSummaryOpen: true,
+  setIsFeedbackSummaryOpen: (value) => set({ isFeedbackSummaryOpen: value }),
 }));
