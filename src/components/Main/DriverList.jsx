@@ -23,7 +23,7 @@ export default function DriverList({ list, toggleCreating }) {
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
-        Список {currentRole === "passenger" ? "водителей" : "попутчиков"}
+        Список {currentRole === "passenger" ? "водителей" : "пассажиров"}
       </h2>
       <div className='flex flex-col items-center justify-center gap-4 pb-4'>
         {list.map((obj) => {

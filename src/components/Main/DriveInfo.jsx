@@ -12,7 +12,9 @@ export default function DriveInfo() {
   const { bookedDrive } = useTrip();
   const { toggleBookedModal } = useModal();
   const { setIsRouteEnabled, isRouteEnabled, setStartPoint, setEndPoint } = useMap();
-  const driver = useDriverById(bookedDrive.driver_id).data;
+  const data = useDriverById(bookedDrive.driver_id).data;
+  const driver = data.user;
+  const rating = data.rating;
 
   function bookingByPassenger(e) {
     e.preventDefault();
@@ -38,6 +40,7 @@ export default function DriveInfo() {
       setEndPoint(null);
     };
   }, []);
+  console.log(driver);
   return (
     <Footer className={"bg-[#f6f6f6] w-full z-10 flex flex-col items-center "}>
       <div className=''>
@@ -50,7 +53,7 @@ export default function DriveInfo() {
             <div className='text-[#343B71] font-medium text-[17px] leading-5'>
               <h3 className='pb-3  '>{driver.name}</h3>
               <div className=''>
-                <p className='profile-stars'>123</p>
+                <p className='profile-stars'>{rating}</p>
               </div>
             </div>
           </div>

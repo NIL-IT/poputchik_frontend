@@ -7,7 +7,7 @@ import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
 import { useMap } from "../../state/MapRoutesStore";
 export default function HistoryCard({ drive }) {
-  const { toggleFeedback, toggleActiveDrive, toggleBookedModal } = useModal();
+  const { toggleFeedback, toggleBookedModal } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { currentRole, currentUser } = useUserStore();
   const { setIsRouteEnabled, isRouteEnabled } = useMap();
@@ -23,9 +23,8 @@ export default function HistoryCard({ drive }) {
 
   function chooseDrive(event) {
     event.stopPropagation();
-    if (drive.state == "active" && currentRole == "passenger" && !!currentUser.passenger_profile) {
+    if (drive.state == "active" && currentRole == "passenger" && currentUser.passenger_profile) {
       setBookedDrive(drive);
-      toggleActiveDrive(false);
       toggleBookedModal(true);
       navigate("/main");
       console.log(isRouteEnabled);

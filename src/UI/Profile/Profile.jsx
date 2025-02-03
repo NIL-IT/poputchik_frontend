@@ -3,6 +3,7 @@ import message from "../../assets/icons/message.svg";
 import { useModal } from "../../state/ModalStore";
 import { useNavigate } from "react-router-dom";
 import { getReviewsByDriverId } from "../../api/api";
+import { useUserStore } from "../../state/UserStore";
 export default function Profile({ driver }) {
   const { setSelectedDriver } = useModal();
   const navigate = useNavigate();
@@ -13,9 +14,12 @@ export default function Profile({ driver }) {
   if (!driver) {
     return null;
   }
-  const { name, rating, profile_photo } = driver;
-  const comments = getReviewsByDriverId(driver.driver_profile.id);
-  console.log(driver);
+  const { currentRole } = useUserStore();
+  const { name, id, profile_photo } = driver.user;
+  console.log(driver.user);
+  const comments =
+    currentRole == "passenger" && driver.driver_profile ? getReviewsByDriverId(driver.driver_profile.id) : "";
+  console.log(id);
   return (
     <div className='profile'>
       <div
@@ -27,10 +31,12 @@ export default function Profile({ driver }) {
         />
         <div className='profile-text'>
           <h3 className='profile-name'>{name}</h3>
-          <div className='profile-ratings'>
-            <p className='profile-stars'>{rating}</p>
-            <p className='profile-comments'>{comments.length}</p>
-          </div>
+          {currentRole == "passenger" && driver.driver_profile && (
+            <div className='profile-ratings'>
+              <p className='profile-stars'>{id}</p>
+              <p className='profile-comments'>{comments.length}</p>
+            </div>
+          )}
         </div>
       </div>
       <button className='profile-message'>
