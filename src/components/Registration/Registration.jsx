@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
 import Select from "../../UI/Select/Select";
-import { getUserById, registration, urlToFile } from "../../api/api";
+import { urlToFile } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
@@ -135,7 +135,7 @@ export default function Registration({ backFunc, step, nextStep }) {
       if (currentRole == "driver" && !currentUser.passenger_profile) {
         await registration(formData, "passenger");
       }
-      const { data } = await getUserById(userId);
+      const { data } = await getUserByI(userId);
       setCurrentUser(data);
 
       navigate("/main");

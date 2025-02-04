@@ -4,12 +4,9 @@ import { useUserStore } from "../state/UserStore";
 import { useState } from "react";
 import Switcher from "../UI/Switcher/Switcher";
 import Welcome from "../components/Welcome";
-import Button from "../UI/Button/Button";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { registration } from "../api/api";
 
 export default function StartPage() {
-  const { currentUser, changeCurrentRole, currentRole, setCurrentUser } = useUserStore();
+  const { currentUser, changeCurrentRole, currentRole } = useUserStore();
   const navigate = useNavigate();
   const [isAuth, setAuth] = useState(false);
   const [toReg, setToReg] = useState(false);

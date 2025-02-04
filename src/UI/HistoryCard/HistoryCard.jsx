@@ -1,17 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { useDriverById } from "../../api/api";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useUserStore } from "../../state/UserStore";
 import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
 import { useMap } from "../../state/MapRoutesStore";
+import { useDriverById } from "../../api/driver";
 export default function HistoryCard({ drive }) {
   if (!drive) return null;
   const { toggleFeedback, toggleBookedModal } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
-  const { currentRole, currentUser } = useUserStore();
-  const { setIsRouteEnabled, isRouteEnabled } = useMap();
   const navigate = useNavigate();
   function openFeedback(event) {
     event.stopPropagation();
@@ -22,22 +20,12 @@ export default function HistoryCard({ drive }) {
   }
   const driver = useDriverById(drive.driver_id).data;
 
-  function chooseDrive(event) {
-    event.stopPropagation();
-    if (drive.state == "active" && currentRole == "passenger" && currentUser.passenger_profile) {
-      setBookedDrive(drive);
-      toggleBookedModal(true);
-      navigate("/main");
-      setIsRouteEnabled(true);
-    }
-  }
+  console.log(drive);
   if (!drive || !driver) {
     return null;
   }
   return (
-    <div
-      className='history'
-      onClick={(e) => chooseDrive(e)}>
+    <div className='history'>
       <div className='history-wrapper'>
         <div className='history-path'>
           <span className='history-from'>{drive.start_address.name}</span>

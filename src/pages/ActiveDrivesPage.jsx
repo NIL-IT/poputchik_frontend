@@ -1,5 +1,4 @@
-import { useDriversTripsList, useTripsList } from "../api/api";
-import { useMap } from "../state/MapRoutesStore";
+import { useDriversTripsList, useTripsList } from "../api/trips";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
 import CloseBtn from "../UI/CloseBtn";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,7 @@ export default function ActiveDrivesPage() {
   const hasDriverProfile = currentUser.driver_profile?.id;
   const activeDrives =
     currentRole === "passenger"
-      ? useTripsList(currentUser.city)
+      ? useTripsList(currentUser.city).filter((i) => i.driver_id !== currentUser.driver_profile.id)
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : [];
@@ -20,7 +19,7 @@ export default function ActiveDrivesPage() {
       <CloseBtn onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8'>Активные поездки</h3>
       <div className='flex flex-col gap-4 w-full items-center justify-center'>
-        {activeDrives ? (
+        {activeDrives && activeDrives.length.filter((i) => i.driver_id !== currentUser.driver_profile.id) ? (
           activeDrives.map((obj) => {
             return (
               <div key={obj.id}>

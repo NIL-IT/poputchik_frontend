@@ -1,7 +1,7 @@
 import BackButton from "../UI/BackButton";
 import Button from "../UI/Button/Button";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { isValidPhoneNumber } from "react-phone-number-input";
@@ -9,7 +9,9 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { useModal } from "../state/ModalStore";
 import UserInfo from "../components/UserInfo";
 import FeedBack from "../components/Modals/FeedBack";
-import { updateUser, urlToFile, useDriversTripsList, usePassengerTripsList } from "../api/api";
+import { urlToFile } from "../api/api";
+import { updateUser } from "../api/passenger";
+import { useDriversTripsList, usePassengerTripsList } from "../api/trips";
 
 export default function UserPage() {
   const navigate = useNavigate();

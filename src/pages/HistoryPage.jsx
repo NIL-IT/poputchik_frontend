@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import BackButton from "../UI/BackButton";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
 import { useUserStore } from "../state/UserStore";
-import { useDriversTripsList, usePassengerTripsList } from "../api/api";
+import { usePassengerTripsList, useDriversTripsList } from "../api/trips";
 
 export default function HistoryPage() {
   const { currentRole, currentUser } = useUserStore();
@@ -20,7 +20,7 @@ export default function HistoryPage() {
       <BackButton onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8'>История поездок</h3>
       <div className='flex flex-col gap-4 container-custom w-full container-custom px-5'>
-        {historyList.length ? (
+        {historyList && historyList.length ? (
           historyList.map((obj) => {
             return (
               <HistoryCard

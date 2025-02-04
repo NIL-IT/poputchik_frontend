@@ -24,7 +24,17 @@
 
 .profile-name {
   font-size: 17px;
-  padding-bottom: 21px;
+  padding-bottom: 6px;
+}
+
+.profile-path {
+  font-size: 14px;
+  line-height: 16.1px;
+  padding-right: 20px;
+  padding-left: 12px;
+  color: #464646;
+  background: url("../../assets/icons/geo-profile.svg") no-repeat;
+  background-position-y: 3px;
 }
 
 .profile-ratings {
@@ -41,6 +51,7 @@
   height: 44px;
   border-radius: 10px;
 }
+
 .profile-stars {
   padding-left: 22px;
   background: url("../../assets/icons/star.svg") no-repeat;
@@ -49,8 +60,18 @@
   padding-left: 22px;
   background: url("../../assets/icons/comment.svg") no-repeat;
 }
+
 .profile-message {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.profile-date {
+  margin-top: 8px;
+  color: #747474;
+  font-size: 14px;
+  line-height: 16.1px;
+  background: url("../../assets/icons/profile-date.svg") no-repeat;
+  padding-left: 22px;
 }

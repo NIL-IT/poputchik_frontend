@@ -13,7 +13,7 @@ const Chat = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://89.23.116.157:8005/ws/chat/${chatId}`);
+    const ws = new WebSocket(`wss://testingnil8.ru/ws/chat/1`);
     ws.onopen = () => {
       console.log("Соединение установлено");
     };

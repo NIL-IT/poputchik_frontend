@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useDriversTripsList, useTripsList } from "../../api/api";
+import { useDriversTripsList, useTripsList } from "../../api/trips";
 import { useUserStore } from "../../state/UserStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -55,7 +55,7 @@ export default function DriverList({ list, toggleCreating }) {
             Активные поездки
           </Button>
           <span className='absolute w-4 h-4 border-[2px] border-white bg-[#FF2C20] text-white rounded-full text-[12px] leading-4 flex items-center justify-center -right-2 -top-2'>
-            {activeDrives ? activeDrives.length : 0}
+            {activeDrives ? activeDrives.filter((i) => i.driver_id !== currentUser.driver_profile.id).length : 0}
           </span>
         </div>
         {currentRole === "driver" && (

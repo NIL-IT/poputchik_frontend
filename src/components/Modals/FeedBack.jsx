@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useModal } from "../../state/ModalStore";
 import Button from "../../UI/Button/Button";
 import { useTrip } from "../../state/TripStore";
-import { createReviewByDriver } from "../../api/api";
+
 import FeedbackSummary from "./FeedbackSummary";
+import { createReviewByDriver } from "../../api/driver";
 
 export default function FeedBack() {
   const [grade, setGrade] = useState(-1);

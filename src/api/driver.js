@@ -31,6 +31,15 @@ export async function createReviewByDriver(data) {
   }
 }
 
-export async function getReviewsByDriverId(driver_id) {
+async function getReviewsByDriverId(driver_id) {
   return axios.get(`${url}/reviews/driver/${driver_id}`);
+}
+
+export function useDriverReviews(driver_id) {
+  const { data } = useQuery({
+    queryKey: ["userReviews", driver_id],
+    queryFn: () => getReviewsByDriverId(driver_id),
+    select: (data) => data.data,
+  });
+  return data;
 }

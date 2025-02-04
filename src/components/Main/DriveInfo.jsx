@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { bookedTripByPassenger, useDriverById } from "../../api/api";
 import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
 import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
+import { useDriverById } from "../../api/driver";
+import { bookedTripByPassenger } from "../../api/trips";
 
 export default function DriveInfo() {
   const { currentUser } = useUserStore();

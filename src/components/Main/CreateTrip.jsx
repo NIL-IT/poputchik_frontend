@@ -4,7 +4,7 @@ import Input from "../../UI/Input/Input";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useEffect, useState } from "react";
-import { createTripByDriver } from "../../api/api";
+
 import { useMap } from "../../state/MapRoutesStore";
 import { formatDate } from "../../utils/utils";
 import { useUserStore } from "../../state/UserStore";
@@ -68,7 +68,7 @@ export default function CreateTrip() {
       console.log(JSON.stringify(trip));
 
       try {
-        await createTripByDriver(trip).then(() => clearData());
+        await createTrip(trip).then(() => clearData());
       } catch (error) {
         setFormError(error.message || "Неизвестная ошибка");
       }
@@ -119,7 +119,7 @@ export default function CreateTrip() {
                 <Input
                   readOnly
                   onClick={() => toggleCalendar(true)}
-                  value={date.length > 0 ? formatDate(date) : "00.00.00"}
+                  value={date.length > 0 ? formatDate(date, true) : "00.00.00"}
                   onChange={() => {}}
                   type={"text"}
                   placeholder={"00.00.00"}

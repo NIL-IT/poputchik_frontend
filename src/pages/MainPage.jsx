@@ -9,16 +9,18 @@ import MapComponent from "../components/Main/MapComponent";
 import { useTrip } from "../state/TripStore";
 import { useMap } from "../state/MapRoutesStore";
 import { useUserStore } from "../state/UserStore";
-import { usePassengerList, useTripsList } from "../api/api";
+import { useTripsList } from "../api/trips";
+import { usePassengerList } from "../api/passenger";
 
 export default function MainPage() {
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const { currentUser, currentRole } = useUserStore();
+
   const driverList =
     currentRole == "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
-  console.log(currentUser);
+
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -49,8 +51,8 @@ export default function MainPage() {
     setEndPoint([]);
   }
 
-  const nerbiest = driverList && driverList.slice(0, 2);
-
+  const nerbiest = driverList && driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id).slice(0, 2);
+  // .filter((i) => i.driver_id !== currentUser.driver_profile.id)
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
