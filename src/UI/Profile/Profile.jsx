@@ -26,6 +26,7 @@ export default function Profile({ driver }) {
   const comments =
     currentRole == "passenger" && driver?.driver_profile ? getReviewsByDriverId(driver.driver_profile.id) : "";
   if (!user) return null;
+
   return (
     <div className='profile'>
       <div className='profile-info'>
