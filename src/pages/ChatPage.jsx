@@ -6,7 +6,7 @@ import { useUserStore } from "../state/UserStore";
 
 const Chat = () => {
   const { currentUser } = useUserStore();
-  const userId = currentUser.id;
+  const userId = "123";
   const chatId = "1";
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -29,6 +29,7 @@ const Chat = () => {
   const sendMessage = () => {
     if (socket && input.trim()) {
       const message = { sender_id: userId, content: input };
+      console.log(message);
       socket.send(JSON.stringify(message));
       setMessages((prev) => [...prev, message]);
       setInput("");
