@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const API_KEY = "6339ca58-3537-4f94-b069-a82968dfb362";
 
-const url = "https://testingnil8.ru/api";
+export const url = "https://testingnil8.ru/api";
 
 export async function registration(data, role) {
   const response = await axios({
@@ -75,11 +75,21 @@ export async function createTripByDriver(data) {
 }
 
 async function getDrviersTrips(id, state) {
-  return axios.get(`${url}/trips/driver/${id}?trip_status=${state}`);
+  try {
+    const response = await axios.get(`${url}/trips/driver/${id}?trip_status=${state}`);
+    return response;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return { data: [] };
+    }
+
+    throw error;
+  }
 }
+
 export function useDriversTripsList(id, state) {
   const { data } = useQuery({
-    queryKey: ["tripsList"],
+    queryKey: ["tripsList", id, state],
     queryFn: () => getDrviersTrips(id, state),
     select: (data) => data.data,
   });

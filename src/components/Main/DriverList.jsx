@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useDriversTripsList, useTripsList } from "../../api/api";
-import { useMap } from "../../state/MapRoutesStore";
-import { useModal } from "../../state/ModalStore";
 import { useUserStore } from "../../state/UserStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -9,8 +7,6 @@ import Profile from "../../UI/Profile/Profile";
 
 export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
-  const { city } = useMap();
-  console.log(city);
   const hasDriverProfile = currentUser.driver_profile?.id;
   const navigate = useNavigate();
   const activeDrives =
@@ -19,7 +15,6 @@ export default function DriverList({ list, toggleCreating }) {
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : null;
-  console.log(activeDrives);
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>

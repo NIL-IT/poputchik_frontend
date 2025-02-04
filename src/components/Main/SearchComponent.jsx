@@ -17,16 +17,15 @@ export default function SearchComponent({ onLocClick }) {
     try {
       if (searchValue) {
         const res = await fetch(
-          `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&format=json&geocode=${searchValue}&lang=ru_RU&kind=locality`,
+          `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&format=json&geocode=${searchValue}&lang=ru_RU`,
         );
         const data = await res.json();
 
         const collection = data.response.GeoObjectCollection.featureMember
-          .filter(
-            (item) =>
-              item.GeoObject.metaDataProperty.GeocoderMetaData.kind === "locality" &&
-              item.GeoObject.description.includes("Алтай"),
-          )
+          .filter((item) => {
+            const kind = item.GeoObject.metaDataProperty.GeocoderMetaData.kind;
+            return ["locality", "street", "house"].includes(kind) && item.GeoObject.description.includes("Алтай");
+          })
           .map((item) => item.GeoObject);
 
         setOptions(() => collection);
@@ -37,6 +36,7 @@ export default function SearchComponent({ onLocClick }) {
       console.log(e);
     }
   }
+
   return (
     <div className={`absolute z-20 h-full w-full bg-white py-8 flex flex-col ${isSearchOpen ? "" : "hidden"} `}>
       <div className='searchBig-container container-custom'>

@@ -3,9 +3,11 @@ import { useUserStore } from "../state/UserStore";
 import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import { useNavigate } from "react-router-dom";
 
 export default function UserInfo({ isEditable, value, setCity, setPhone, setMail, setProfilePhoto }) {
   const { currentUser, currentRole } = useUserStore();
+  const navigate = useNavigate();
 
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
@@ -41,7 +43,9 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
       {currentRole === "driver" && (
         <div className='w-full balance-bg py-8 rounded-[10px] mb-10'>
           <h3 className='pb-7  text-[32px] leading-8 text-white'>Баланс, ₽</h3>
-          <button className='rounded-[20px] bg-white font-bold text-[16px] text-black px-10 py-4'>
+          <button
+            className='rounded-[20px] bg-white font-bold text-[16px] text-black px-10 py-4'
+            onClick={() => navigate("/payment")}>
             Вывести средства
           </button>
         </div>

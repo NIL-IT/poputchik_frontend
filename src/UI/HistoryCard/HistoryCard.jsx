@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { getDriverUser, getUserById, useDriverById, useUserById } from "../../api/api";
+import { useDriverById } from "../../api/api";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useUserStore } from "../../state/UserStore";
@@ -7,6 +7,7 @@ import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
 import { useMap } from "../../state/MapRoutesStore";
 export default function HistoryCard({ drive }) {
+  if (!drive) return null;
   const { toggleFeedback, toggleBookedModal } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { currentRole, currentUser } = useUserStore();
@@ -27,14 +28,12 @@ export default function HistoryCard({ drive }) {
       setBookedDrive(drive);
       toggleBookedModal(true);
       navigate("/main");
-      console.log(isRouteEnabled);
       setIsRouteEnabled(true);
     }
   }
   if (!drive || !driver) {
     return null;
   }
-  console.log();
   return (
     <div
       className='history'

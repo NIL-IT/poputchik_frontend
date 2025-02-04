@@ -13,6 +13,8 @@ import HistoryPage from "./pages/HistoryPage";
 import ActiveDrivesPage from "./pages/ActiveDrivesPage";
 import UserReviews from "./pages/UserReviews";
 import PeopleList from "./pages/PeopleList";
+import PaymentPage from "./pages/PaymentPage";
+import Chat from "./pages/ChatPage";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -26,7 +28,7 @@ function App() {
 
     tg.ready();
     tg.expand();
-    tg.setHeaderColor("secondary_bg_color");
+    tg.setHeaderColor("#F6F6F6");
     if (tg.requestViewport) {
       tg.requestViewport({ height: window.innerHeight, width: window.innerWidth });
     }
@@ -110,14 +112,6 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await requestLocation();
-  //     await getCityByCoordinates();
-  //   };
-
-  //   fetchData();
-  // }, []);
   return (
     <div className='container'>
       <Router>
@@ -176,7 +170,7 @@ function App() {
             }
           />
           <Route
-            path='/userReview'
+            path='/userReview/:userId'
             element={
               <div className='container-custom'>
                 <ProtectedRoute>
@@ -192,6 +186,24 @@ function App() {
                 <ProtectedRoute>
                   <PeopleList />
                 </ProtectedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/payment'
+            element={
+              <div className='container-custom'>
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/chat/:userId'
+            element={
+              <div className=''>
+                <Chat />
               </div>
             }
           />

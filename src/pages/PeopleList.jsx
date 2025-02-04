@@ -2,12 +2,14 @@ import Profile from "../UI/Profile/Profile";
 import BackButton from "../UI/BackButton";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
-import { usePassengerList } from "../api/api";
+import { usePassengerList, useTripsList } from "../api/api";
 
 export default function PeopleList() {
   const navigate = useNavigate();
-  const { currentUser } = useUserStore();
-  const driverList = usePassengerList(currentUser.driver_profile.id);
+  const { currentUser, currentRole } = useUserStore();
+
+  const driverList =
+    currentRole == "driver" ? usePassengerList(currentUser.driver_profile.id) : useTripsList(currentUser.city);
   console.log(driverList);
   return (
     <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>

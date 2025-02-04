@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
 import Select from "../../UI/Select/Select";
-import { getUserById, registration, urlToFile, useUserById } from "../../api/api";
+import { getUserById, registration, urlToFile } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";

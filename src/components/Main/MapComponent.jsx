@@ -47,12 +47,9 @@ const MapComponent = () => {
   };
 
   useEffect(() => {
-    console.log(isRouteEnabled, ymapsRef.current);
     if (isRouteEnabled && ymapsRef.current && startPoint && endPoint) {
-      console.log("Building route...");
       buildRoute(ymapsRef.current);
     } else if (!isRouteEnabled && ymapsRef.current) {
-      console.log("Clearing route...");
       mapRef.current?.geoObjects.removeAll();
       setRouteDistance(null);
       setRouteDuration(null);

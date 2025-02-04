@@ -7,7 +7,6 @@ import { useUserStore } from "../state/UserStore";
 
 export default function ActiveDrivesPage() {
   const { currentRole, currentUser } = useUserStore();
-  const { city } = useMap();
   const navigate = useNavigate();
   const hasDriverProfile = currentUser.driver_profile?.id;
   const activeDrives =
@@ -16,7 +15,6 @@ export default function ActiveDrivesPage() {
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "active")
       : [];
-  console.log(city);
   return (
     <div className='pt-10 relative flex flex-col justify-center items-center'>
       <CloseBtn onClick={() => navigate(-1)} />

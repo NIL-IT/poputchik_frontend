@@ -2,38 +2,43 @@ import "./Profile.css";
 import message from "../../assets/icons/message.svg";
 import { useModal } from "../../state/ModalStore";
 import { useNavigate } from "react-router-dom";
-import { getReviewsByDriverId } from "../../api/api";
+import { getReviewsByDriverId, useDriverById } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 export default function Profile({ driver }) {
   const { setSelectedDriver } = useModal();
   const navigate = useNavigate();
-  const openProfile = () => {
-    setSelectedDriver(driver);
-    navigate("/userReview");
-  };
+
   if (!driver) {
     return null;
   }
   const { currentRole } = useUserStore();
-  const { name, id, profile_photo } = driver.user;
-  console.log(driver.user);
+
+  const driverData = useDriverById(driver?.driver_id)?.data;
+
+  const user = currentRole === "driver" ? driver?.user : driverData?.user || {};
+  if (!user || Object.keys(user).length === 0) return null;
+
+  const openProfile = () => {
+    setSelectedDriver(driver);
+    navigate(`/userReview/${user.id}`);
+  };
+
   const comments =
-    currentRole == "passenger" && driver.driver_profile ? getReviewsByDriverId(driver.driver_profile.id) : "";
-  console.log(id);
+    currentRole == "passenger" && driver?.driver_profile ? getReviewsByDriverId(driver.driver_profile.id) : "";
+  if (!user) return null;
   return (
     <div className='profile'>
-      <div
-        className='profile-info'
-        onClick={() => openProfile()}>
+      <div className='profile-info'>
         <img
           className='profile-img'
-          src={profile_photo}
+          src={user.profile_photo}
+          onClick={() => openProfile()}
         />
         <div className='profile-text'>
-          <h3 className='profile-name'>{name}</h3>
+          <h3 className='profile-name'>{user.name}</h3>
           {currentRole == "passenger" && driver.driver_profile && (
             <div className='profile-ratings'>
-              <p className='profile-stars'>{id}</p>
+              {/* <p className='profile-stars'>{}</p> */}
               <p className='profile-comments'>{comments.length}</p>
             </div>
           )}
