@@ -20,7 +20,7 @@ export default function MainPage() {
 
   const driverList =
     currentRole == "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
-
+  console.log(driverList);
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -44,7 +44,6 @@ export default function MainPage() {
     setStartPoint([]);
     setEndPoint([]);
   }
-
   function clearBookedData() {
     setIsRouteEnabled(false);
     setStartPoint([]);

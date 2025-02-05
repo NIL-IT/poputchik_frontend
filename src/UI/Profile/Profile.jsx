@@ -20,8 +20,8 @@ export default function Profile({ driver }) {
   const { toggleBookedModal } = useModal();
 
   const driverData = useDriverById(driver?.driver_id)?.data;
-
-  const { start_address, end_address, departure_time } = driver;
+  console.log(driverData);
+  const { start_address, end_address, departure_time, id } = driver;
   const date = formatDate(departure_time);
   const user = currentRole === "driver" ? driver?.user : driverData?.user || {};
   const rating = currentRole === "driver" ? driver?.rating : driverData?.rating ?? "";
@@ -56,12 +56,13 @@ export default function Profile({ driver }) {
             <h3 className='profile-name'>{user.name}</h3>
             <p className='profile-stars'>{rating}</p>
           </div>
-          {/* {currentRole == "passenger" && driver.driver_profile && <div className='profile-ratings'></div>} */}
           <span className='profile-path'>{`${start_address.name} - ${end_address.name}`}</span>
           <div className='profile-date'>{date}</div>
         </div>
       </div>
-      <button className='profile-message'>
+      <button
+        onClick={() => navigate(`/chat/${id}/${user.id}`)}
+        className='profile-message'>
         <img
           src={message}
           alt=''

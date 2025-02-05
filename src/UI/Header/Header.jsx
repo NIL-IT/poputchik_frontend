@@ -8,7 +8,7 @@ export default function Header() {
   const { currentUser } = useUserStore();
   const navigate = useNavigate();
   function goToChat() {
-    navigate("/chat/1");
+    navigate("/chat/1/4");
     console.log("first");
   }
   return (
