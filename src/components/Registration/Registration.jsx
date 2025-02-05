@@ -11,6 +11,7 @@ import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
 import { useMap } from "../../state/MapRoutesStore";
 import Switcher from "../../UI/Switcher/Switcher";
+import { getUserById, registration } from "../../api/user";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
@@ -137,7 +138,7 @@ export default function Registration({ backFunc, step, nextStep }) {
       if (currentRole == "driver" && !currentUser.passenger_profile) {
         await registration(formData, "passenger");
       }
-      const { data } = await getUserByI(userId);
+      const { data } = await getUserById(userId);
       setCurrentUser(data);
 
       navigate("/main");
@@ -330,7 +331,7 @@ export default function Registration({ backFunc, step, nextStep }) {
           {formError.general && <p className='text-red-500 text-sm'>{formError.general}</p>}
         </form>
       </div>
-      <div>
+      <div className='mt-10'>
         <Button
           type='submit'
           onClick={handleSubmit}
