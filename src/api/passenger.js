@@ -1,5 +1,6 @@
 import axios from "axios";
 import { url } from "./api";
+import { useQuery } from "@tanstack/react-query";
 
 export async function updateUser(data) {
   const response = await axios({

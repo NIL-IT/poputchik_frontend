@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const API_KEY = "6339ca58-3537-4f94-b069-a82968dfb362";
+export const API_KEY = "1b583848-fb5b-46a4-85ac-6dd48bbede91";
 
 export const url = "https://testingnil8.ru/api";
 

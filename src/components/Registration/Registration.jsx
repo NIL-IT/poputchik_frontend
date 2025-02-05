@@ -10,6 +10,7 @@ import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
 import { useMap } from "../../state/MapRoutesStore";
+import Switcher from "../../UI/Switcher/Switcher";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
@@ -50,17 +51,18 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   useEffect(() => {
     const loadData = async () => {
-      if (currentUser && currentRole === "driver") {
-        const profile_photo = await urlToFile(currentUser.profile_photo);
-        setAvatar(profile_photo);
-        setPassportPhoto(currentUser.passport_photo);
-        setCity(currentUser.city);
-        setName(currentUser.name);
-        setPhone(currentUser.phone_number);
-        setEmail(currentUser.email);
-        setVisibleAvatarPhoto(currentUser.profile_photo);
-        setVisiblePassportPhoto(currentUser.passport_photo);
+      if (!currentUser || Object.keys(currentUser).length === 0 || currentRole !== "driver") {
+        return;
       }
+      const profile_photo = await urlToFile(currentUser.profile_photo);
+      setAvatar(profile_photo);
+      setPassportPhoto(currentUser.passport_photo);
+      setCity(currentUser.city);
+      setName(currentUser.name);
+      setPhone(currentUser.phone_number);
+      setEmail(currentUser.email);
+      setVisibleAvatarPhoto(currentUser.profile_photo);
+      setVisiblePassportPhoto(currentUser.passport_photo);
     };
     loadData();
   }, [currentUser, currentRole]);
@@ -173,166 +175,171 @@ export default function Registration({ backFunc, step, nextStep }) {
   }, [step]);
 
   return (
-    <main className='px-5 flex flex-col relative w-full h-screen'>
-      <header className='pt-[30px] flex items-center mb-12'>
-        <button
-          className='absolute flex items-center'
-          onClick={backFunc}>
-          <img
-            src={backIcon}
-            alt='Назад'
-          />
-          <p className='pl-4'>Назад</p>
-        </button>
-        <h1 className='w-full text-center text-2xl leading-6'>{renderTitle()}</h1>
-      </header>
+    <main className='px-5 flex flex-col justify-between pb-6 relative w-full h-screen'>
+      <div>
+        <header className='pt-[30px] flex items-center mb-12'>
+          <button
+            className='absolute flex items-center'
+            onClick={backFunc}>
+            <img
+              src={backIcon}
+              alt='Назад'
+            />
+            <p className='pl-4'>Назад</p>
+          </button>
+          <h1 className='w-full text-center text-2xl leading-6'>{renderTitle()}</h1>
+        </header>
 
-      <form
-        encType='multipart/form-data'
-        onSubmit={handleSubmit}
-        className='flex flex-col gap-5 justify-center items-center container-custom'>
-        {step === 0 && (
-          <>
-            <fieldset className='w-[121px] h-[121px] mb-10 relative'>
-              <input
-                id='upload-file'
-                type='file'
-                accept='image/*'
-                onChange={handleFileChange}
-                className='visually-hidden'
-              />
-              <label
-                htmlFor='upload-file'
-                className='img-upload__label img-upload__control'
-                style={{
-                  backgroundImage: avatar && `url(${visibleAvatarPhoto})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}>
-                Загрузить
-              </label>
-              {formError.avatar && (
-                <p className='text-red-500 text-sm absolute -bottom-6 text-center w-full'>{formError.avatar}</p>
-              )}
-            </fieldset>
-
-            <div className='w-full relative'>
-              <Input
-                type='text'
-                placeholder='Имя'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength='17'
-              />
-              {formError.name && <p className='text-red-500 text-sm mt-1'>{formError.name}</p>}
-            </div>
-
-            <div className='w-full relative'>
-              <PhoneInput
-                className={`input tel ${phone?.length <= 2 ? "grey" : ""}`}
-                placeholder='Номер телефона'
-                value={phone}
-                onChange={handlePhoneChange}
-                international
-                defaultCountry='RU'
-                maxLength='16'
-              />
-              {formError.phone && <p className='text-red-500 text-sm mt-1'>{formError.phone}</p>}
-            </div>
-
-            <div className='w-full relative'>
-              <Input
-                type='email'
-                placeholder='Почта'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {formError.email && <p className='text-red-500 text-sm mt-1'>{formError.email}</p>}
-            </div>
-
-            <div className='w-full relative'>
-              <Select
-                selectedValue={city}
-                options={["село Майма", "Горно-Алтайск", "село Манжерок", "село Ая"]}
-                placeholder='Город'
-                onChange={handleCityChange}
-              />
-              {formError.city && <p className='text-red-500 text-sm mt-1'>{formError.city}</p>}
-            </div>
-          </>
-        )}
-
-        {step === 1 && currentRole === "driver" && (
-          <>
-            <div className='flex flex-col gap-10 items-center justify-center'>
-              <fieldset className='relative'>
+        <form
+          encType='multipart/form-data'
+          // onSubmit={handleSubmit}
+          className='flex flex-col gap-5 justify-center items-center container-custom'>
+          {step === 0 && (
+            <>
+              <fieldset className='w-[121px] h-[121px] mb-10 relative'>
                 <input
-                  id='upload-passport'
+                  id='upload-file'
                   type='file'
                   accept='image/*'
-                  onChange={handlePassportChange}
+                  onChange={handleFileChange}
                   className='visually-hidden'
                 />
                 <label
-                  htmlFor='upload-passport'
-                  className='img-upload__label img-upload__control docs'
+                  htmlFor='upload-file'
+                  className='img-upload__label img-upload__control'
                   style={{
-                    backgroundImage: passportPhoto && `url(${visiblePassportPhoto})`,
+                    backgroundImage: avatar && `url(${visibleAvatarPhoto})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}>
                   Загрузить
                 </label>
-                <span className='block mt-2'>Фото паспорта</span>
-                {formError.passport && <p className='text-red-500 text-sm mt-1 text-center'>{formError.passport}</p>}
+                {formError.avatar && (
+                  <p className='text-red-500 text-sm absolute -bottom-6 text-center w-full'>{formError.avatar}</p>
+                )}
               </fieldset>
 
-              <fieldset className='relative w-[200px]'>
-                <input
-                  id='upload-license'
-                  type='file'
-                  accept='image/*'
-                  onChange={handleLicenseChange}
-                  className='visually-hidden'
+              <div className='w-full relative'>
+                <Input
+                  type='text'
+                  placeholder='Имя'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength='17'
                 />
-                <label
-                  htmlFor='upload-license'
-                  className='img-upload__label img-upload__control docs'
-                  style={{
-                    backgroundImage: driverLicensePhoto && `url(${visibleLicensePhoto})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}>
-                  Загрузить
-                </label>
-                <span className='block mt-2'>Водительское удостоверение</span>
-                {formError.license && <p className='text-red-500 text-sm mt-1 text-center'>{formError.license}</p>}
-              </fieldset>
-            </div>
-          </>
-        )}
+                {formError.name && <p className='text-red-500 text-sm mt-1'>{formError.name}</p>}
+              </div>
 
-        {step === 2 && currentRole === "driver" && (
-          <ChooseCar
-            selectedCar={carType}
-            setSelectedCar={setCarType}
-            setCarNumber={setCarNumber}
-            setCarModel={setCarModel}
-            setCarMake={setCarMake}
-            setCarColor={setCarColor}
-            errors={formError}
-          />
-        )}
+              <div className='w-full relative'>
+                <PhoneInput
+                  className={`input tel ${phone?.length <= 2 ? "grey" : ""}`}
+                  placeholder='Номер телефона'
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  international
+                  defaultCountry='RU'
+                  maxLength='16'
+                />
+                {formError.phone && <p className='text-red-500 text-sm mt-1'>{formError.phone}</p>}
+              </div>
 
-        {formError.general && <p className='text-red-500 text-sm'>{formError.general}</p>}
+              <div className='w-full relative'>
+                <Input
+                  type='email'
+                  placeholder='Почта'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {formError.email && <p className='text-red-500 text-sm mt-1'>{formError.email}</p>}
+              </div>
 
+              <div className='w-full relative'>
+                <Select
+                  selectedValue={city}
+                  options={["село Майма", "Горно-Алтайск", "село Манжерок", "село Ая"]}
+                  placeholder='Город'
+                  onChange={handleCityChange}
+                />
+                {formError.city && <p className='text-red-500 text-sm mt-1'>{formError.city}</p>}
+              </div>
+            </>
+          )}
+
+          {step === 1 && currentRole === "driver" && (
+            <>
+              <div className='flex flex-col gap-10 items-center justify-center'>
+                <fieldset className='relative'>
+                  <input
+                    id='upload-passport'
+                    type='file'
+                    accept='image/*'
+                    onChange={handlePassportChange}
+                    className='visually-hidden'
+                  />
+                  <label
+                    htmlFor='upload-passport'
+                    className='img-upload__label img-upload__control docs'
+                    style={{
+                      backgroundImage: passportPhoto && `url(${visiblePassportPhoto})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}>
+                    Загрузить
+                  </label>
+                  <span className='block mt-2'>Фото паспорта</span>
+                  {formError.passport && <p className='text-red-500 text-sm mt-1 text-center'>{formError.passport}</p>}
+                </fieldset>
+
+                <fieldset className='relative w-[200px]'>
+                  <input
+                    id='upload-license'
+                    type='file'
+                    accept='image/*'
+                    onChange={handleLicenseChange}
+                    className='visually-hidden'
+                  />
+                  <label
+                    htmlFor='upload-license'
+                    className='img-upload__label img-upload__control docs'
+                    style={{
+                      backgroundImage: driverLicensePhoto && `url(${visibleLicensePhoto})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}>
+                    Загрузить
+                  </label>
+                  <span className='block mt-2'>Водительское удостоверение</span>
+                  {formError.license && <p className='text-red-500 text-sm mt-1 text-center'>{formError.license}</p>}
+                </fieldset>
+              </div>
+            </>
+          )}
+
+          {step === 2 && currentRole === "driver" && (
+            <ChooseCar
+              selectedCar={carType}
+              setSelectedCar={setCarType}
+              setCarNumber={setCarNumber}
+              setCarModel={setCarModel}
+              setCarMake={setCarMake}
+              setCarColor={setCarColor}
+              errors={formError}
+            />
+          )}
+
+          {formError.general && <p className='text-red-500 text-sm'>{formError.general}</p>}
+        </form>
+      </div>
+      <div>
         <Button
           type='submit'
-          className='absolute bottom-10'
+          onClick={handleSubmit}
+          classNames=' mb-10'
           size='large'>
           {currentRole === "driver" && step < 2 ? "Далее" : "Завершить"}
         </Button>
-      </form>
+        <Switcher position={step} />
+      </div>
     </main>
   );
 }

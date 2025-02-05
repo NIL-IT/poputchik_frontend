@@ -63,7 +63,10 @@ export default function StartPage() {
   return (
     <div className='relative min-h-screen flex flex-col items-center '>
       {!toReg ? (
-        <Welcome func={navigateToRegister} />
+        <Welcome
+          func={navigateToRegister}
+          step={switcherPos}
+        />
       ) : (
         <>
           <Registration
@@ -73,7 +76,6 @@ export default function StartPage() {
           />
         </>
       )}
-      <Switcher position={switcherPos} />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import Footer from "../UI/Footer/Footer";
 import Button from "../UI/Button/Button";
 import Background from "../assets/welcome/startScreen.png";
+import Switcher from "../UI/Switcher/Switcher";
 
-export default function Welcome({ func }) {
+export default function Welcome({ func, step }) {
   return (
     <div className='flex justify-center items-center h-screen w-full'>
       <img
@@ -28,6 +29,7 @@ export default function Welcome({ func }) {
             Я водитель
           </Button>
         </div>
+        <Switcher position={step} />
       </Footer>
     </div>
   );

@@ -4,7 +4,7 @@ export default function Switcher({ position }) {
   const translateX = translateValues[clampedPosition];
 
   return (
-    <div className='absolute z-20 bottom-5 flex flex-col items-center'>
+    <div className=' z-20 bottom-5 flex flex-col items-center'>
       <div className='relative w-[90px] h-[6px] bg-white rounded-full'>
         <div
           className={`absolute top-0 h-[6px] bg-[#F5AE7E] rounded-full transition-transform duration-300`}
