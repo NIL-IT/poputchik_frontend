@@ -10,8 +10,8 @@ import { bookedTripByPassenger } from "../../api/trips";
 
 export default function DriveInfo() {
   const { currentUser } = useUserStore();
-  const { bookedDrive } = useTrip();
-  const { toggleBookedModal } = useModal();
+  const { bookedDrive, setFeedbackTarget } = useTrip();
+  const { toggleBookedModal, toggleFeedback } = useModal();
   const { setIsRouteEnabled, isRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const data = useDriverById(bookedDrive.driver_id).data;
   const driver = data.user;
@@ -23,7 +23,13 @@ export default function DriveInfo() {
     bookedTripByPassenger(currentUser.passenger_profile.id, bookedDrive.id, 1);
     toggleBookedModal(false);
   }
-
+  function openFeedback(event) {
+    event.stopPropagation();
+    window.scrollTo(0, 0);
+    document.body.classList.add("overflow-y-hidden");
+    setFeedbackTarget(driver.driver_id);
+    toggleFeedback(true);
+  }
   useEffect(() => {
     if (!bookedDrive || !bookedDrive.start_address || !bookedDrive.end_address) return;
 
@@ -41,7 +47,7 @@ export default function DriveInfo() {
       setEndPoint(null);
     };
   }, []);
-  console.log(driver);
+  console.log(bookedDrive);
   return (
     <Footer className={"bg-[#f6f6f6] w-full z-10 flex flex-col items-center "}>
       <div className=''>
@@ -136,6 +142,65 @@ export default function DriveInfo() {
             <span className='history-to'>{bookedDrive.end_address.name}</span>
           </div>
         </div>
+        {bookedDrive.state == "started" && (
+          <div className='py-4 border-b border-[#EFEFF4]'>
+            <button
+              onClick={openFeedback}
+              className='w-full flex  justify-between items-center'>
+              <div className='flex flex-col justify-center items-center py-4 border rounded-2xl border-black w-[150px] h-[104px]'>
+                <svg
+                  className='pb-2'
+                  width='32'
+                  height='30'
+                  viewBox='0 0 22 20'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'>
+                  <path
+                    d='M14.135 10.5C14.015 10.5 13.89 10.48 13.77 10.44C13.5446 10.3683 13.3481 10.2261 13.2095 10.0344C13.0709 9.8427 12.9974 9.61156 13 9.375V7.97C11.87 7.79 11 6.805 11 5.625V2.375C11 1.065 12.065 0 13.375 0H19.125C20.435 0 21.5 1.065 21.5 2.375V5.625C21.5 6.935 20.435 8 19.125 8H16.565L15.025 10.05C14.805 10.34 14.48 10.5 14.135 10.5ZM7 11.75C4.93 11.75 3.25 10.07 3.25 8C3.25 5.93 4.93 4.25 7 4.25C9.07 4.25 10.75 5.93 10.75 8C10.75 10.07 9.07 11.75 7 11.75ZM0.5 15.395C0.5 15.44 0.575 20 7 20C13.425 20 13.5 15.44 13.5 15.395V14.875C13.5 13.84 12.66 13 11.625 13H2.375C1.34 13 0.5 13.84 0.5 14.875V15.395Z'
+                    fill='#EF7828'
+                  />
+                </svg>
+                <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Оставить отзыв</span>
+              </div>
+              <div className='flex flex-col justify-center items-center py-4 border rounded-2xl border-black w-[150px] h-[104px]'>
+                <div className='bg-[#F52D56] rounded-full min-w-[44px] min-h-[44px]  max-w-[44px] max-h-[44px] flex justify-center items-center'>
+                  <svg
+                    className=''
+                    width='25'
+                    height='25'
+                    viewBox='0 0 30 30'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'>
+                    <path
+                      d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
+                      fill='#2C2C2C'
+                    />
+                    <mask
+                      id='mask0_48_4925'
+                      maskUnits='userSpaceOnUse'
+                      x='5'
+                      y='5'
+                      width='20'
+                      height='20'>
+                      <path
+                        d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
+                        fill='white'
+                      />
+                    </mask>
+                    <g mask='url(#mask0_48_4925)'>
+                      <rect
+                        width='30'
+                        height='30'
+                        fill='white'
+                      />
+                    </g>
+                  </svg>
+                </div>
+                <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Поездка не оплачена</span>
+              </div>
+            </button>
+          </div>
+        )}
         <div className='w-full flex justify-between py-5 border-b border-[#EFEFF4]'>
           <div className='mr-10'>
             <svg
@@ -161,6 +226,7 @@ export default function DriveInfo() {
               />
             </svg>
           </div>
+
           <div className='flex justify-between w-full font-bold text-[16px] leading-[18.4px] text-[#242E42]'>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Дистанция</span>

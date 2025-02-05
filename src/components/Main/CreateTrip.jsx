@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useMap } from "../../state/MapRoutesStore";
 import { formatDate } from "../../utils/utils";
 import { useUserStore } from "../../state/UserStore";
+import { createTripByDriver } from "../../api/trips";
 export default function CreateTrip() {
   const { tripFrom, tripTo, date, persons, price } = useTrip();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
@@ -46,14 +47,13 @@ export default function CreateTrip() {
     setIsRouteEnabled(false);
     setStartPoint([]);
     setEndPoint([]);
-    setStep(0);
+    // setStep(0);
   }
 
-  async function createTrip(e) {
-    e.preventDefault();
-    if (step == 0) {
-      setStep(1);
-    } else if (tripFrom.name.length > 0 && tripTo.name.length > 0 && date && persons && price) {
+  async function createTrip(event) {
+    event.preventDefault();
+
+    if (tripFrom.name.length > 0 && tripTo.name.length > 0 && date && persons && price) {
       const trip = {
         driver_id: currentUser.driver_profile.id,
         start_address: tripFrom,
@@ -68,7 +68,8 @@ export default function CreateTrip() {
       console.log(JSON.stringify(trip));
 
       try {
-        await createTrip(trip).then(() => clearData());
+        await createTripByDriver(trip);
+        clearData();
       } catch (error) {
         setFormError(error.message || "Неизвестная ошибка");
       }
@@ -94,67 +95,55 @@ export default function CreateTrip() {
           onSubmit={createTrip}
           encType='application/json'
           className='rounded-[15px] create '>
-          {step == 0 ? (
-            <>
-              {" "}
-              <div className='first geo'>
-                <Input
-                  readOnly
-                  placeholder={"откуда"}
-                  value={tripFrom.name}
-                  onChange={() => {}}
-                  onClick={() => openSearch("from")}
-                />
-              </div>
-              <div className='geo'>
-                <Input
-                  readOnly
-                  placeholder={"куда"}
-                  value={tripTo.name}
-                  onChange={() => {}}
-                  onClick={() => openSearch("to")}
-                />
-              </div>
-              <div className='date'>
-                <Input
-                  readOnly
-                  onClick={() => toggleCalendar(true)}
-                  value={date.length > 0 ? formatDate(date, true) : "00.00.00"}
-                  onChange={() => {}}
-                  type={"text"}
-                  placeholder={"00.00.00"}
-                />
-              </div>
-              <div className='person'>
-                <Input
-                  readOnly
-                  onChange={() => {}}
-                  onClick={() => togglePersonModal(true)}
-                  type={"number"}
-                  value={Number(persons)}
-                />
-              </div>
-              <div className='price'>
-                <Input
-                  readOnly
-                  onClick={() => togglePrice(true)}
-                  type={"number"}
-                  onChange={() => {}}
-                  value={price}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <textarea
-                name=''
-                id=''
-                placeholder='Пожелания к заказу'
-                value={tripText}
-                className='bg-[#F6F6F6] min-h-[200px] rounded-[15px] p-5 w-full mb-10'
-                onChange={(e) => setTripText(e.target.value)}></textarea>
-            </>
-          )}
+          <>
+            <div className='first geo'>
+              <Input
+                readOnly
+                placeholder={"откуда"}
+                value={tripFrom.name}
+                onChange={() => {}}
+                onClick={() => openSearch("from")}
+              />
+            </div>
+            <div className='geo'>
+              <Input
+                readOnly
+                placeholder={"куда"}
+                value={tripTo.name}
+                onChange={() => {}}
+                onClick={() => openSearch("to")}
+              />
+            </div>
+            <div className='date'>
+              <Input
+                readOnly
+                onClick={() => toggleCalendar(true)}
+                value={date.length > 0 ? formatDate(date, true) : "00.00.00"}
+                onChange={() => {}}
+                type={"text"}
+                placeholder={"00.00.00"}
+              />
+            </div>
+            <div className='person'>
+              <Input
+                readOnly
+                onChange={() => {}}
+                onClick={() => togglePersonModal(true)}
+                type={"number"}
+                value={Number(persons)}
+              />
+            </div>
+            <div className='price'>
+              <Input
+                readOnly
+                onClick={() => togglePrice(true)}
+                type={"number"}
+                onChange={() => {}}
+                value={price}
+              />
+            </div>
+          </>
+
           {formError ? <>{formError}</> : <></>}
           <Button
             type='submit'

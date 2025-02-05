@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import Message from "../UI/Message/Message";
 import MessageInput from "../UI/MessageInput/MessageInput";
-import { url } from "../api/api";
 import { useUserStore } from "../state/UserStore";
 
 const Chat = () => {
   const { currentUser } = useUserStore();
-  const userId = "123";
+  const userId = currentUser.id;
   const chatId = "1";
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [socket, setSocket] = useState(null);
-
   useEffect(() => {
     const ws = new WebSocket(`wss://testingnil8.ru/ws/chat/1`);
     ws.onopen = () => {
@@ -31,7 +29,6 @@ const Chat = () => {
       const message = { sender_id: userId, content: input };
       console.log(message);
       socket.send(JSON.stringify(message));
-      setMessages((prev) => [...prev, message]);
       setInput("");
     }
   };

@@ -9,12 +9,28 @@ export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
   const hasDriverProfile = currentUser.driver_profile?.id;
   const navigate = useNavigate();
+  const activeTrips = hasDriverProfile ? useDriversTripsList(currentUser.driver_profile.id, "active") || [] : [];
+
+  const startedTrips = hasDriverProfile ? useDriversTripsList(currentUser.driver_profile.id, "started") || [] : [];
+
   const activeDrives =
     currentRole === "passenger"
       ? useTripsList(currentUser.city)
       : hasDriverProfile
-      ? useDriversTripsList(currentUser.driver_profile.id, "active")
-      : null;
+      ? [...activeTrips, ...startedTrips]
+      : [];
+
+  const filteredDrives = activeDrives?.filter((i) => i.driver_id !== currentUser.driver_profile.id);
+  console.log(filteredDrives);
+  function renderLength() {
+    if (activeDrives) {
+      if (currentRole == "driver") {
+        return activeDrives.length;
+      } else {
+        return filteredDrives.length;
+      }
+    } else return 0;
+  }
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
@@ -55,7 +71,7 @@ export default function DriverList({ list, toggleCreating }) {
             Активные поездки
           </Button>
           <span className='absolute w-4 h-4 border-[2px] border-white bg-[#FF2C20] text-white rounded-full text-[12px] leading-4 flex items-center justify-center -right-2 -top-2'>
-            {activeDrives ? activeDrives.filter((i) => i.driver_id !== currentUser.driver_profile.id).length : 0}
+            {renderLength()}
           </span>
         </div>
         {currentRole === "driver" && (

@@ -6,6 +6,8 @@ export function getStatus(state) {
       return "Забронирована";
     case "finished":
       return "Завершена";
+    case "started":
+      return "В пути";
   }
 }
 

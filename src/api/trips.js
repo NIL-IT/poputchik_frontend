@@ -55,7 +55,6 @@ export async function bookedTripByPassenger(passenger_id, trip_id, seats_to_book
   const response = await axios({
     method: "post",
     url: `${url}/trips/booking?passenger_id=${passenger_id}&trip_id=${trip_id}&seats_to_book=${seats_to_book}`,
-    // data: data,
     headers: {
       "Content-Type": "application/json",
     },
@@ -75,4 +74,17 @@ export function usePassengerTripsList(id, state) {
     select: (data) => data.data,
   });
   return data;
+}
+
+export async function updateTripState(trip_id, state) {
+  const response = await axios({
+    method: "put",
+    url: `${url}/tripschange_state/${trip_id}?state=${state}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.status !== 200) {
+    throw new Error(response.data);
+  }
 }

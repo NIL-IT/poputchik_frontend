@@ -1,16 +1,52 @@
-import { useNavigate } from "react-router-dom";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
-import { useUserStore } from "../../state/UserStore";
 import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
-import { useMap } from "../../state/MapRoutesStore";
 import { useDriverById } from "../../api/driver";
+import { useEffect, useState } from "react";
+import { updateTripState } from "../../api/trips";
+import { useNavigate } from "react-router-dom";
+import { useMap } from "../../state/MapRoutesStore";
+
 export default function HistoryCard({ drive }) {
-  if (!drive) return null;
   const { toggleFeedback, toggleBookedModal } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
+  const { setIsRouteEnabled } = useMap();
+  const [showStartButton, setShowStartButton] = useState(false);
   const navigate = useNavigate();
+
+  const driverQuery = useDriverById(drive ? drive.driver_id : null, { skip: !drive });
+  const driver = driverQuery?.data;
+
+  useEffect(() => {
+    if (!drive) return;
+
+    const handleTime = () => {
+      const departure = new Date(drive.departure_time);
+      const startAllowedTime = new Date(departure.getTime() - 10 * 60 * 1000);
+      const now = new Date();
+      const diff = startAllowedTime - now;
+
+      if (diff <= 0) {
+        setShowStartButton(true);
+      } else {
+        const timer = setTimeout(() => {
+          setShowStartButton(true);
+        }, diff);
+        return () => clearTimeout(timer);
+      }
+    };
+
+    handleTime();
+  }, [drive]);
+
+  if (!drive) {
+    return null;
+  }
+  if (!driver) {
+    return <div>Loading...</div>;
+  }
+
   function openFeedback(event) {
     event.stopPropagation();
     window.scrollTo(0, 0);
@@ -18,12 +54,16 @@ export default function HistoryCard({ drive }) {
     setFeedbackTarget(drive.driver_id);
     toggleFeedback(true);
   }
-  const driver = useDriverById(drive.driver_id).data;
 
-  console.log(drive);
-  if (!drive || !driver) {
-    return null;
-  }
+  const handleStart = () => {
+    setBookedDrive(drive);
+    updateTripState(drive.id, "started");
+    toggleBookedModal(true);
+    setIsRouteEnabled(true);
+    drive.state = "started";
+    navigate("/main");
+  };
+
   return (
     <div className='history'>
       <div className='history-wrapper'>
@@ -38,12 +78,13 @@ export default function HistoryCard({ drive }) {
             <img
               className='history-img'
               src={driver.user.profile_photo}
+              alt='Driver'
             />
           </div>
         </div>
       </div>
       <div className='history-footer'>
-        <div className='history-price'>{drive.price}руб</div>
+        <div className='history-price'>{drive.price} руб</div>
         <span onClick={openFeedback}>
           <svg
             width='22'
@@ -59,6 +100,15 @@ export default function HistoryCard({ drive }) {
         </span>
         <div className='history-status'>{getStatus(drive.state)}</div>
       </div>
+      {showStartButton && (
+        <div className='start-wrapper'>
+          <button
+            className='history-start'
+            onClick={handleStart}>
+            Начать
+          </button>
+        </div>
+      )}
     </div>
   );
 }
