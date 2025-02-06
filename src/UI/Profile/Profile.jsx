@@ -43,7 +43,13 @@ export default function Profile({ drive, passenger, onList }) {
       if (onList) navigate("/main");
     }
   }
-
+  function openChat() {
+    if (currentRole == "driver") {
+      navigate(`/chat/${id}/${passenger.id}`);
+    } else {
+      navigate(`/chat/${id}/${currentUser.id}`);
+    }
+  }
   const openProfile = () => {
     if (currentRole == "passenger") {
       setSelectedDriver(drive);
@@ -74,7 +80,7 @@ export default function Profile({ drive, passenger, onList }) {
         </div>
       </div>
       <button
-        onClick={() => navigate(`/chat/${id}/${user.id}`)}
+        onClick={openChat}
         className='profile-message'>
         <img
           src={message}
