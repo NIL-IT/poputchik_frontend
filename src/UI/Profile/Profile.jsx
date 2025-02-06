@@ -40,17 +40,20 @@ export default function Profile({ drive, passenger, onList }) {
       setBookedDrive(drive);
       toggleBookedModal(true);
       setIsRouteEnabled(true);
-      if (onList) navigate("/main");
+      if (onList == true) navigate("/main");
     }
   }
-  function openChat() {
+  console.log(passenger);
+  function openChat(e) {
+    e.stopPropagation();
     if (currentRole == "driver") {
       navigate(`/chat/${id}/${passenger.id}`);
     } else {
-      navigate(`/chat/${id}/${currentUser.id}`);
+      navigate(`/chat/${id}/${currentUser.passenger_profile.id}`);
     }
   }
-  const openProfile = () => {
+  const openProfile = (e) => {
+    e.stopPropagation();
     if (currentRole == "passenger") {
       setSelectedDriver(drive);
       navigate(`/userReview/${user.id}`);

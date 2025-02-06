@@ -44,3 +44,16 @@ export async function updateUser(data) {
     throw new Error(response.data);
   }
 }
+async function getUserByUserId(user_id) {
+  return axios.get(`${url}/users/users/user_id/${user_id}`);
+}
+
+export function useUserByUserId(user_id) {
+  const { data } = useQuery({
+    queryKey: ["user", user_id],
+    queryFn: () => getUserByUserId(user_id),
+    select: (data) => data.data,
+  });
+
+  return { data };
+}

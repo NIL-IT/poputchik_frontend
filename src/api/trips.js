@@ -88,3 +88,17 @@ export async function updateTripState(trip_id, state) {
     throw new Error(response.data);
   }
 }
+
+export async function getTripsById(trip_id) {
+  return axios.get(`${url}/trips/${trip_id}`);
+}
+
+export function useTripById(tripId) {
+  const { data } = useQuery({
+    queryKey: ["trip", tripId],
+    queryFn: () => getTripsById(tripId),
+    // enabled: !!tripId,
+    select: (data) => data.data,
+  });
+  return data;
+}

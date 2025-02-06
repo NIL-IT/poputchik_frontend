@@ -27,6 +27,7 @@ export default function PeopleList() {
               key={trip.id}
               drive={trip}
               passenger={item.user}
+              onList={true}
             />
           );
         });
@@ -37,6 +38,7 @@ export default function PeopleList() {
           <Profile
             key={obj.id}
             drive={obj}
+            onList={true}
           />
         );
       });
