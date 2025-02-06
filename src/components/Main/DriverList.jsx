@@ -18,7 +18,7 @@ export default function DriverList({ list, toggleCreating }) {
   const activeDrives =
     currentRole === "passenger"
       ? useBookedTripsList(currentUser.passenger_profile.id)
-      : hasDriverProfile
+      : currentUser.driver_profile
       ? [...activeTrips, ...startedTrips, ...bookedTrips]
       : [];
   const filteredDrives = activeDrives?.filter((i) => (driverId ? i.driver_id !== driverId : true));

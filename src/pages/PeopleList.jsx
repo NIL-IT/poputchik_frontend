@@ -18,7 +18,30 @@ export default function PeopleList() {
     driverList && currentUser.driver_profile
       ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id)
       : driverList;
-
+  function renderList() {
+    if (currentRole == "driver") {
+      return filteredList.map((item) => {
+        return item.booked_trips.map((trip) => {
+          return (
+            <Profile
+              key={trip.id}
+              drive={trip}
+              passenger={item.user}
+            />
+          );
+        });
+      });
+    } else if (currentRole == "passenger") {
+      return filteredList.map((obj) => {
+        return (
+          <Profile
+            key={obj.id}
+            drive={obj}
+          />
+        );
+      });
+    }
+  }
   return (
     <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>
       <BackButton onClick={() => navigate(-1)} />
@@ -26,17 +49,7 @@ export default function PeopleList() {
         Список {currentRole == "driver" ? "пассажиров" : "водителей"}
       </h3>
       <div className='flex flex-col gap-4 w-full justify-center items-center'>
-        {filteredList && filteredList.length > 0 ? (
-          filteredList.map((obj) => (
-            <Profile
-              key={obj.id}
-              drive={obj}
-              onList={true}
-            />
-          ))
-        ) : (
-          <>Активных водителей сейчас нет</>
-        )}
+        {filteredList ? renderList() : <>Активных водителей сейчас нет</>}
       </div>
     </div>
   );
