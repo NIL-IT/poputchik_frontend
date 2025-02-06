@@ -43,13 +43,15 @@ export default function Profile({ drive, passenger, onList }) {
       if (onList == true) navigate("/main");
     }
   }
-  console.log(passenger);
+  // по обычному айди
+  console.log(user.id, currentUser.id);
+
   function openChat(e) {
     e.stopPropagation();
     if (currentRole == "driver") {
-      navigate(`/chat/${id}/${passenger.id}`);
+      navigate(`/chat/${id}/${user.id}`);
     } else {
-      navigate(`/chat/${id}/${currentUser.passenger_profile.id}`);
+      navigate(`/chat/${id}/${currentUser.id}`);
     }
   }
   const openProfile = (e) => {

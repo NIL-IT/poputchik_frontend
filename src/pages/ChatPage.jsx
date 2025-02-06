@@ -3,10 +3,11 @@ import Message from "../UI/Message/Message";
 import MessageInput from "../UI/MessageInput/MessageInput";
 import { useUserStore } from "../state/UserStore";
 import { useNavigate, useParams } from "react-router-dom";
-import { getPassengerById, useChatHistory } from "../api/passenger";
+import { useChatHistory } from "../api/passenger";
 import CloseBtn from "../UI/CloseBtn";
 import { useDriverById } from "../api/driver";
-import { usePassengerById } from "../api/passenger";
+import { useUserByUserId } from "../api/user";
+
 import { useTripById } from "../api/trips";
 
 const Chat = () => {
@@ -19,7 +20,8 @@ const Chat = () => {
   const { tripId, passengerId } = useParams();
   const chatId = `${tripId}_${passengerId}`;
   const chatHistory = useChatHistory(chatId);
-  const passenger = usePassengerById(passengerId);
+
+  const passenger = useUserByUserId(passengerId).data;
   const trip = useTripById(tripId);
   const driverQuery = useDriverById(trip?.driver_id);
   const driver = driverQuery.data?.user;
