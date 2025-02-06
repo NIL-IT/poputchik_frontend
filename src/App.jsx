@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router-dom";
 import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -115,7 +115,7 @@ function App() {
 
   return (
     <div className='container'>
-      <Router>
+      <HashRouter>
         <Routes>
           <Route
             path='/'
@@ -201,7 +201,7 @@ function App() {
             }
           />
           <Route
-            path='/chat/:userId'
+            path='/chat/:tripId/:passengerId'
             element={
               <div className=''>
                 <Chat />
@@ -210,7 +210,7 @@ function App() {
           />
         </Routes>
         <MainModals />
-      </Router>
+      </HashRouter>
     </div>
   );
 }

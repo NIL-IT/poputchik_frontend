@@ -21,7 +21,7 @@ export default function Profile({ drive, passenger, onList }) {
   const driverData = useDriverById(drive?.driver_id)?.data;
 
   const { start_address, end_address, departure_time, id } = drive;
-  console.log(start_address, end_address, departure_time, id);
+  // console.log(start_address, end_address, departure_time, id);
   if (!start_address || !end_address) {
     console.error("Не заданы адреса отправления или прибытия для", drive);
     return null;

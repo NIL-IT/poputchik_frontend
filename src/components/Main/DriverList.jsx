@@ -36,17 +36,18 @@ export default function DriverList({ list, toggleCreating }) {
   }
   console.log(list);
   function renderList() {
-    if (currentRole == "driver") {
+    if (currentRole == "driver" && list) {
       return list.map((item) => {
-        return item.booked_trips.map((trip) => {
-          return (
-            <Profile
-              key={trip.id}
-              drive={trip}
-              passenger={item.user}
-            />
-          );
-        });
+        if (item.booked_trips)
+          return item.booked_trips.slice(0, 2).map((trip) => {
+            return (
+              <Profile
+                key={trip.id}
+                drive={trip}
+                passenger={item.user}
+              />
+            );
+          });
       });
     } else if (currentRole == "passenger") {
       // console.log("first");

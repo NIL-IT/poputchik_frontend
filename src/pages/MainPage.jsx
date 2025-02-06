@@ -50,14 +50,12 @@ export default function MainPage() {
     setStartPoint([]);
     setEndPoint([]);
   }
+  console.log(driverList);
 
-  const nerbiest = driverList
-    ? (currentUser.driver_profile
-        ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id)
-        : driverList
-      ).slice(0, 2)
-    : [];
-  // console.log(nerbiest);
+  const nerbiest =
+    driverList && currentRole === "driver"
+      ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id).slice(0, 2)
+      : driverList && driverList.slice(0, 2);
 
   function toggleCreating() {
     setIsCreating((prev) => !prev);
