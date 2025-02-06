@@ -115,7 +115,7 @@ function App() {
 
   return (
     <div className='container'>
-      <HashRouter>
+      <Router>
         <Routes>
           <Route
             path='/'
@@ -204,13 +204,15 @@ function App() {
             path='/chat/:tripId/:passengerId'
             element={
               <div className=''>
-                <Chat />
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
               </div>
             }
           />
         </Routes>
         <MainModals />
-      </HashRouter>
+      </Router>
     </div>
   );
 }
