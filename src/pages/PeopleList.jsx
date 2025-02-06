@@ -9,23 +9,30 @@ export default function PeopleList() {
   const navigate = useNavigate();
   const { currentUser, currentRole } = useUserStore();
 
-  const driverList =
-    currentRole == "driver" ? usePassengerList(currentUser.driver_profile.id) : useTripsList(currentUser.city);
+  const passengerList = usePassengerList(currentUser.driver_profile?.id);
+  const tripsList = useTripsList(currentUser.city);
+
+  const driverList = currentRole === "driver" && currentUser.driver_profile ? passengerList : tripsList;
+
+  const filteredList =
+    driverList && currentUser.driver_profile
+      ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id)
+      : driverList;
 
   return (
     <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>
       <BackButton onClick={() => navigate(-1)} />
-      <h3 className='font-bold text-[20px] leading-5 pb-8'>Список водителей</h3>
+      <h3 className='font-bold text-[20px] leading-5 pb-8'>
+        Список {currentRole == "driver" ? "пассажиров" : "водителей"}
+      </h3>
       <div className='flex flex-col gap-4 w-full justify-center items-center'>
-        {driverList && driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id).length > 0 ? (
-          driverList.map((obj) => {
-            return (
-              <Profile
-                key={obj.id}
-                driver={obj}
-              />
-            );
-          })
+        {filteredList && filteredList.length > 0 ? (
+          filteredList.map((obj) => (
+            <Profile
+              key={obj.id}
+              driver={obj}
+            />
+          ))
         ) : (
           <>Активных водителей сейчас нет</>
         )}

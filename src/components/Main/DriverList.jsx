@@ -7,47 +7,68 @@ import Profile from "../../UI/Profile/Profile";
 
 export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
-  const hasDriverProfile = currentUser.driver_profile?.id;
+  const driverId = currentUser.driver_profile?.id; // Получаем id, если он существует
   const navigate = useNavigate();
-  const activeTrips = hasDriverProfile ? useDriversTripsList(currentUser.driver_profile.id, "active") || [] : [];
 
-  const startedTrips = hasDriverProfile ? useDriversTripsList(currentUser.driver_profile.id, "started") || [] : [];
-
-  const bookedTrips = hasDriverProfile ? useDriversTripsList(currentUser.driver_profile.id, "booked") || [] : [];
+  const activeTrips = driverId ? useDriversTripsList(driverId, "active") || [] : [];
+  const startedTrips = driverId ? useDriversTripsList(driverId, "started") || [] : [];
+  const bookedTrips = driverId ? useDriversTripsList(driverId, "booked") || [] : [];
 
   const activeDrives =
     currentRole === "passenger"
       ? useTripsList(currentUser.city)
-      : hasDriverProfile
+      : driverId
       ? [...activeTrips, ...startedTrips, ...bookedTrips]
       : [];
+  const filteredDrives = activeDrives?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
-  const filteredDrives = activeDrives?.filter((i) => i.driver_id !== currentUser.driver_profile.id);
-  console.log(filteredDrives);
+  const allBookedTrips = list.reduce((acc, curr) => {
+    return Array.isArray(curr.booked_trips) ? acc.concat(curr.booked_trips) : acc;
+  }, []);
+
   function renderLength() {
     if (activeDrives) {
-      if (currentRole == "driver") {
+      if (currentRole === "driver") {
         return activeDrives.length;
       } else {
         return filteredDrives.length;
       }
-    } else return 0;
+    } else {
+      return 0;
+    }
   }
+
+  function renderList() {
+    if (currentRole == "driver") {
+      return list.map((item) => {
+        return item.booked_trips.map((trip) => {
+          return (
+            <Profile
+              key={trip.id}
+              drive={trip}
+              passenger={item.user}
+            />
+          );
+        });
+      });
+    } else {
+      return list.map((obj) => {
+        return (
+          <Profile
+            key={obj.id}
+            driver={obj}
+          />
+        );
+      });
+    }
+  }
+  // console.log(list);
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
         Список {currentRole === "passenger" ? "водителей" : "пассажиров"}
       </h2>
-      <div className='flex flex-col items-center justify-center gap-4 pb-4'>
-        {list.map((obj) => {
-          return (
-            <Profile
-              key={obj.id}
-              driver={obj}
-            />
-          );
-        })}
-      </div>
+      <div className='flex flex-col items-center justify-center gap-4 pb-4'>{renderList()}</div>
       <div
         className='flex max-w-[350px] justify-end items-end text-right text-[14px] leading-[16.1px] margin-[0 auto] pb-4'
         onClick={() => navigate("/peopleList")}>
@@ -68,7 +89,7 @@ export default function DriverList({ list, toggleCreating }) {
       <div className='flex justify-center items-center gap-5 pb-6'>
         <div className='relative'>
           <Button
-            size={currentRole == "driver" ? "medium" : "large"}
+            size={currentRole === "driver" ? "medium" : "large"}
             onClick={() => navigate("/activeDrives")}>
             Активные поездки
           </Button>

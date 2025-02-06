@@ -331,7 +331,7 @@ export default function Registration({ backFunc, step, nextStep }) {
           {formError.general && <p className='text-red-500 text-sm'>{formError.general}</p>}
         </form>
       </div>
-      <div className='mt-10'>
+      <div className='mt-10 mb-5'>
         <Button
           type='submit'
           onClick={handleSubmit}

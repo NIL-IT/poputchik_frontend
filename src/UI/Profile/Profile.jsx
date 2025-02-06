@@ -7,40 +7,50 @@ import { formatDate } from "../../utils/utils";
 import { useMap } from "../../state/MapRoutesStore";
 import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
-export default function Profile({ driver }) {
-  const { setSelectedDriver } = useModal();
-  const navigate = useNavigate();
 
-  if (!driver) {
+export default function Profile({ drive, passenger }) {
+  const { setSelectedDriver, toggleBookedModal } = useModal();
+  const navigate = useNavigate();
+  // console.log(drive);
+  if (!drive) {
     return null;
   }
   const { currentRole, currentUser } = useUserStore();
-  const { setIsRouteEnabled, isRouteEnabled } = useMap();
-  const { setBookedDrive, setFeedbackTarget } = useTrip();
-  const { toggleBookedModal } = useModal();
+  const { setIsRouteEnabled } = useMap();
+  const { setBookedDrive } = useTrip();
 
-  const driverData = useDriverById(driver?.driver_id)?.data;
-  console.log(driverData);
-  const { start_address, end_address, departure_time, id } = driver;
-  const date = formatDate(departure_time);
-  const user = currentRole === "driver" ? driver?.user : driverData?.user || {};
-  const rating = currentRole === "driver" ? driver?.rating : driverData?.rating ?? "";
+  const driverData = useDriverById(drive?.driver_id)?.data;
+
+  const { start_address, end_address, departure_time, id } = drive;
+  console.log(start_address, end_address, departure_time, id);
+  if (!start_address || !end_address) {
+    console.error("Не заданы адреса отправления или прибытия для", drive);
+    return null;
+  }
+
+  const date = formatDate(departure_time, true);
+
+  const user = currentRole === "driver" ? passenger : driverData?.user || {};
+  const rating = currentRole === "driver" ? "" : driverData?.rating ?? "";
+
   if (!user || Object.keys(user).length === 0) return null;
+
   function chooseDrive(event) {
     event.stopPropagation();
-    if (driver.state == "active" && currentRole == "passenger" && currentUser.passenger_profile) {
-      setBookedDrive(driver);
+    if (drive.state === "active" && currentRole === "passenger" && currentUser.passenger_profile) {
+      setBookedDrive(drive);
       toggleBookedModal(true);
       setIsRouteEnabled(true);
     }
   }
+
   const openProfile = () => {
-    setSelectedDriver(driver);
-    navigate(`/userReview/${user.id}`);
+    if (currentRole == "passenger") {
+      setSelectedDriver(drive);
+      navigate(`/userReview/${user.id}`);
+    }
   };
-  console.log(driverData?.rating);
-  if (!user) return null;
-  console.log(driver);
+
   return (
     <div
       className='profile'
@@ -49,14 +59,17 @@ export default function Profile({ driver }) {
         <img
           className='profile-img'
           src={user.profile_photo}
+          alt='Profile'
           onClick={() => openProfile()}
         />
         <div className='profile-text'>
           <div className='flex gap-5'>
             <h3 className='profile-name'>{user.name}</h3>
-            <p className='profile-stars'>{rating}</p>
+            {rating && <p className='profile-stars'>{rating}</p>}
           </div>
-          <span className='profile-path'>{`${start_address.name} - ${end_address.name}`}</span>
+          <span className='profile-path'>
+            {`${start_address?.name || "Не указан"} - ${end_address?.name || "Не указан"}`}
+          </span>
           <div className='profile-date'>{date}</div>
         </div>
       </div>
@@ -65,7 +78,7 @@ export default function Profile({ driver }) {
         className='profile-message'>
         <img
           src={message}
-          alt=''
+          alt='Message icon'
         />
       </button>
     </div>

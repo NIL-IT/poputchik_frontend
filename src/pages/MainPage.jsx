@@ -19,8 +19,8 @@ export default function MainPage() {
   const { currentUser, currentRole } = useUserStore();
 
   const driverList =
-    currentRole == "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
-  console.log(driverList);
+    currentRole === "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
+
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -44,14 +44,21 @@ export default function MainPage() {
     setStartPoint([]);
     setEndPoint([]);
   }
+
   function clearBookedData() {
     setIsRouteEnabled(false);
     setStartPoint([]);
     setEndPoint([]);
   }
 
-  const nerbiest = driverList && driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id).slice(0, 2);
-  // .filter((i) => i.driver_id !== currentUser.driver_profile.id)
+  const nerbiest = driverList
+    ? (currentUser.driver_profile
+        ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id)
+        : driverList
+      ).slice(0, 2)
+    : [];
+  // console.log(nerbiest);
+
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
