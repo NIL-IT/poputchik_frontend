@@ -4,10 +4,11 @@ import { useUserStore } from "../../state/UserStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
 import Profile from "../../UI/Profile/Profile";
+import { useBookedTripsList } from "../../api/passenger";
 
 export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
-  const driverId = currentUser.driver_profile?.id; // Получаем id, если он существует
+  const driverId = currentUser.driver_profile?.id;
   const navigate = useNavigate();
 
   const activeTrips = driverId ? useDriversTripsList(driverId, "active") || [] : [];
@@ -16,15 +17,11 @@ export default function DriverList({ list, toggleCreating }) {
 
   const activeDrives =
     currentRole === "passenger"
-      ? useTripsList(currentUser.city)
-      : driverId
+      ? useBookedTripsList(currentUser.passenger_profile.id)
+      : hasDriverProfile
       ? [...activeTrips, ...startedTrips, ...bookedTrips]
       : [];
   const filteredDrives = activeDrives?.filter((i) => (driverId ? i.driver_id !== driverId : true));
-
-  const allBookedTrips = list.reduce((acc, curr) => {
-    return Array.isArray(curr.booked_trips) ? acc.concat(curr.booked_trips) : acc;
-  }, []);
 
   function renderLength() {
     if (activeDrives) {
@@ -37,7 +34,7 @@ export default function DriverList({ list, toggleCreating }) {
       return 0;
     }
   }
-
+  console.log(list);
   function renderList() {
     if (currentRole == "driver") {
       return list.map((item) => {
@@ -51,18 +48,18 @@ export default function DriverList({ list, toggleCreating }) {
           );
         });
       });
-    } else {
+    } else if (currentRole == "passenger") {
+      // console.log("first");
       return list.map((obj) => {
         return (
           <Profile
             key={obj.id}
-            driver={obj}
+            drive={obj}
           />
         );
       });
     }
   }
-  // console.log(list);
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>

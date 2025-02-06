@@ -8,10 +8,9 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
 
-export default function Profile({ drive, passenger }) {
+export default function Profile({ drive, passenger, onList }) {
   const { setSelectedDriver, toggleBookedModal } = useModal();
   const navigate = useNavigate();
-  // console.log(drive);
   if (!drive) {
     return null;
   }
@@ -41,6 +40,7 @@ export default function Profile({ drive, passenger }) {
       setBookedDrive(drive);
       toggleBookedModal(true);
       setIsRouteEnabled(true);
+      if (onList) navigate("/main");
     }
   }
 
@@ -65,7 +65,7 @@ export default function Profile({ drive, passenger }) {
         <div className='profile-text'>
           <div className='flex gap-5'>
             <h3 className='profile-name'>{user.name}</h3>
-            {rating && <p className='profile-stars'>{rating}</p>}
+            {currentRole == "passenger" ? <p className='profile-stars'>{rating}</p> : ""}
           </div>
           <span className='profile-path'>
             {`${start_address?.name || "Не указан"} - ${end_address?.name || "Не указан"}`}

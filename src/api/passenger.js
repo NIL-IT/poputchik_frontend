@@ -27,3 +27,16 @@ export function usePassengerList(driver_id) {
   });
   return data;
 }
+
+async function getBookedTripsByPassengerId(passenger_id) {
+  return axios.get(`${url}/users/passenger/booked_trips/${passenger_id}`);
+}
+
+export function useBookedTripsList(passenger_id) {
+  const { data } = useQuery({
+    queryKey: ["passengerList"],
+    queryFn: () => getBookedTripsByPassengerId(passenger_id),
+    select: (data) => data.data,
+  });
+  return data;
+}

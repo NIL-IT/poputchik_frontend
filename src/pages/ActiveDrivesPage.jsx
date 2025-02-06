@@ -3,6 +3,7 @@ import HistoryCard from "../UI/HistoryCard/HistoryCard";
 import CloseBtn from "../UI/CloseBtn";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
+import { useBookedTripsList } from "../api/passenger";
 
 export default function ActiveDrivesPage() {
   const { currentRole, currentUser } = useUserStore();
@@ -17,11 +18,11 @@ export default function ActiveDrivesPage() {
 
   const activeDrives =
     currentRole === "passenger"
-      ? useTripsList(currentUser.city)
+      ? useBookedTripsList(currentUser.passenger_profile.id)
       : hasDriverProfile
       ? [...activeTrips, ...startedTrips, ...bookedTrips]
       : [];
-
+  console.log(activeDrives);
   const filteredDrives = activeDrives?.filter((i) => i.driver_id !== currentUser.driver_profile?.id) || [];
   function renderList() {
     if (currentRole === "passenger") {

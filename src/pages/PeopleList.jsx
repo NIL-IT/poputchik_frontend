@@ -30,7 +30,8 @@ export default function PeopleList() {
           filteredList.map((obj) => (
             <Profile
               key={obj.id}
-              driver={obj}
+              drive={obj}
+              onList={true}
             />
           ))
         ) : (

@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 import { updateTripState } from "../../api/trips";
 import { useNavigate } from "react-router-dom";
 import { useMap } from "../../state/MapRoutesStore";
+import { useUserStore } from "../../state/UserStore";
 
 export default function HistoryCard({ drive }) {
+  const { currentUser } = useUserStore();
   const { toggleFeedback, toggleBookedModal } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { setIsRouteEnabled } = useMap();
@@ -22,18 +24,20 @@ export default function HistoryCard({ drive }) {
     if (!drive) return;
 
     const handleTime = () => {
-      const departure = new Date(drive.departure_time);
-      const startAllowedTime = new Date(departure.getTime() - 10 * 60 * 1000);
-      const now = new Date();
-      const diff = startAllowedTime - now;
+      if (currentUser.driver_profile && currentUser.driver_profile == drive.driver_id) {
+        const departure = new Date(drive.departure_time);
+        const startAllowedTime = new Date(departure.getTime() - 10 * 60 * 1000);
+        const now = new Date();
+        const diff = startAllowedTime - now;
 
-      if (diff <= 0) {
-        setShowStartButton(true);
-      } else {
-        const timer = setTimeout(() => {
+        if (diff <= 0) {
           setShowStartButton(true);
-        }, diff);
-        return () => clearTimeout(timer);
+        } else {
+          const timer = setTimeout(() => {
+            setShowStartButton(true);
+          }, diff);
+          return () => clearTimeout(timer);
+        }
       }
     };
 
