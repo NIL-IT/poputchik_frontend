@@ -24,7 +24,8 @@ export default function HistoryCard({ drive }) {
     if (!drive) return;
 
     const handleTime = () => {
-      if (currentUser.driver_profile && currentUser.driver_profile == drive.driver_id) {
+      console.log(drive.driver_id);
+      if (currentUser.driver_profile && currentUser.driver_profile.id == drive.driver_id) {
         const departure = new Date(drive.departure_time);
         const startAllowedTime = new Date(departure.getTime() - 10 * 60 * 1000);
         const now = new Date();

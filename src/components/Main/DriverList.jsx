@@ -34,7 +34,6 @@ export default function DriverList({ list, toggleCreating }) {
       return 0;
     }
   }
-  console.log(list);
   function renderList() {
     if (currentRole == "driver" && list) {
       return list.map((item) => {

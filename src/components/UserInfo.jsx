@@ -4,6 +4,7 @@ import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import { useNavigate } from "react-router-dom";
+import { useDriverById, useDriverReviews } from "../api/driver";
 
 export default function UserInfo({ isEditable, value, setCity, setPhone, setMail, setProfilePhoto }) {
   const { currentUser, currentRole } = useUserStore();
@@ -11,6 +12,9 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
 
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
+
+  const reviews = useDriverReviews(currentUser.driver_profile?.id || []);
+  const rating = useDriverById(currentUser.driver_profile.id).data.rating;
 
   return (
     <div className='flex flex-col justify-center items-center '>
@@ -35,8 +39,8 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
           </label>
         </fieldset>
         <div className='profile-ratings gap-5 '>
-          <p className='profile-stars'>4</p>
-          <p className='profile-comments'>4.4</p>
+          <p className='profile-stars'>{rating}</p>
+          <p className='profile-comments'>{reviews ? reviews.length : 0}</p>
         </div>
         <h1 className='font-bold text-[24px] leading-6 pt-6'>{currentUser.name}</h1>
       </div>

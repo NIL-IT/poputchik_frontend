@@ -64,6 +64,7 @@ body {
 .container-custom {
   max-width: 390px;
   margin: 0 auto;
+  padding-top: 30px;
 }
 
 body {

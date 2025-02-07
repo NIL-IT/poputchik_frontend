@@ -38,7 +38,8 @@ export default function SearchComponent({ onLocClick }) {
   }
 
   return (
-    <div className={`absolute z-20 h-full w-full bg-white py-8 flex flex-col ${isSearchOpen ? "" : "hidden"} `}>
+    <div
+      className={`pt-[60px] absolute z-20 h-full w-full bg-white py-8 flex flex-col ${isSearchOpen ? "" : "hidden"} `}>
       <div className='searchBig-container container-custom'>
         <div className='searchBig-wrapper'>
           <label

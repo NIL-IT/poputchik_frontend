@@ -245,7 +245,7 @@ export default function DriveInfo() {
         <Button
           onClick={bookingByPassenger}
           size={"large"}>
-          Забронировать
+          {bookedDrive.state == "started" ? "Закончить" : "Забронировать"}
         </Button>
       </div>
     </Footer>

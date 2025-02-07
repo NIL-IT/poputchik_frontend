@@ -13,7 +13,7 @@ export default function UserReviews() {
     <div className='relative pt-10'>
       <CloseBtn onClick={() => navigate(-1)} />
 
-      <div className='flex flex-col items-start justify-start w-full '>
+      <div className='flex flex-col items-start justify-start w-full pt-10'>
         <div className='flex gap-2 mb-10 text-left mx-5'>
           <img
             className='rounded-full w-[76px] h-[76px]'

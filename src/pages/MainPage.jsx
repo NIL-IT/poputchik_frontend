@@ -54,8 +54,10 @@ export default function MainPage() {
 
   const nerbiest =
     driverList && currentRole === "driver"
-      ? driverList && driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id).slice(0, 2)
-      : driverList && driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id).slice(0, 2);
+      ? driverList &&
+        driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2)
+      : driverList &&
+        driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2);
 
   function toggleCreating() {
     setIsCreating((prev) => !prev);

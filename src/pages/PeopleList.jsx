@@ -47,8 +47,8 @@ export default function PeopleList() {
   return (
     <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>
       <BackButton onClick={() => navigate(-1)} />
-      <h3 className='font-bold text-[20px] leading-5 pb-8'>
-        Список {currentRole == "driver" ? "пассажиров" : "водителей"}
+      <h3 className='font-bold text-[20px] leading-5 pb-8 max-w-[250px]'>
+        Список {currentRole == "driver" ? "пассажиров твоих поездок" : "водителей"}
       </h3>
       <div className='flex flex-col gap-4 w-full justify-center items-center'>
         {filteredList ? renderList() : <>Активных водителей сейчас нет</>}

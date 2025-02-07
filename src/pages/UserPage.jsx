@@ -70,7 +70,6 @@ export default function UserPage() {
       profile_photo: URL.createObjectURL(profile_photo),
     };
     updateCurrentUser(updates);
-    console.log(currentUser);
   }
 
   async function editHandler() {
@@ -101,7 +100,7 @@ export default function UserPage() {
     setIsEditable((prev) => !prev);
   }
   return (
-    <div className=''>
+    <div className='pt-10'>
       <div className='container-custom relative'>
         <div className='pt-8 pb-10 px-5 border-b border-[#919191] '>
           <BackButton />
