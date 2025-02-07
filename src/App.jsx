@@ -16,11 +16,13 @@ import UserReviews from "./pages/UserReviews";
 import PeopleList from "./pages/PeopleList";
 import PaymentPage from "./pages/PaymentPage";
 import Chat from "./pages/ChatPage";
+import ChatList from "./pages/ChatList";
 
 function App() {
   const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
+
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -206,6 +208,16 @@ function App() {
               <div className=''>
                 <ProtectedRoute>
                   <Chat />
+                </ProtectedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/chats'
+            element={
+              <div className=''>
+                <ProtectedRoute>
+                  <ChatList />
                 </ProtectedRoute>
               </div>
             }
