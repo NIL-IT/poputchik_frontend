@@ -7,14 +7,13 @@ import Search from "../Search/Search";
 export default function Header() {
   const { currentUser } = useUserStore();
   const navigate = useNavigate();
-  function goToChat() {
-    navigate("/chat/1/4");
-    console.log("first");
+  function goToChats() {
+    navigate("/chats");
   }
   return (
     <div className='px-5 py-[66px] flex justify-between items-center absolute w-full z-10'>
       <div className='flex w-full justify-between'>
-        <Burger onClick={goToChat} />
+        <Burger onClick={goToChats} />
         <Search />
         <Avatar img={currentUser.profile_photo} />
       </div>

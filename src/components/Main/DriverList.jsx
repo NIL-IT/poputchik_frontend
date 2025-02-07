@@ -49,7 +49,6 @@ export default function DriverList({ list, toggleCreating }) {
           });
       });
     } else if (currentRole == "passenger") {
-      // console.log("first");
       return list.map((obj) => {
         return (
           <Profile

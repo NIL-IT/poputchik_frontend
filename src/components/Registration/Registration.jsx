@@ -143,10 +143,9 @@ export default function Registration({ backFunc, step, nextStep }) {
 
       navigate("/main");
     } catch (error) {
-      setFormError({ general: error.message || "Неизвестная ошибка" });
+      setFormError({ general: error.response.data.detail || "Неизвестная ошибка" });
     }
   };
-
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
 

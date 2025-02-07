@@ -14,7 +14,7 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
   const handlePhoneChange = (value) => setPhone(value);
 
   const reviews = useDriverReviews(currentUser.driver_profile?.id || []);
-  const rating = useDriverById(currentUser.driver_profile.id).data.rating;
+  const user = useDriverById(currentUser.driver_profile.id).data;
 
   return (
     <div className='flex flex-col justify-center items-center '>
@@ -39,7 +39,7 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
           </label>
         </fieldset>
         <div className='profile-ratings gap-5 '>
-          <p className='profile-stars'>{rating}</p>
+          <p className='profile-stars'>{user ? user.rating : "0"}</p>
           <p className='profile-comments'>{reviews ? reviews.length : 0}</p>
         </div>
         <h1 className='font-bold text-[24px] leading-6 pt-6'>{currentUser.name}</h1>
