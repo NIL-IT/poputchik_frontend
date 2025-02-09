@@ -109,7 +109,7 @@ export default function CreateTrip() {
 
     const grossRatePerKm = 15 / 0.95;
     const totalFare = value * grossRatePerKm;
-
+    setTripPrice(totalFare.toFixed(2));
     return totalFare.toFixed(2) + " руб";
   }
 

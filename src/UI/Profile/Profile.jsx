@@ -34,7 +34,7 @@ export default function Profile({ drive, passenger, onList }) {
   const rating = currentRole === "driver" ? "" : driverData?.rating ?? "";
 
   if (!user || Object.keys(user).length === 0) return null;
-
+  console.log(drive);
   function chooseDrive(event) {
     event.stopPropagation();
     if (drive.state === "active" && currentRole === "passenger" && currentUser.passenger_profile) {

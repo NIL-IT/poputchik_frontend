@@ -96,8 +96,10 @@
 }
 
 .history-img {
-  height: 37px;
-  width: 37px;
+  min-height: 37px;
+  max-height: 37px;
+  max-width: 37px;
+  min-width: 37px;
   border-radius: 50%;
 }
 

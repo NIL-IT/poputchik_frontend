@@ -8,6 +8,7 @@ import { updateTripState } from "../../api/trips";
 import { useNavigate } from "react-router-dom";
 import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
+import { cleanAddress } from "../../api/api";
 
 export default function HistoryCard({ drive }) {
   const { currentUser } = useUserStore();
@@ -15,7 +16,7 @@ export default function HistoryCard({ drive }) {
   const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { setIsRouteEnabled } = useMap();
   const [showStartButton, setShowStartButton] = useState(false);
-  const [isExpired, setIsExpired] = useState(false); // Флаг для скрытия карточки
+  const [isExpired, setIsExpired] = useState(false);
   const navigate = useNavigate();
 
   const driverQuery = useDriverById(drive ? drive.driver_id : null, { skip: !drive });
@@ -116,12 +117,24 @@ export default function HistoryCard({ drive }) {
       });
   };
 
+  function activeClick() {
+    if ((drive.state = "started")) {
+      setBookedDrive(drive);
+      toggleBookedModal(true);
+      setIsRouteEnabled(true);
+      navigate("/main");
+    }
+  }
+  console.log(drive);
+
   return (
-    <div className='history'>
+    <div
+      className='history'
+      onClick={activeClick}>
       <div className='history-wrapper'>
         <div className='history-path'>
-          <span className='history-from'>{drive.start_address.name}</span>
-          <span className='history-to'>{drive.end_address.name}</span>
+          <span className='history-from'>{cleanAddress(drive.start_address.name)}</span>
+          <span className='history-to'>{cleanAddress(drive.end_address.name)}</span>
         </div>
         <div className='history-info'>
           <div className='history-date'>{formatDate(drive.departure_time)}</div>
