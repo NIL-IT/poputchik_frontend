@@ -8,7 +8,7 @@ import { useBookedTripsList } from "../../api/passenger";
 
 export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
-  const driverId = currentUser.driver_profile?.id;
+  const driverId = currentUser.driver ? currentUser.driver_profile?.id : null;
   const navigate = useNavigate();
 
   const activeTrips = driverId ? useDriversTripsList(driverId, "active") || [] : [];
