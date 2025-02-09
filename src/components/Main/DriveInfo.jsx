@@ -7,6 +7,7 @@ import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
 import { bookedTripByPassenger, updateTripState } from "../../api/trips";
+import { cleanAddress } from "../../api/api";
 
 export default function DriveInfo() {
   const { currentUser, currentRole } = useUserStore();
@@ -163,8 +164,8 @@ export default function DriveInfo() {
         </div>
         <div className='border-b border-[#EFEFF4]'>
           <div className='history-path my-5 '>
-            <span className='history-from'>{bookedDrive.start_address.name}</span>
-            <span className='history-to'>{bookedDrive.end_address.name}</span>
+            <span className='history-from'>{cleanAddress(bookedDrive.start_address.name)}</span>
+            <span className='history-to'>{cleanAddress(bookedDrive.end_address.name)}</span>
           </div>
         </div>
         {bookedDrive.state == "started" && (

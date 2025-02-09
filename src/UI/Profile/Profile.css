@@ -9,8 +9,10 @@
   border-radius: 10px;
 }
 .profile-img {
-  width: 58px;
-  height: 58px;
+  min-width: 58px;
+  min-height: 58px;
+  max-width: 58px;
+  max-height: 58px;
   border-radius: 50%;
   background-color: var(--grey-color);
 }
@@ -47,9 +49,12 @@
 
 .profile-message {
   background: var(--orange-color);
-  width: 53px;
-  height: 44px;
+  min-width: 53px;
+  max-width: 53px;
+  min-height: 44px;
+  max-width: 44px;
   border-radius: 10px;
+  margin-left: 10px;
 }
 
 .profile-stars {

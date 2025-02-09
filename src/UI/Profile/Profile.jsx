@@ -7,6 +7,7 @@ import { formatDate } from "../../utils/utils";
 import { useMap } from "../../state/MapRoutesStore";
 import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
+import { cleanAddress } from "../../api/api";
 
 export default function Profile({ drive, passenger, onList }) {
   const { setSelectedDriver, toggleBookedModal } = useModal();
@@ -79,7 +80,7 @@ export default function Profile({ drive, passenger, onList }) {
             {currentRole == "passenger" ? <p className='profile-stars'>{rating}</p> : ""}
           </div>
           <span className='profile-path'>
-            {`${start_address?.name || "Не указан"} - ${end_address?.name || "Не указан"}`}
+            {`${cleanAddress(start_address?.name) || "Не указан"} - ${cleanAddress(end_address?.name) || "Не указан"}`}
           </span>
           <div className='profile-date'>{date}</div>
         </div>

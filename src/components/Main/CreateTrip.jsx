@@ -9,6 +9,7 @@ import { useMap } from "../../state/MapRoutesStore";
 import { formatDate } from "../../utils/utils";
 import { useUserStore } from "../../state/UserStore";
 import { createTripByDriver } from "../../api/trips";
+import { cleanAddress } from "../../api/api";
 export default function CreateTrip() {
   const { tripFrom, tripTo, date, persons, price } = useTrip();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
@@ -125,7 +126,7 @@ export default function CreateTrip() {
               <Input
                 readOnly
                 placeholder={"откуда"}
-                value={tripFrom.name}
+                value={cleanAddress(tripFrom.name)}
                 onChange={() => {}}
                 onClick={() => openSearch("from")}
               />
@@ -134,7 +135,7 @@ export default function CreateTrip() {
               <Input
                 readOnly
                 placeholder={"куда"}
-                value={tripTo.name}
+                value={cleanAddress(tripTo.name)}
                 onChange={() => {}}
                 onClick={() => openSearch("to")}
               />

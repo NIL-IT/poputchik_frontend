@@ -8,3 +8,12 @@ export async function urlToFile(url) {
   const filename = url.split("/").pop().split(/[#?]/)[0];
   return new File([blob], filename, { type: blob.type });
 }
+
+export function cleanAddress(address) {
+  return address
+    .replace(/^(Россия, )?(Республика Алтай, |Алтайский край, )?/i, "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part) => !/район/i.test(part))
+    .join(", ");
+}
