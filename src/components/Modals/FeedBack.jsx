@@ -39,7 +39,7 @@ export default function FeedBack() {
   }
 
   async function postFeedback() {
-    if (grade > 1 && feedbackText.length > 0) {
+    if (grade > 0 && feedbackText.length > 0) {
       const now = new Date();
       const isoString = now.toISOString();
       const feedback = {

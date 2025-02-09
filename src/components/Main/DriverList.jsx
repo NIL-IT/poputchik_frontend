@@ -53,6 +53,8 @@ export default function DriverList({ list, toggleCreating }) {
             />
           ));
       }
+
+      // Если passengerList получается вложенным массивом, можно его сплющить позже
       passengerList = list
         .map((item) => {
           if (item.booked_trips) {
@@ -76,7 +78,9 @@ export default function DriverList({ list, toggleCreating }) {
       ));
     }
 
-    return [...waitingItems, ...passengerList, ...driverList];
+    const flatPassengerList = passengerList.flat();
+    console.log([...waitingItems, ...flatPassengerList, ...driverList]);
+    return [...waitingItems, ...flatPassengerList, ...driverList].slice(0, 2);
   }
 
   return (
