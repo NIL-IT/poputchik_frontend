@@ -61,10 +61,10 @@ const Chat = () => {
   return (
     <div className='flex flex-col h-screen mx-auto'>
       <CloseBtn
-        className='absolute top-[50px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
+        className='absolute top-[70px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
         onClick={() => navigate(-1)}
       />
-      <div className='pt-[60px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold'>{name}</div>
+      <div className='pt-[80px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold'>{name}</div>
       <div className='flex-1 overflow-y-auto p-4 space-y-2'>
         {messages.map((msg, index) => (
           <Message
