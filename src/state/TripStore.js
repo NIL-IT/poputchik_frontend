@@ -27,7 +27,7 @@ export const useTrip = create((set) => ({
 
   decreaseTripPerson: () => set((state) => ({ persons: state.persons > 1 ? state.persons - 1 : 1 })),
   setPersons: (value) => set({ persons: value }),
-  price: 500,
+  price: 0,
   setTripPrice: (value) => set({ price: value }),
 
   bookedDrive: {},

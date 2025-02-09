@@ -9,7 +9,6 @@ import CarModal from "./CarModal";
 
 export default function MainModals() {
   const { isCalendarOpen, toggleCalendar } = useModal();
-  const { isPriceOpen, togglePrice } = useModal();
   const { persons, increaseTripPerson, decreaseTripPerson, price, setTripPrice, bookedDrive } = useTrip();
   const { isPersonOpen, togglePersonModal } = useModal();
   const { isFeedBackOpen, toggleFeedback, bookedModal, isFeedbackSummaryOpen, setIsFeedbackSummaryOpen, carModal } =
@@ -89,29 +88,6 @@ export default function MainModals() {
           <Button
             size={"large"}
             onClick={() => togglePersonModal(false)}>
-            Подтвердить
-          </Button>
-        </FullScreenList>
-      )}
-      {isPriceOpen && (
-        <FullScreenList
-          isCreating
-          isNumbers
-          isClose
-          isOpen={isPriceOpen}
-          toggle={() => togglePrice(false)}>
-          <h3 className='text-left w-[250px] font-bold text-[24px] leading-[25.44px]'>Стоимость поездки</h3>
-          <div className='flex justify-center items-center w-[350px]'>
-            <input
-              type='number'
-              className='text-[64px] leading-[67.84px] w-[172px] border-b border-[#CACDD4] bg-inherit outline-none text-center'
-              onChange={(e) => setTripPrice(e.target.value)}
-              value={price}
-            />
-          </div>
-          <Button
-            size={"large"}
-            onClick={() => togglePrice(false)}>
             Подтвердить
           </Button>
         </FullScreenList>

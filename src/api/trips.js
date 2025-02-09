@@ -102,3 +102,17 @@ export function useTripById(tripId) {
   });
   return data;
 }
+
+export async function tripRequestByPassenger(data) {
+  const response = await axios({
+    method: "post",
+    url: `${url}/trip_requests/trip_requests/`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  });
+  if (response.status !== 201) {
+    throw new Error(response.data);
+  }
+}

@@ -44,7 +44,7 @@ export default function ChatList() {
         onClick={() => navigate(-1)}
       />
       <div className='pt-[60px] h-[170px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold'>Чаты</div>
-      <div className='container-custom'>{renderList()}</div>
+      <div className='container-custom flex flex-col gap-4'>{renderList()}</div>
     </div>
   );
 }

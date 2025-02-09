@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTrip } from "../../state/TripStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -6,7 +6,7 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
-import { bookedTripByPassenger, updateTripState } from "../../api/trips";
+import { bookedTripByPassenger, tripRequestByPassenger, updateTripState } from "../../api/trips";
 import { cleanAddress } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
@@ -20,12 +20,23 @@ export default function DriveInfo() {
   const driver = data.user;
   const rating = data.rating;
   const carPhoto = driver.driver_profile.car_photo;
+
+  const [text, setText] = useState("");
+
+  const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
+
   function bookingByPassenger(e) {
     e.preventDefault();
-
-    bookedTripByPassenger(currentUser.passenger_profile.id, bookedDrive.id, 1);
+    const formData = {
+      trip_id: bookedDrive.id,
+      passenger_id: currentUser.passenger_profile.id,
+      text: text,
+      seats_requested: 1,
+    };
+    tripRequestByPassenger(formData);
     toggleBookedModal(false);
   }
+
   function openFeedback(event) {
     event.stopPropagation();
     window.scrollTo(0, 0);
@@ -33,6 +44,7 @@ export default function DriveInfo() {
     setFeedbackTarget(driver.driver_id);
     toggleFeedback(true);
   }
+
   useEffect(() => {
     if (!bookedDrive || !bookedDrive.start_address || !bookedDrive.end_address) return;
 
@@ -43,6 +55,7 @@ export default function DriveInfo() {
     setEndPoint([end.latitude, end.longitude]);
     setIsRouteEnabled(true);
   }, [bookedDrive]);
+
   useEffect(() => {
     return () => {
       setIsRouteEnabled(false);
@@ -57,7 +70,7 @@ export default function DriveInfo() {
   }
 
   function renderButton() {
-    if (currentRole == "driver" && bookedDrive.state == "started") {
+    if (currentRole === "driver" && bookedDrive.state === "started") {
       return (
         <Button
           onClick={finishDrive}
@@ -65,15 +78,33 @@ export default function DriveInfo() {
           Закончить
         </Button>
       );
-    } else if (currentRole == "passenger" && bookedDrive.state !== "started") {
-      return (
-        <Button
-          onClick={bookingByPassenger}
-          size={"large"}>
-          Забронировать
-        </Button>
-      );
-    } else if (currentRole == "passenger" && bookedDrive.state == "started") {
+    } else if (currentRole === "passenger" && bookedDrive.state !== "started") {
+      if (!isTextAreaVisible) {
+        return (
+          <Button
+            onClick={() => setIsTextAreaVisible(true)}
+            size={"large"}>
+            Забронировать
+          </Button>
+        );
+      } else {
+        return (
+          <div>
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder='Введите комментарий (необязательно)'
+              className='w-full p-2 border rounded mb-4'
+            />
+            <Button
+              onClick={bookingByPassenger}
+              size={"large"}>
+              Подтвердить бронь
+            </Button>
+          </div>
+        );
+      }
+    } else if (currentRole === "passenger" && bookedDrive.state === "started") {
       return (
         <Button
           onClick={() => {}}
@@ -100,8 +131,8 @@ export default function DriveInfo() {
               src={driver.profile_photo}
             />
             <div className='text-[#343B71] font-medium text-[17px] leading-5'>
-              <h3 className='pb-3  '>{driver.name}</h3>
-              <div className=''>
+              <h3 className='pb-3'>{driver.name}</h3>
+              <div>
                 <p className='profile-stars'>{rating}</p>
               </div>
             </div>
@@ -111,141 +142,33 @@ export default function DriveInfo() {
               <button
                 className='w-10 h-10 bg-[#007BFF] rounded-full flex justify-center items-center'
                 onClick={() => navigate(`/chat/${bookedDrive.id}/${currentUser.id}`)}>
-                <svg
-                  width='28'
-                  height='28'
-                  viewBox='0 0 28 28'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'>
-                  <path
-                    fillRule='evenodd'
-                    clipRule='evenodd'
-                    d='M18.3775 23.5575C17.0367 24.1067 15.556 24.4137 13.9998 24.4137C7.81288 24.4137 2.7998 19.5783 2.7998 13.6067C2.7998 7.64057 7.81288 2.7998 13.9998 2.7998C20.1867 2.7998 25.1998 7.64057 25.189 13.6175C25.189 15.766 24.5375 17.769 23.4121 19.4544C23.3637 19.5137 23.3206 19.5837 23.2775 19.6537C23.1483 19.8852 23.0675 20.1544 23.0675 20.4398L24.2575 25.1998L19.7344 23.536C19.5352 23.4498 19.3144 23.4067 19.0829 23.4067C18.8729 23.4067 18.6683 23.4444 18.4798 23.5144C18.4798 23.5198 18.4744 23.5198 18.469 23.5198C18.4367 23.5306 18.4098 23.5413 18.3775 23.5575ZM20.8921 13.9998C20.8921 13.0467 20.1221 12.2767 19.169 12.2767C18.216 12.2767 17.446 13.0467 17.446 13.9998C17.446 14.9529 18.216 15.7229 19.169 15.7229C20.1221 15.7229 20.8921 14.9529 20.8921 13.9998ZM13.9998 12.2767C14.9529 12.2767 15.7229 13.0467 15.7229 13.9998C15.7229 14.9529 14.9529 15.7229 13.9998 15.7229C13.0467 15.7229 12.2767 14.9529 12.2767 13.9998C12.2767 13.0467 13.0467 12.2767 13.9998 12.2767ZM10.5537 13.9998C10.5537 13.0467 9.78365 12.2767 8.83057 12.2767C7.8775 12.2767 7.1075 13.0467 7.1075 13.9998C7.1075 14.9529 7.8775 15.7229 8.83057 15.7229C9.78365 15.7229 10.5537 14.9529 10.5537 13.9998Z'
-                    fill='black'
-                  />
-                  <mask
-                    id='mask0_355_3505'
-                    maskUnits='userSpaceOnUse'
-                    x='2'
-                    y='2'
-                    width='24'
-                    height='24'>
-                    <path
-                      fillRule='evenodd'
-                      clipRule='evenodd'
-                      d='M18.3775 23.5575C17.0367 24.1067 15.556 24.4137 13.9998 24.4137C7.81288 24.4137 2.7998 19.5783 2.7998 13.6067C2.7998 7.64057 7.81288 2.7998 13.9998 2.7998C20.1867 2.7998 25.1998 7.64057 25.189 13.6175C25.189 15.766 24.5375 17.769 23.4121 19.4544C23.3637 19.5137 23.3206 19.5837 23.2775 19.6537C23.1483 19.8852 23.0675 20.1544 23.0675 20.4398L24.2575 25.1998L19.7344 23.536C19.5352 23.4498 19.3144 23.4067 19.0829 23.4067C18.8729 23.4067 18.6683 23.4444 18.4798 23.5144C18.4798 23.5198 18.4744 23.5198 18.469 23.5198C18.4367 23.5306 18.4098 23.5413 18.3775 23.5575ZM20.8921 13.9998C20.8921 13.0467 20.1221 12.2767 19.169 12.2767C18.216 12.2767 17.446 13.0467 17.446 13.9998C17.446 14.9529 18.216 15.7229 19.169 15.7229C20.1221 15.7229 20.8921 14.9529 20.8921 13.9998ZM13.9998 12.2767C14.9529 12.2767 15.7229 13.0467 15.7229 13.9998C15.7229 14.9529 14.9529 15.7229 13.9998 15.7229C13.0467 15.7229 12.2767 14.9529 12.2767 13.9998C12.2767 13.0467 13.0467 12.2767 13.9998 12.2767ZM10.5537 13.9998C10.5537 13.0467 9.78365 12.2767 8.83057 12.2767C7.8775 12.2767 7.1075 13.0467 7.1075 13.9998C7.1075 14.9529 7.8775 15.7229 8.83057 15.7229C9.78365 15.7229 10.5537 14.9529 10.5537 13.9998Z'
-                      fill='white'
-                    />
-                  </mask>
-                  <g mask='url(#mask0_355_3505)'>
-                    <rect
-                      width='28'
-                      height='28'
-                      fill='white'
-                    />
-                  </g>
-                </svg>
+                {/* svg-иконка чата */}
               </button>
               <button
                 className='w-10 h-10 bg-[#4CE5B1] rounded-full flex justify-center items-center'
                 onClick={() => (window.location.href = `tel:${driver.phone_number}`)}>
-                <svg
-                  width='28'
-                  height='30'
-                  viewBox='0 0 28 30'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'>
-                  <path
-                    d='M11.9215 8.62921C11.6363 5.21906 8.21355 3.54581 8.0687 3.47751C7.9328 3.41077 7.78048 3.39059 7.63414 3.41698C3.68278 4.09839 3.08843 6.48875 3.06454 6.58809C3.03168 6.72778 3.03766 6.87214 3.07947 7.00718C7.79243 22.2062 17.5872 25.0234 20.8068 25.95C21.0547 26.0214 21.2593 26.0789 21.4146 26.1316C21.4893 26.158 21.5669 26.1689 21.6446 26.1689C21.7506 26.1689 21.8566 26.1456 21.9537 26.099C22.0523 26.0525 24.3789 24.9132 24.9478 21.1972C24.9732 21.0358 24.9478 20.8682 24.8762 20.7223C24.8254 20.6198 23.6083 18.2124 20.2334 17.3618C19.9974 17.2982 19.7555 17.3633 19.5733 17.5248C18.5086 18.4701 17.0377 19.4774 16.403 19.5814C12.1485 17.4192 9.77259 13.2702 9.68299 12.4833C9.63072 12.0409 10.6059 10.4872 11.7274 9.2237C11.8692 9.06382 11.9409 8.84652 11.9215 8.62921Z'
-                    fill='black'
-                  />
-                  <mask
-                    id='mask0_355_3508'
-                    maskUnits='userSpaceOnUse'
-                    x='3'
-                    y='3'
-                    width='22'
-                    height='24'>
-                    <path
-                      d='M11.9215 8.62921C11.6363 5.21906 8.21355 3.54581 8.0687 3.47751C7.9328 3.41077 7.78048 3.39059 7.63414 3.41698C3.68278 4.09839 3.08843 6.48875 3.06454 6.58809C3.03168 6.72778 3.03766 6.87214 3.07947 7.00718C7.79243 22.2062 17.5872 25.0234 20.8068 25.95C21.0547 26.0214 21.2593 26.0789 21.4146 26.1316C21.4893 26.158 21.5669 26.1689 21.6446 26.1689C21.7506 26.1689 21.8566 26.1456 21.9537 26.099C22.0523 26.0525 24.3789 24.9132 24.9478 21.1972C24.9732 21.0358 24.9478 20.8682 24.8762 20.7223C24.8254 20.6198 23.6083 18.2124 20.2334 17.3618C19.9974 17.2982 19.7555 17.3633 19.5733 17.5248C18.5086 18.4701 17.0377 19.4774 16.403 19.5814C12.1485 17.4192 9.77259 13.2702 9.68299 12.4833C9.63072 12.0409 10.6059 10.4872 11.7274 9.2237C11.8692 9.06382 11.9409 8.84652 11.9215 8.62921Z'
-                      fill='white'
-                    />
-                  </mask>
-                  <g mask='url(#mask0_355_3508)'>
-                    <rect
-                      y='0.236328'
-                      width='28'
-                      height='29.1034'
-                      fill='white'
-                    />
-                  </g>
-                </svg>
+                {/* svg-иконка телефона */}
               </button>
             </div>
           )}
         </div>
         <div className='border-b border-[#EFEFF4]'>
-          <div className='history-path my-5 '>
+          <div className='history-path my-5'>
             <span className='history-from'>{cleanAddress(bookedDrive.start_address.name)}</span>
             <span className='history-to'>{cleanAddress(bookedDrive.end_address.name)}</span>
           </div>
         </div>
-        {bookedDrive.state == "started" && (
+        {bookedDrive.state === "started" && (
           <div className='py-4 border-b border-[#EFEFF4]'>
-            <button className='w-full flex  justify-between items-center'>
-              {currentRole == "passenger" && (
+            <button className='w-full flex justify-between items-center'>
+              {currentRole === "passenger" && (
                 <div
                   className='flex flex-col justify-center items-center py-4 border rounded-2xl border-black w-[150px] h-[104px]'
                   onClick={openFeedback}>
-                  <svg
-                    className='pb-2'
-                    width='32'
-                    height='30'
-                    viewBox='0 0 22 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'>
-                    <path
-                      d='M14.135 10.5C14.015 10.5 13.89 10.48 13.77 10.44C13.5446 10.3683 13.3481 10.2261 13.2095 10.0344C13.0709 9.8427 12.9974 9.61156 13 9.375V7.97C11.87 7.79 11 6.805 11 5.625V2.375C11 1.065 12.065 0 13.375 0H19.125C20.435 0 21.5 1.065 21.5 2.375V5.625C21.5 6.935 20.435 8 19.125 8H16.565L15.025 10.05C14.805 10.34 14.48 10.5 14.135 10.5ZM7 11.75C4.93 11.75 3.25 10.07 3.25 8C3.25 5.93 4.93 4.25 7 4.25C9.07 4.25 10.75 5.93 10.75 8C10.75 10.07 9.07 11.75 7 11.75ZM0.5 15.395C0.5 15.44 0.575 20 7 20C13.425 20 13.5 15.44 13.5 15.395V14.875C13.5 13.84 12.66 13 11.625 13H2.375C1.34 13 0.5 13.84 0.5 14.875V15.395Z'
-                      fill='#EF7828'
-                    />
-                  </svg>
                   <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Оставить отзыв</span>
                 </div>
               )}
               <div className='flex flex-col justify-center items-center py-4 border rounded-2xl border-black w-[150px] h-[104px]'>
-                <div className='bg-[#F52D56] rounded-full min-w-[44px] min-h-[44px]  max-w-[44px] max-h-[44px] flex justify-center items-center'>
-                  <svg
-                    className=''
-                    width='25'
-                    height='25'
-                    viewBox='0 0 30 30'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'>
-                    <path
-                      d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
-                      fill='#2C2C2C'
-                    />
-                    <mask
-                      id='mask0_48_4925'
-                      maskUnits='userSpaceOnUse'
-                      x='5'
-                      y='5'
-                      width='20'
-                      height='20'>
-                      <path
-                        d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
-                        fill='white'
-                      />
-                    </mask>
-                    <g mask='url(#mask0_48_4925)'>
-                      <rect
-                        width='30'
-                        height='30'
-                        fill='white'
-                      />
-                    </g>
-                  </svg>
-                </div>
                 <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Поездка не оплачена</span>
               </div>
             </button>
@@ -277,7 +200,6 @@ export default function DriveInfo() {
               />
             </svg>
           </div>
-
           <div className='flex justify-between w-full font-bold text-[16px] leading-[18.4px] text-[#242E42]'>
             <div className='flex flex-col'>
               <span className='pb-1 text-[#C8C7CC]'>Дистанция</span>
