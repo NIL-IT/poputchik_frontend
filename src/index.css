@@ -233,10 +233,10 @@ body {
 }
 .searchBig-close {
   position: absolute;
-  background: url("./assets/icons/miniClose.svg");
+  background: url("./assets/icons/search.svg");
   width: 20px;
   height: 20px;
-  right: 30px;
+  right: 47px;
   top: 20px;
 }
 

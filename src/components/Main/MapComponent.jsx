@@ -24,6 +24,7 @@ const MapComponent = () => {
 
   const buildRoute = async (ymaps) => {
     if (!mapRef.current || !startPoint || !endPoint) return;
+
     if (startPoint && endPoint && mapRef.current) {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
         {
@@ -32,6 +33,7 @@ const MapComponent = () => {
         },
         { boundsAutoApply: true },
       );
+
       mapRef.current.geoObjects.removeAll();
       mapRef.current.geoObjects.add(multiRoute);
       multiRoute.model.events.add("requestsuccess", () => {

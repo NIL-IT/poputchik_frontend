@@ -86,7 +86,34 @@ export default function CreateTrip() {
       setIsRouteEnabled(true);
     }
   }, [tripFrom, tripTo]);
+  function calculateTripFare(distanceStr) {
+    if (!distanceStr || typeof distanceStr !== "string") {
+      console.error("Входное значение должно быть непустой строкой с расстоянием и единицей измерения.");
+      return "";
+    }
 
+    const regex = /([\d.,]+)\s*(к?м)/i;
+    const match = distanceStr.match(regex);
+
+    if (!match) {
+      console.error("Неверный формат строки. Ожидается число с единицей 'м' или 'км'.");
+      return "";
+    }
+
+    let value = parseFloat(match[1].replace(",", "."));
+    let unit = match[2].toLowerCase();
+
+    if (unit === "м") {
+      value = value / 1000;
+    }
+
+    const grossRatePerKm = 15 / 0.95;
+    const totalFare = value * grossRatePerKm;
+
+    // Возвращаем строку с двумя знаками после запятой
+    return totalFare.toFixed(2) + " руб";
+  }
+  console.log(calculateTripFare(routeDistance));
   return (
     <Footer className={`bg-[#fff] px-5 flex justify-center`}>
       <div className='relative w-[350px]'>
@@ -136,10 +163,10 @@ export default function CreateTrip() {
             <div className='price'>
               <Input
                 readOnly
-                onClick={() => togglePrice(true)}
-                type={"number"}
+                // onClick={() => togglePrice(true)}
+                // type={"number"}
                 onChange={() => {}}
-                value={price}
+                value={calculateTripFare(routeDistance)}
               />
             </div>
           </>

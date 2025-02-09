@@ -57,7 +57,7 @@ export default function SearchComponent({ onLocClick }) {
           />
           <button
             className='searchBig-close'
-            onClick={() => setSearchValue("")}></button>
+            onClick={searchLocation}></button>
         </div>
         <div className='flex flex-col items-center'>
           <SearchList

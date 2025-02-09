@@ -50,7 +50,6 @@ export default function MainPage() {
     setStartPoint([]);
     setEndPoint([]);
   }
-  console.log();
 
   const nerbiest =
     driverList && currentRole === "driver"

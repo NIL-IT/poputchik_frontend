@@ -15,6 +15,7 @@ export default function HistoryCard({ drive }) {
   const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { setIsRouteEnabled } = useMap();
   const [showStartButton, setShowStartButton] = useState(false);
+  const [isExpired, setIsExpired] = useState(false); // Флаг для скрытия карточки
   const navigate = useNavigate();
 
   const driverQuery = useDriverById(drive ? drive.driver_id : null, { skip: !drive });
@@ -24,8 +25,11 @@ export default function HistoryCard({ drive }) {
     if (!drive) return;
 
     const handleTime = () => {
-      console.log(drive.driver_id);
-      if (currentUser.driver_profile && currentUser.driver_profile.id == drive.driver_id) {
+      if (
+        currentUser.driver_profile &&
+        currentUser.driver_profile.id === drive.driver_id &&
+        drive.state !== "finished"
+      ) {
         const departure = new Date(drive.departure_time);
         const startAllowedTime = new Date(departure.getTime() - 10 * 60 * 1000);
         const now = new Date();
@@ -43,7 +47,45 @@ export default function HistoryCard({ drive }) {
     };
 
     handleTime();
+  }, [drive, currentUser.driver_profile]);
+
+  useEffect(() => {
+    if (!drive) return;
+
+    if (drive.state === "started" || drive.state === "finished") return;
+
+    const departureTime = new Date(drive.departure_time);
+    const expirationTime = departureTime.getTime() + 15 * 60 * 1000;
+    const now = Date.now();
+
+    if (now >= expirationTime) {
+      updateTripState(drive.id, "finished")
+        .then(() => {
+          setIsExpired(true);
+        })
+        .catch((error) => {
+          console.error("Ошибка при обновлении состояния поездки:", error);
+        });
+    } else {
+      const delay = expirationTime - now;
+      const timer = setTimeout(() => {
+        updateTripState(drive.id, "finished")
+          .then(() => {
+            setIsExpired(true);
+          })
+          .catch((error) => {
+            console.error("Ошибка при обновлении состояния поездки:", error);
+          });
+      }, delay);
+
+      return () => clearTimeout(timer);
+    }
   }, [drive]);
+  console.log(drive);
+
+  if (isExpired) {
+    return null;
+  }
 
   if (!drive) {
     return null;
@@ -62,11 +104,16 @@ export default function HistoryCard({ drive }) {
 
   const handleStart = () => {
     setBookedDrive(drive);
-    updateTripState(drive.id, "started");
-    toggleBookedModal(true);
-    setIsRouteEnabled(true);
-    drive.state = "started";
-    navigate("/main");
+    updateTripState(drive.id, "started")
+      .then(() => {
+        toggleBookedModal(true);
+        setIsRouteEnabled(true);
+        drive.state = "started";
+        navigate("/main");
+      })
+      .catch((error) => {
+        console.error("Ошибка при обновлении состояния поездки:", error);
+      });
   };
 
   return (

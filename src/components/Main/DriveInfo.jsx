@@ -6,10 +6,10 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
-import { bookedTripByPassenger } from "../../api/trips";
+import { bookedTripByPassenger, updateTripState } from "../../api/trips";
 
 export default function DriveInfo() {
-  const { currentUser } = useUserStore();
+  const { currentUser, currentRole } = useUserStore();
   const { bookedDrive, setFeedbackTarget } = useTrip();
   const { toggleBookedModal, toggleFeedback } = useModal();
   const { setIsRouteEnabled, isRouteEnabled, setStartPoint, setEndPoint } = useMap();
@@ -47,7 +47,32 @@ export default function DriveInfo() {
       setEndPoint(null);
     };
   }, []);
-  console.log(bookedDrive);
+
+  function finishDrive() {
+    updateTripState(bookedDrive.id, "finished");
+    toggleBookedModal(false);
+  }
+
+  function renderButton() {
+    if (currentRole == "driver" && bookedDrive.state == "started") {
+      return (
+        <Button
+          onClick={finishDrive}
+          size={"large"}>
+          Закончить
+        </Button>
+      );
+    } else if ((currentRole == "passenger" && bookedDrive.state !== "started") || bookedDrive.state !== "finished") {
+      return (
+        <Button
+          onClick={bookingByPassenger}
+          size={"large"}>
+          Забронировать
+        </Button>
+      );
+    }
+  }
+
   return (
     <Footer className={"bg-[#f6f6f6] w-full z-10 flex flex-col items-center "}>
       <div className=''>
@@ -242,11 +267,7 @@ export default function DriveInfo() {
             </div>
           </div>
         </div>
-        <Button
-          onClick={bookingByPassenger}
-          size={"large"}>
-          {bookedDrive.state == "started" ? "Закончить" : "Забронировать"}
-        </Button>
+        {renderButton()}
       </div>
     </Footer>
   );

@@ -32,8 +32,11 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [visibleAvatarPhoto, setVisibleAvatarPhoto] = useState("");
   const [visiblePassportPhoto, setVisiblePassportPhoto] = useState("");
   const [visibleLicensePhoto, setVisibleLicensePhoto] = useState("");
+  const [visibleCarPhoto, setVisibleCarPhoto] = useState("");
 
   const [passportPhoto, setPassportPhoto] = useState("");
+  const [carPhoto, setCarPhoto] = useState("");
+
   const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState({});
 
@@ -83,6 +86,7 @@ export default function Registration({ backFunc, step, nextStep }) {
         case 1:
           if (!passportPhoto) errors.passport = "Загрузите фото паспорта";
           if (!driverLicensePhoto) errors.license = "Загрузите водительское удостоверение";
+          if (!carPhoto) errors.carPhoto = "Загрузите фото машины";
           break;
         case 2:
           if (!carNumber.trim()) errors.carNumber = "Введите номер авто";
@@ -129,6 +133,8 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.append("passport_photo", passportPhoto);
         formData.append("driver_license", driverLicensePhoto);
         formData.append("car_number", carNumber);
+        formData.append("car_photo", carPhoto);
+
         formData.append("car_model", carModel);
         formData.append("car_make", carMake);
         formData.append("car_color", carColor);
@@ -162,6 +168,11 @@ export default function Registration({ backFunc, step, nextStep }) {
   const handleLicenseChange = (e) => {
     setDriverLicensePhoto(e.target.files[0]);
     setVisibleLicensePhoto(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const handleCarChange = (e) => {
+    setCarPhoto(e.target.files[0]);
+    setVisibleCarPhoto(URL.createObjectURL(e.target.files[0]));
   };
 
   const renderTitle = () => {
@@ -310,6 +321,27 @@ export default function Registration({ backFunc, step, nextStep }) {
                   </label>
                   <span className='block mt-2'>Водительское удостоверение</span>
                   {formError.license && <p className='text-red-500 text-sm mt-1 text-center'>{formError.license}</p>}
+                </fieldset>
+                <fieldset className='relative w-[200px]'>
+                  <input
+                    id='upload-license'
+                    type='file'
+                    accept='image/*'
+                    onChange={handleCarChange}
+                    className='visually-hidden'
+                  />
+                  <label
+                    htmlFor='upload-license'
+                    className='img-upload__label img-upload__control docs'
+                    style={{
+                      backgroundImage: carPhoto && `url(${visibleCarPhoto})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}>
+                    Загрузить
+                  </label>
+                  <span className='block mt-2'>Фото машины</span>
+                  {formError.license && <p className='text-red-500 text-sm mt-1 text-center'>{formError.carPhoto}</p>}
                 </fieldset>
               </div>
             </>
