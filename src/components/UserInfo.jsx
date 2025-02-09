@@ -12,9 +12,10 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
 
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
+  const hasDriverProfile = currentUser.driver_profile?.id;
 
   const reviews = useDriverReviews(currentUser.driver_profile?.id || []);
-  const user = useDriverById(currentUser.driver_profile.id).data;
+  const user = hasDriverProfile ? useDriverById(currentUser.driver_profile.id).data : null;
 
   return (
     <div className='flex flex-col justify-center items-center '>
