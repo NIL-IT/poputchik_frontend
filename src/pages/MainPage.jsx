@@ -17,7 +17,6 @@ export default function MainPage() {
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const { currentUser, currentRole } = useUserStore();
-
   const driverList =
     currentRole === "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
 

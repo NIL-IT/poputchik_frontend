@@ -30,4 +30,9 @@ export const useModal = create((set) => ({
 
   isFeedbackSummaryOpen: true,
   setIsFeedbackSummaryOpen: (value) => set({ isFeedbackSummaryOpen: value }),
+  carPhoto: "",
+  setCarPhoto: (value) => set({ carPhoto: value }),
+
+  carModal: false,
+  toggleCarModal: (value) => set({ carModal: value }),
 }));

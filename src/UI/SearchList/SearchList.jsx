@@ -34,7 +34,6 @@ export default function SearchList({ value, setValue, options, setOptions }) {
     setValue("");
     setOptions([]);
   };
-  console.log(options);
   return (
     <div className='searchList-wrapper '>
       {options.map((option) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useModal } from "../../state/ModalStore";
 import SearchList from "../../UI/SearchList/SearchList";
 import CloseBtn from "../../UI/CloseBtn";
@@ -39,7 +39,7 @@ export default function SearchComponent({ onLocClick }) {
 
   return (
     <div
-      className={`pt-[60px] absolute z-20 h-full w-full bg-white py-8 flex flex-col ${isSearchOpen ? "" : "hidden"} `}>
+      className={`pt-[70px] absolute z-20 h-full w-full bg-white py-8 flex flex-col ${isSearchOpen ? "" : "hidden"} `}>
       <div className='searchBig-container container-custom'>
         <div className='searchBig-wrapper'>
           <label
