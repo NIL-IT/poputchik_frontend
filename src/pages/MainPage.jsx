@@ -54,8 +54,10 @@ export default function MainPage() {
     driverList && currentRole === "driver"
       ? driverList &&
         driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2)
-      : driverList &&
-        driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2);
+      : currentUser.driver_profile
+      ? driverList &&
+        driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2)
+      : [];
 
   function toggleCreating() {
     setIsCreating((prev) => !prev);
