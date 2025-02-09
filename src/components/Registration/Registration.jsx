@@ -173,6 +173,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   const handleCarChange = (e) => {
     setCarPhoto(e.target.files[0]);
     setVisibleCarPhoto(URL.createObjectURL(e.target.files[0]));
+    console.log(visibleCarPhoto);
   };
 
   const renderTitle = () => {
@@ -186,7 +187,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   }, [step]);
 
   return (
-    <main className='px-5 flex flex-col justify-between pb-6 relative w-full h-screen'>
+    <main className='px-5 flex flex-col justify-between pb-6 relative w-full min-h-screen'>
       <div>
         <header className='pt-[30px] flex items-center mb-12'>
           <button
@@ -324,14 +325,14 @@ export default function Registration({ backFunc, step, nextStep }) {
                 </fieldset>
                 <fieldset className='relative w-[200px]'>
                   <input
-                    id='upload-license'
+                    id='upload-carPhoto'
                     type='file'
                     accept='image/*'
                     onChange={handleCarChange}
                     className='visually-hidden'
                   />
                   <label
-                    htmlFor='upload-license'
+                    htmlFor='upload-carPhoto'
                     className='img-upload__label img-upload__control docs'
                     style={{
                       backgroundImage: carPhoto && `url(${visibleCarPhoto})`,

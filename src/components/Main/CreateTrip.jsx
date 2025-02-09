@@ -86,6 +86,7 @@ export default function CreateTrip() {
       setIsRouteEnabled(true);
     }
   }, [tripFrom, tripTo]);
+
   function calculateTripFare(distanceStr) {
     if (!distanceStr || typeof distanceStr !== "string") {
       console.error("Входное значение должно быть непустой строкой с расстоянием и единицей измерения.");
@@ -110,7 +111,6 @@ export default function CreateTrip() {
     const grossRatePerKm = 15 / 0.95;
     const totalFare = value * grossRatePerKm;
 
-    // Возвращаем строку с двумя знаками после запятой
     return totalFare.toFixed(2) + " руб";
   }
   console.log(calculateTripFare(routeDistance));
