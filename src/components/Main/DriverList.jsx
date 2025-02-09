@@ -54,7 +54,6 @@ export default function DriverList({ list, toggleCreating }) {
           ));
       }
 
-      // Если passengerList получается вложенным массивом, можно его сплющить позже
       passengerList = list
         .map((item) => {
           if (item.booked_trips) {

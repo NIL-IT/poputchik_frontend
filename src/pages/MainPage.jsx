@@ -19,7 +19,6 @@ export default function MainPage() {
   const { currentUser, currentRole } = useUserStore();
   const driverList =
     currentRole === "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
-
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -54,9 +53,15 @@ export default function MainPage() {
     driverList && currentRole === "driver"
       ? driverList &&
         driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2)
-      : currentUser.driver_profile
+      : currentUser
       ? driverList &&
-        driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2)
+        driverList
+          .filter(
+            currentUser.driver_profile
+              ? (i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked"
+              : (i) => i.state !== "booked",
+          )
+          .slice(0, 2)
       : [];
 
   function toggleCreating() {

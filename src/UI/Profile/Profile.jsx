@@ -76,7 +76,7 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
             className='profile-img'
             src={user.profile_photo}
             alt='Profile'
-            onClick={() => openProfile()}
+            onClick={(e) => openProfile(e)}
           />
           <div className='profile-text'>
             <div className='flex gap-5'>
@@ -91,7 +91,7 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
             <div className='profile-date'>{date}</div>
           </div>
           <button
-            onClick={openChat}
+            onClick={(e) => openChat(e)}
             className='profile-message'>
             <img
               src={message}
