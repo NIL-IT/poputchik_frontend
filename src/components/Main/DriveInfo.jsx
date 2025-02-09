@@ -114,7 +114,6 @@ export default function DriveInfo() {
     toggleCarModal(true);
   }
 
-  console.log(driver);
   return (
     <Footer className={"bg-[#fff] w-full z-10 flex flex-col items-center "}>
       <div className=''>

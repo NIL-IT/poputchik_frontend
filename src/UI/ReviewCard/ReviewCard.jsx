@@ -2,9 +2,7 @@ import { useUserByUserId } from "../../api/user";
 import { formatDate } from "../../utils/utils";
 import "./ReviewCard.css";
 export default function ReviewCard({ review }) {
-  console.log(review);
   const user = useUserByUserId(review.id).data;
-  // console.log(user);
   return (
     <div className='review shadow-custom'>
       <div className='review-info'>

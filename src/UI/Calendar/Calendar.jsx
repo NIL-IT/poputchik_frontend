@@ -95,7 +95,6 @@ function CalendarComponent() {
     date.setHours(0, 0, 0, 0);
     setSelectedDate(date);
     setTripDate(date.toISOString());
-    console.log("Выбрана дата:", date);
     setStep(1);
   };
 
@@ -115,7 +114,6 @@ function CalendarComponent() {
     updatedDate.setHours(hours, minutes, seconds);
     setSelectedDate(updatedDate);
     setTripDate(updatedDate.toISOString());
-    console.log("Обновленная дата со временем:", updatedDate);
   };
 
   const handleTimeSubmit = () => {

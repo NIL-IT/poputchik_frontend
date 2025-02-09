@@ -49,14 +49,12 @@ const Chat = () => {
   const sendMessage = () => {
     if (socket && input.trim()) {
       const message = { sender_id: userId, content: input };
-      console.log(message);
       socket.send(JSON.stringify(message));
       setInput("");
     }
   };
 
   const name = currentRole == "driver" ? passenger && passenger.name : driver && driver.name;
-  console.log(name);
 
   return (
     <div className='flex flex-col h-screen mx-auto'>

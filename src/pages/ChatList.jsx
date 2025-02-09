@@ -8,9 +8,14 @@ export default function ChatList() {
   const { currentRole, currentUser } = useUserStore();
   const driverList =
     currentRole === "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
+  const filteredList =
+    driverList && currentUser.driver_profile
+      ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id)
+      : driverList;
+
   function renderList() {
-    if (currentRole == "driver" && driverList && driverList.length > 0) {
-      return driverList.map((item) => {
+    if (currentRole == "driver" && filteredList && filteredList.length > 0) {
+      return filteredList.map((item) => {
         if (item.booked_trips)
           return item.booked_trips.slice(0, 2).map((trip) => {
             return (
@@ -22,8 +27,8 @@ export default function ChatList() {
             );
           });
       });
-    } else if (currentRole == "passenger" && driverList && driverList.length > 0) {
-      return driverList.map((obj) => {
+    } else if (currentRole == "passenger" && filteredList && filteredList.length > 0) {
+      return filteredList.map((obj) => {
         return (
           <Profile
             key={obj.id}
@@ -35,16 +40,16 @@ export default function ChatList() {
       return <span>Нет активных чатов</span>;
     }
   }
-  console.log(driverList);
+
   const navigate = useNavigate();
   return (
-    <div className='flex flex-col h-screen mx-auto'>
+    <div className='flex flex-col min-h-screen mx-auto'>
       <CloseBtn
         className='absolute top-[50px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
         onClick={() => navigate(-1)}
       />
       <div className='pt-[60px] h-[170px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold'>Чаты</div>
-      <div className='container-custom flex flex-col gap-4'>{renderList()}</div>
+      <div className='container-custom flex flex-col gap-4 pb-5'>{renderList()}</div>
     </div>
   );
 }

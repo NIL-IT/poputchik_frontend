@@ -22,7 +22,6 @@ function App() {
   const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -57,23 +56,18 @@ function App() {
 
     if (!tg.LocationManager.isInited) {
       await new Promise((resolve) => tg.LocationManager.init(resolve));
-      console.log("LocationManager инициализирован");
     }
 
     if (tg.LocationManager.isLocationAvailable) {
       tg.LocationManager.getLocation((data) => {
         if (data) {
           setCenter([data.latitude, data.longitude]);
-          console.log(data);
-          console.log("Location получен:", data);
           return true;
         } else {
-          console.error("Не удалось получить геолокацию");
           return false;
         }
       });
     } else {
-      console.warn("Геолокация недоступна через Telegram");
       return false;
     }
   };
@@ -176,9 +170,9 @@ function App() {
             path='/userReview/:userId'
             element={
               <div className='container-custom'>
-                <ProtectedRoute>
-                  <UserReviews />
-                </ProtectedRoute>
+                {/* <ProtectedRoute> */}
+                <UserReviews />
+                {/* </ProtectedRoute> */}
               </div>
             }
           />

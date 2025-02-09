@@ -66,7 +66,6 @@ export default function CreateTrip() {
         distance: routeDistance,
         travel_time: routeDuration,
       };
-      console.log(JSON.stringify(trip));
 
       try {
         await createTripByDriver(trip);

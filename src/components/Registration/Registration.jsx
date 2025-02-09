@@ -173,7 +173,6 @@ export default function Registration({ backFunc, step, nextStep }) {
   const handleCarChange = (e) => {
     setCarPhoto(e.target.files[0]);
     setVisibleCarPhoto(URL.createObjectURL(e.target.files[0]));
-    console.log(visibleCarPhoto);
   };
 
   const renderTitle = () => {

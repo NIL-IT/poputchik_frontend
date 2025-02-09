@@ -78,7 +78,6 @@ export default function DriverList({ list, toggleCreating }) {
     }
 
     const flatPassengerList = passengerList.flat();
-    console.log([...waitingItems, ...flatPassengerList, ...driverList]);
     return [...waitingItems, ...flatPassengerList, ...driverList].slice(0, 2);
   }
 

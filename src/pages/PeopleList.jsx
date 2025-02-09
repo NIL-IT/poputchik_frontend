@@ -41,6 +41,7 @@ export default function PeopleList() {
             key={trip.id}
             drive={trip}
             passenger={item.user}
+            onList
           />
         ));
       } else if (currentRole === "passenger") {
@@ -48,6 +49,7 @@ export default function PeopleList() {
           <Profile
             key={item.id}
             drive={item}
+            onList
           />
         );
       }

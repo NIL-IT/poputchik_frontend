@@ -77,7 +77,6 @@ export default function UserPage() {
       if (phone !== currentUser.phone_number || mail !== currentUser.email || city !== currentUser.city) {
         if (!validation()) return;
         const tgId = currentUser.telegram_id;
-        console.log(tgId);
         const profile_photo = await urlToFile(profilePhoto);
 
         try {
@@ -87,12 +86,10 @@ export default function UserPage() {
           formData.append("city", city);
           formData.append("email", mail);
           formData.append("profile_photo", profile_photo);
-          console.log(formData.get("telegram_id"));
           await updateUser(formData);
           updateUserData();
         } catch (error) {
           setError({ general: error.message || "Неизвестная ошибка" });
-          console.log(error);
         }
       }
     }

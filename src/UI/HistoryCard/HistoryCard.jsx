@@ -82,7 +82,6 @@ export default function HistoryCard({ drive }) {
       return () => clearTimeout(timer);
     }
   }, [drive]);
-  console.log(drive);
 
   if (isExpired) {
     return null;
@@ -125,7 +124,6 @@ export default function HistoryCard({ drive }) {
       navigate("/main");
     }
   }
-  console.log(drive);
 
   return (
     <div

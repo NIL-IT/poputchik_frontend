@@ -22,7 +22,7 @@ export default function ActiveDrivesPage() {
       : hasDriverProfile
       ? [...activeTrips, ...startedTrips, ...bookedTrips]
       : [];
-  console.log(activeDrives);
+
   const filteredDrives = activeDrives?.filter((i) => i.driver_id !== currentUser.driver_profile?.id) || [];
   function renderList() {
     if (currentRole === "passenger") {

@@ -35,7 +35,6 @@ export default function FeedBack() {
     document.body.classList.remove("overflow-y-hidden");
     toggleFeedback(false);
     setFeedbackTarget("");
-    console.log("закрылось или отправилось");
   }
 
   async function postFeedback() {
@@ -48,7 +47,6 @@ export default function FeedBack() {
         comment: feedbackText,
         created_at: isoString,
       };
-      console.log(JSON.stringify(feedback));
 
       try {
         await createReviewByDriver(feedback).then(() => setStep(1));

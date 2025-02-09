@@ -14,28 +14,25 @@ import { useState } from "react";
 export default function Profile({ drive, passenger, onList, pending, request }) {
   const { setSelectedDriver, toggleBookedModal } = useModal();
   const navigate = useNavigate();
-
-  if (!drive) {
-    return null;
-  }
-
-  // Создаем локальное состояние для статуса запроса
   const [reqStatus, setReqStatus] = useState(request ? request.status : null);
-
-  // Если статус уже не "pending", ничего не рендерим
-  if (request && reqStatus !== "pending") {
-    return null;
-  }
-
   const { currentRole, currentUser } = useUserStore();
   const { setIsRouteEnabled } = useMap();
   const { setBookedDrive } = useTrip();
-
   const driverData = useDriverById(drive?.driver_id)?.data;
+
+  if (!drive) {
+    console.error("Drive is not provided", drive);
+    return null;
+  }
+
   const { start_address, end_address, departure_time, id } = drive;
 
   if (!start_address || !end_address) {
     console.error("Не заданы адреса отправления или прибытия для", drive);
+    return null;
+  }
+
+  if (request && reqStatus !== "pending") {
     return null;
   }
 
@@ -72,7 +69,6 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
     }
   };
 
-  // Обработчики для изменения статуса
   const handleReject = (e) => {
     e.stopPropagation();
     rejectRequest(request.id);
