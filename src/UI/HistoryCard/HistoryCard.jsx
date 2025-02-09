@@ -36,7 +36,7 @@ export default function HistoryCard({ drive }) {
         const now = new Date();
         const diff = startAllowedTime - now;
 
-        if (diff <= 0) {
+        if (diff <= 0 && drive.state !== "started" && drive.state !== "finished" && drive.state !== "canceled") {
           setShowStartButton(true);
         } else {
           const timer = setTimeout(() => {
@@ -60,7 +60,7 @@ export default function HistoryCard({ drive }) {
     const now = Date.now();
 
     if (now >= expirationTime) {
-      updateTripState(drive.id, "finished")
+      updateTripState(drive.id, "canceled")
         .then(() => {
           setIsExpired(true);
         })
@@ -70,7 +70,7 @@ export default function HistoryCard({ drive }) {
     } else {
       const delay = expirationTime - now;
       const timer = setTimeout(() => {
-        updateTripState(drive.id, "finished")
+        updateTripState(drive.id, "canceled")
           .then(() => {
             setIsExpired(true);
           })
