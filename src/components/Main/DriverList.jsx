@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useDriversTripsList, useTripsList } from "../../api/trips";
+import { useDriversTripsList, useRequests, useTripsList } from "../../api/trips";
 import { useUserStore } from "../../state/UserStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -23,6 +23,8 @@ export default function DriverList({ list, toggleCreating }) {
       : [];
   const filteredDrives = activeDrives?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
+  const waitingList = currentRole == "driver" ? useRequests(driverId) : [];
+  console.log(driverId);
   function renderLength() {
     if (activeDrives) {
       if (currentRole === "driver") {

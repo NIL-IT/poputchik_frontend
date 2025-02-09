@@ -118,7 +118,7 @@ export default function HistoryCard({ drive }) {
   };
 
   function activeClick() {
-    if ((drive.state = "started")) {
+    if (drive.state == "started") {
       setBookedDrive(drive);
       toggleBookedModal(true);
       setIsRouteEnabled(true);

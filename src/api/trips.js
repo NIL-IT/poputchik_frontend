@@ -116,3 +116,15 @@ export async function tripRequestByPassenger(data) {
     throw new Error(response.data);
   }
 }
+export async function getRequestsByDriverId(driver_id) {
+  return axios.get(`${url}/trip_requests/trip_requests/driver/${driver_id}`);
+}
+
+export function useRequests(driver_id) {
+  const { data } = useQuery({
+    queryKey: ["requests", driver_id],
+    queryFn: () => getRequestsByDriverId(driver_id),
+    select: (data) => data.data,
+  });
+  return data;
+}

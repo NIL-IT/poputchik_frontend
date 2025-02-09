@@ -3,8 +3,6 @@
   padding: 15px 18px;
   max-width: 350px;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   border-radius: 10px;
 }
@@ -22,6 +20,7 @@
   gap: 15px;
   color: #181818;
   text-align: left;
+  align-items: center;
 }
 
 .profile-name {
@@ -55,6 +54,11 @@
   max-width: 44px;
   border-radius: 10px;
   margin-left: 10px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-stars {
@@ -67,9 +71,6 @@
 }
 
 .profile-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .profile-date {
@@ -79,4 +80,35 @@
   line-height: 16.1px;
   background: url("../../assets/icons/profile-date.svg") no-repeat;
   padding-left: 22px;
+}
+
+.profile-pending {
+  background: #fefefe;
+  padding-top: 6px;
+}
+.pending-message {
+  font-size: 14px;
+}
+.pending-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.pending-btn {
+  width: 150px;
+  height: 43px;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16.1px;
+  color: white;
+  margin-top: 20px;
+}
+
+.pending-approve {
+  background: #15b709;
+}
+
+.pending-reject {
+  background: #dc0000;
 }
