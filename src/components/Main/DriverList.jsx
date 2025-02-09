@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useDriversTripsList, useRequests, useTripsList } from "../../api/trips";
+import { useDriversTripsList, useRequests } from "../../api/trips";
 import { useUserStore } from "../../state/UserStore";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
@@ -8,71 +8,32 @@ import { useBookedTripsList } from "../../api/passenger";
 
 export default function DriverList({ list, toggleCreating }) {
   const { currentRole, currentUser } = useUserStore();
-  const driverId = currentUser.driver ? currentUser.driver_profile?.id : null;
   const navigate = useNavigate();
+
+  const driverId = currentUser.driver_profile ? currentUser.driver_profile.id : null;
 
   const activeTrips = driverId ? useDriversTripsList(driverId, "active") || [] : [];
   const startedTrips = driverId ? useDriversTripsList(driverId, "started") || [] : [];
   const bookedTrips = driverId ? useDriversTripsList(driverId, "booked") || [] : [];
 
   const activeDrives =
-    currentRole === "passenger"
-      ? useBookedTripsList(currentUser.passenger_profile.id)
+    currentRole === "passenger" && currentUser.passenger_profile
+      ? useBookedTripsList(currentUser.passenger_profile.id) || []
       : currentUser.driver_profile
       ? [...activeTrips, ...startedTrips, ...bookedTrips]
       : [];
+
   const filteredDrives = activeDrives?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
-  const waitingList = currentRole == "driver" ? useRequests(driverId) : [];
+  const waitingList = currentRole === "driver" && driverId ? useRequests(driverId) || [] : [];
+
   function renderLength() {
     if (activeDrives) {
-      if (currentRole === "driver") {
-        return activeDrives.length;
-      } else {
-        return filteredDrives.length;
-      }
-    } else {
-      return 0;
+      return currentRole === "driver" ? activeDrives.length : filteredDrives.length;
     }
+    return 0;
   }
-  console.log(list);
-  // function renderList() {
-  //   const renderedWaitingList =
-  //     currentRole === "driver" && waitingList && waitingList.length > 0
-  //       ? waitingList
-  //           .filter((i) => i.status == "pending")
-  //           .map((request) => (
-  //             <Profile
-  //               key={`waiting-${request.id}`}
-  //               drive={request.trip}
-  //               passenger={request.passenger.user}
-  //               pending
-  //               request={request}
-  //             />
-  //           ))
-  //       : [];
 
-  //   const renderedMainList = list?.map((item) => {
-  //     console.log(item);
-  //     if (currentRole === "driver" && item.booked_trips) {
-  //       item.booked_trips.slice(0, 2).map((trip) => (
-  //         <Profile
-  //           key={trip.id}
-  //           drive={trip}
-  //           passenger={item.user}
-  //         />
-  //       ));
-  //     } else if (currentRole === "passenger") {
-  //       <Profile
-  //         key={item.id}
-  //         drive={item}
-  //       />;
-  //     }
-  //     return null;
-  //   });
-  //   console.log(renderedMainList);
-  //   return <>{[...renderedWaitingList, ...renderedMainList].slice(0, 2)}</>;
-  // }
   function renderList() {
     let waitingItems = [];
     let passengerList = [];
@@ -81,44 +42,38 @@ export default function DriverList({ list, toggleCreating }) {
     if (currentRole === "driver" && list) {
       if (waitingList && waitingList.length > 0) {
         waitingItems = waitingList
-          ? waitingList
-              .filter((i) => i.status === "pending")
-              .map((request) => (
-                <Profile
-                  key={`waiting-${request.id}`}
-                  drive={request.trip}
-                  passenger={request.passenger.user}
-                  pending
-                  request={request}
-                />
-              ))
-          : [];
+          .filter((i) => i.status === "pending")
+          .map((request) => (
+            <Profile
+              key={`waiting-${request.id}`}
+              drive={request.trip}
+              passenger={request.passenger.user}
+              pending
+              request={request}
+            />
+          ));
       }
       passengerList = list
-        ? list
-            .map((item) => {
-              if (item.booked_trips) {
-                return item.booked_trips.slice(0, 2).map((trip) => (
-                  <Profile
-                    key={trip.id}
-                    drive={trip}
-                    passenger={item.user}
-                  />
-                ));
-              }
-              return null;
-            })
-            .filter(Boolean)
-        : [];
-    } else if (currentRole === "passenger") {
-      driverList = list
-        ? list.map((obj) => (
-            <Profile
-              key={obj.id}
-              drive={obj}
-            />
-          ))
-        : [];
+        .map((item) => {
+          if (item.booked_trips) {
+            return item.booked_trips.slice(0, 2).map((trip) => (
+              <Profile
+                key={trip.id}
+                drive={trip}
+                passenger={item.user}
+              />
+            ));
+          }
+          return null;
+        })
+        .filter(Boolean);
+    } else if (currentRole === "passenger" && list) {
+      driverList = list.map((obj) => (
+        <Profile
+          key={obj.id}
+          drive={obj}
+        />
+      ));
     }
 
     return [...waitingItems, ...passengerList, ...driverList];
