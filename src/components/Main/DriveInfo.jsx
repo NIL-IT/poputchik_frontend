@@ -284,7 +284,7 @@ export default function DriveInfo() {
               </div>
             )}
             <div className='w-full flex justify-between py-5 border-b border-[#EFEFF4]'>
-              <div className='mr-10'>
+              <div className='mr-10 flex flex-col'>
                 <svg
                   onClick={openCarModal}
                   width='62'
@@ -308,6 +308,7 @@ export default function DriveInfo() {
                     fillOpacity='1'
                   />
                 </svg>
+                фото машины
               </div>
               <div className='flex justify-between w-full font-bold text-[16px] leading-[18.4px] text-[#242E42]'>
                 <div className='flex flex-col'>

@@ -79,41 +79,46 @@ export default function DriverList({ list, toggleCreating }) {
     let driverList = [];
 
     if (currentRole === "driver" && list) {
-      // Если нужно работать с waitingList, можно также объявить локальную переменную или использовать уже существующую
       if (waitingList && waitingList.length > 0) {
         waitingItems = waitingList
-          .filter((i) => i.status === "pending")
-          .map((request) => (
-            <Profile
-              key={`waiting-${request.id}`}
-              drive={request.trip}
-              passenger={request.passenger.user}
-              pending
-              request={request}
-            />
-          ));
+          ? waitingList
+              .filter((i) => i.status === "pending")
+              .map((request) => (
+                <Profile
+                  key={`waiting-${request.id}`}
+                  drive={request.trip}
+                  passenger={request.passenger.user}
+                  pending
+                  request={request}
+                />
+              ))
+          : [];
       }
       passengerList = list
-        .map((item) => {
-          if (item.booked_trips) {
-            return item.booked_trips.slice(0, 2).map((trip) => (
-              <Profile
-                key={trip.id}
-                drive={trip}
-                passenger={item.user}
-              />
-            ));
-          }
-          return null; // или можно отфильтровать такие случаи
-        })
-        .filter(Boolean); // чтобы убрать возможные null значения
+        ? list
+            .map((item) => {
+              if (item.booked_trips) {
+                return item.booked_trips.slice(0, 2).map((trip) => (
+                  <Profile
+                    key={trip.id}
+                    drive={trip}
+                    passenger={item.user}
+                  />
+                ));
+              }
+              return null;
+            })
+            .filter(Boolean)
+        : [];
     } else if (currentRole === "passenger") {
-      driverList = list.map((obj) => (
-        <Profile
-          key={obj.id}
-          drive={obj}
-        />
-      ));
+      driverList = list
+        ? list.map((obj) => (
+            <Profile
+              key={obj.id}
+              drive={obj}
+            />
+          ))
+        : [];
     }
 
     return [...waitingItems, ...passengerList, ...driverList];
