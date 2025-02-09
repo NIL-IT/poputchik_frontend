@@ -46,11 +46,11 @@ export default function UserReviews() {
         <div className='flex flex-col w-full justify-center items-center'>
           <div className='flex justify-between items-center w-[350px] border-t border-b border-[#CECECE]'>
             <div className='flex flex-col text-[16px] py-6 '>
-              <span className='font-bold  pb-2'>33</span>
+              <span className='font-bold  pb-2'>0</span>
               <span>поездок</span>
             </div>
             <div className='flex flex-col'>
-              <span className='font-bold  pb-2'>33</span>
+              <span className='font-bold  pb-2'>{reviews ? reviews.length : 0}</span>
               <span>Отзывов</span>
             </div>
             <div className='flex flex-col'>
