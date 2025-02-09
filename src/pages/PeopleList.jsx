@@ -3,7 +3,7 @@ import BackButton from "../UI/BackButton";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { usePassengerList } from "../api/passenger";
-import { useTripsList } from "../api/trips";
+import { useRequests, useTripsList } from "../api/trips";
 
 export default function PeopleList() {
   const navigate = useNavigate();
@@ -18,31 +18,48 @@ export default function PeopleList() {
     driverList && currentUser.driver_profile
       ? driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id)
       : driverList;
+
+  const waitingList = currentRole == "driver" ? useRequests(currentUser.driver_profile?.id) : [];
   function renderList() {
-    if (currentRole == "driver") {
-      return filteredList.map((item) => {
-        return item.booked_trips.map((trip) => {
-          return (
+    const renderedWaitingList =
+      currentRole === "driver" && waitingList && waitingList.length > 0
+        ? waitingList.map((request) => (
             <Profile
-              key={trip.id}
-              drive={trip}
-              passenger={item.user}
-              onList={true}
+              key={`waiting-${request.id}`}
+              drive={request.trip}
+              passenger={request.passenger.user}
+              pending
+              request={request}
             />
-          );
-        });
-      });
-    } else if (currentRole == "passenger") {
-      return filteredList.map((obj) => {
+          ))
+        : null;
+
+    const renderedMainList = filteredList?.map((item) => {
+      if (currentRole === "driver" && item.booked_trips) {
+        return item.booked_trips.slice(0, 2).map((trip) => (
+          <Profile
+            key={trip.id}
+            drive={trip}
+            passenger={item.user}
+          />
+        ));
+      } else if (currentRole === "passenger") {
         return (
           <Profile
-            key={obj.id}
-            drive={obj}
-            onList={true}
+            key={item.id}
+            drive={item}
           />
         );
-      });
-    }
+      }
+      return null;
+    });
+
+    return (
+      <>
+        {renderedWaitingList}
+        {renderedMainList}
+      </>
+    );
   }
   return (
     <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>

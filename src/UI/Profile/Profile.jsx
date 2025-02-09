@@ -8,13 +8,19 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
 import { cleanAddress } from "../../api/api";
+import { approveRequest, rejectRequest } from "../../api/trips";
 
-export default function Profile({ drive, passenger, onList }) {
+export default function Profile({ drive, passenger, onList, pending, request }) {
   const { setSelectedDriver, toggleBookedModal } = useModal();
   const navigate = useNavigate();
   if (!drive) {
     return null;
   }
+
+  if (request && request.status != "pending") {
+    return null;
+  }
+
   const { currentRole, currentUser } = useUserStore();
   const { setIsRouteEnabled } = useMap();
   const { setBookedDrive } = useTrip();
@@ -64,7 +70,7 @@ export default function Profile({ drive, passenger, onList }) {
     <div
       className='profile'
       onClick={(e) => chooseDrive(e)}>
-      <div className='flex justify-center items-center'>
+      <div className=' profile-wrapper'>
         <div className='profile-info'>
           <img
             className='profile-img'
@@ -94,13 +100,23 @@ export default function Profile({ drive, passenger, onList }) {
           </button>
         </div>
       </div>
-      <div className='profile-pending'>
-        <div className='pending-message'></div>
-        <div className='pending-btns'>
-          <button className='pending-reject pending-btn'>Отклонить</button>
-          <button className='pending-approve pending-btn'>Принять</button>
+      {pending && (
+        <div className='profile-pending mt-2'>
+          <div className='pending-message text-left'>{request.text}</div>
+          <div className='pending-btns'>
+            <button
+              className='pending-reject pending-btn'
+              onClick={() => rejectRequest(request.id)}>
+              Отклонить
+            </button>
+            <button
+              className='pending-approve pending-btn'
+              onClick={() => approveRequest(request.id)}>
+              Принять
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

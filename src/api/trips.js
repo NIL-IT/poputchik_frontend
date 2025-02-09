@@ -128,3 +128,28 @@ export function useRequests(driver_id) {
   });
   return data;
 }
+
+export async function approveRequest(request_id) {
+  const response = await axios({
+    method: "put",
+    url: `${url}/trip_requests/trip_requests/${request_id}/approve`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.status !== 200) {
+    throw new Error(response.data);
+  }
+}
+export async function rejectRequest(request_id) {
+  const response = await axios({
+    method: "put",
+    url: `${url}/trip_requests/trip_requests/${request_id}/reject`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.status !== 200) {
+    throw new Error(response.data);
+  }
+}

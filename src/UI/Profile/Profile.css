@@ -1,10 +1,10 @@
 .profile {
-  background-color: white;
   padding: 15px 18px;
   max-width: 350px;
   width: 100%;
   align-items: center;
   border-radius: 10px;
+  background: #fefefe;
 }
 .profile-img {
   min-width: 58px;
@@ -14,7 +14,12 @@
   border-radius: 50%;
   background-color: var(--grey-color);
 }
-
+.profile-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
 .profile-info {
   display: flex;
   gap: 15px;
@@ -70,9 +75,6 @@
   background: url("../../assets/icons/comment.svg") no-repeat;
 }
 
-.profile-message {
-}
-
 .profile-date {
   margin-top: 8px;
   color: #747474;
@@ -83,7 +85,6 @@
 }
 
 .profile-pending {
-  background: #fefefe;
   padding-top: 6px;
 }
 .pending-message {

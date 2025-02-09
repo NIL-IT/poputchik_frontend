@@ -24,7 +24,6 @@ export default function DriverList({ list, toggleCreating }) {
   const filteredDrives = activeDrives?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
   const waitingList = currentRole == "driver" ? useRequests(driverId) : [];
-  console.log(driverId);
   function renderLength() {
     if (activeDrives) {
       if (currentRole === "driver") {
@@ -36,31 +35,90 @@ export default function DriverList({ list, toggleCreating }) {
       return 0;
     }
   }
+  console.log(list);
+  // function renderList() {
+  //   const renderedWaitingList =
+  //     currentRole === "driver" && waitingList && waitingList.length > 0
+  //       ? waitingList
+  //           .filter((i) => i.status == "pending")
+  //           .map((request) => (
+  //             <Profile
+  //               key={`waiting-${request.id}`}
+  //               drive={request.trip}
+  //               passenger={request.passenger.user}
+  //               pending
+  //               request={request}
+  //             />
+  //           ))
+  //       : [];
+
+  //   const renderedMainList = list?.map((item) => {
+  //     console.log(item);
+  //     if (currentRole === "driver" && item.booked_trips) {
+  //       item.booked_trips.slice(0, 2).map((trip) => (
+  //         <Profile
+  //           key={trip.id}
+  //           drive={trip}
+  //           passenger={item.user}
+  //         />
+  //       ));
+  //     } else if (currentRole === "passenger") {
+  //       <Profile
+  //         key={item.id}
+  //         drive={item}
+  //       />;
+  //     }
+  //     return null;
+  //   });
+  //   console.log(renderedMainList);
+  //   return <>{[...renderedWaitingList, ...renderedMainList].slice(0, 2)}</>;
+  // }
   function renderList() {
-    if (currentRole == "driver" && list) {
-      return list.map((item) => {
-        if (item.booked_trips)
-          return item.booked_trips.slice(0, 2).map((trip) => {
-            return (
+    let waitingItems = [];
+    let passengerList = [];
+    let driverList = [];
+
+    if (currentRole === "driver" && list) {
+      // Если нужно работать с waitingList, можно также объявить локальную переменную или использовать уже существующую
+      if (waitingList && waitingList.length > 0) {
+        waitingItems = waitingList
+          .filter((i) => i.status === "pending")
+          .map((request) => (
+            <Profile
+              key={`waiting-${request.id}`}
+              drive={request.trip}
+              passenger={request.passenger.user}
+              pending
+              request={request}
+            />
+          ));
+      }
+      passengerList = list
+        .map((item) => {
+          if (item.booked_trips) {
+            return item.booked_trips.slice(0, 2).map((trip) => (
               <Profile
                 key={trip.id}
                 drive={trip}
                 passenger={item.user}
               />
-            );
-          });
-      });
-    } else if (currentRole == "passenger") {
-      return list.map((obj) => {
-        return (
-          <Profile
-            key={obj.id}
-            drive={obj}
-          />
-        );
-      });
+            ));
+          }
+          return null; // или можно отфильтровать такие случаи
+        })
+        .filter(Boolean); // чтобы убрать возможные null значения
+    } else if (currentRole === "passenger") {
+      driverList = list.map((obj) => (
+        <Profile
+          key={obj.id}
+          drive={obj}
+        />
+      ));
     }
+
+    return [...waitingItems, ...passengerList, ...driverList];
   }
+
   return (
     <Footer className={`bg-[#F6F6F6] flex items-center justify-center`}>
       <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>
