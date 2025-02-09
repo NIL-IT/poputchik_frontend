@@ -91,7 +91,7 @@ export default function MainPage() {
     <div className='bg-black h-screen relative'>
       {isCreating || bookedModal ? (
         <BackButton
-          className='absolute top-[55px] left-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
+          className='absolute top-[70px] left-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
           onClick={() => onButtonClick()}
         />
       ) : (
