@@ -89,7 +89,6 @@ export default function CreateTrip() {
 
   function calculateTripFare(distanceStr) {
     if (!distanceStr || typeof distanceStr !== "string") {
-      console.error("Входное значение должно быть непустой строкой с расстоянием и единицей измерения.");
       return "";
     }
 
@@ -97,7 +96,6 @@ export default function CreateTrip() {
     const match = distanceStr.match(regex);
 
     if (!match) {
-      console.error("Неверный формат строки. Ожидается число с единицей 'м' или 'км'.");
       return "";
     }
 
@@ -113,7 +111,7 @@ export default function CreateTrip() {
 
     return totalFare.toFixed(2) + " руб";
   }
-  console.log(calculateTripFare(routeDistance));
+
   return (
     <Footer className={`bg-[#fff] px-5 flex justify-center`}>
       <div className='relative w-[350px]'>

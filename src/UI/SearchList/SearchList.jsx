@@ -12,7 +12,7 @@ export default function SearchList({ value, setValue, options, setOptions }) {
     setValue(value);
     if (activeInput === "from" && value !== tripTo) {
       setTripFrom({
-        name: value.name,
+        name: value.metaDataProperty.GeocoderMetaData.text,
         coordinates: {
           latitude: Number(value.Point.pos.split(" ")[1]),
           longitude: Number(value.Point.pos.split(" ")[0]),
@@ -20,7 +20,7 @@ export default function SearchList({ value, setValue, options, setOptions }) {
       });
     } else if (activeInput === "to" && value !== tripFrom) {
       setTripTo({
-        name: value.name,
+        name: value.metaDataProperty.GeocoderMetaData.text,
         coordinates: {
           latitude: Number(value.Point.pos.split(" ")[1]),
           longitude: Number(value.Point.pos.split(" ")[0]),
@@ -34,7 +34,7 @@ export default function SearchList({ value, setValue, options, setOptions }) {
     setValue("");
     setOptions([]);
   };
-
+  console.log(options);
   return (
     <div className='searchList-wrapper '>
       {options.map((option) => {
