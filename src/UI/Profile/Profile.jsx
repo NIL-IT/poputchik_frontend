@@ -106,12 +106,18 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
           <div className='pending-btns'>
             <button
               className='pending-reject pending-btn'
-              onClick={() => rejectRequest(request.id)}>
+              onClick={() => {
+                rejectRequest(request.id);
+                request.status = "reject";
+              }}>
               Отклонить
             </button>
             <button
               className='pending-approve pending-btn'
-              onClick={() => approveRequest(request.id)}>
+              onClick={() => {
+                approveRequest(request.id);
+                request.status = "approve";
+              }}>
               Принять
             </button>
           </div>
