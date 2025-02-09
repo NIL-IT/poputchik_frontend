@@ -9,15 +9,21 @@ import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
 import { cleanAddress } from "../../api/api";
 import { approveRequest, rejectRequest } from "../../api/trips";
+import { useState } from "react";
 
 export default function Profile({ drive, passenger, onList, pending, request }) {
   const { setSelectedDriver, toggleBookedModal } = useModal();
   const navigate = useNavigate();
+
   if (!drive) {
     return null;
   }
 
-  if (request && request.status != "pending") {
+  // Создаем локальное состояние для статуса запроса
+  const [reqStatus, setReqStatus] = useState(request ? request.status : null);
+
+  // Если статус уже не "pending", ничего не рендерим
+  if (request && reqStatus !== "pending") {
     return null;
   }
 
@@ -26,7 +32,6 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
   const { setBookedDrive } = useTrip();
 
   const driverData = useDriverById(drive?.driver_id)?.data;
-
   const { start_address, end_address, departure_time, id } = drive;
 
   if (!start_address || !end_address) {
@@ -35,42 +40,56 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
   }
 
   const date = formatDate(departure_time, true);
-
   const user = currentRole === "driver" ? passenger : driverData?.user || {};
   const rating = currentRole === "driver" ? "" : driverData?.rating ?? "";
 
   if (!user || Object.keys(user).length === 0) return null;
+
   function chooseDrive(event) {
     event.stopPropagation();
     if (drive.state === "active" && currentRole === "passenger" && currentUser.passenger_profile) {
       setBookedDrive(drive);
       toggleBookedModal(true);
       setIsRouteEnabled(true);
-      if (onList == true) navigate("/main");
+      if (onList === true) navigate("/main");
     }
   }
 
   function openChat(e) {
     e.stopPropagation();
-    if (currentRole == "driver") {
+    if (currentRole === "driver") {
       navigate(`/chat/${id}/${user.id}`);
     } else {
       navigate(`/chat/${id}/${currentUser.id}`);
     }
   }
+
   const openProfile = (e) => {
     e.stopPropagation();
-    if (currentRole == "passenger") {
+    if (currentRole === "passenger") {
       setSelectedDriver(drive);
       navigate(`/userReview/${user.id}`);
     }
+  };
+
+  // Обработчики для изменения статуса
+  const handleReject = (e) => {
+    e.stopPropagation();
+    rejectRequest(request.id);
+    setReqStatus("reject");
+  };
+
+  const handleApprove = (e) => {
+    e.stopPropagation();
+    approveRequest(request.id);
+    setReqStatus("approve");
   };
 
   return (
     <div
       className='profile'
       onClick={(e) => chooseDrive(e)}>
-      <div className=' profile-wrapper'>
+      <div className='profile-wrapper'>
         <div className='profile-info'>
           <img
             className='profile-img'
@@ -81,7 +100,7 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
           <div className='profile-text'>
             <div className='flex gap-5'>
               <h3 className='profile-name'>{user.name}</h3>
-              {currentRole == "passenger" ? <p className='profile-stars'>{rating}</p> : ""}
+              {currentRole === "passenger" && <p className='profile-stars'>{rating}</p>}
             </div>
             <span className='profile-path'>
               {`${cleanAddress(start_address?.name) || "Не указан"} - ${
@@ -106,18 +125,12 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
           <div className='pending-btns'>
             <button
               className='pending-reject pending-btn'
-              onClick={() => {
-                rejectRequest(request.id);
-                request.status = "reject";
-              }}>
+              onClick={handleReject}>
               Отклонить
             </button>
             <button
               className='pending-approve pending-btn'
-              onClick={() => {
-                approveRequest(request.id);
-                request.status = "approve";
-              }}>
+              onClick={handleApprove}>
               Принять
             </button>
           </div>
