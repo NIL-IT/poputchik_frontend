@@ -2,7 +2,6 @@ import Registration from "../components/Registration/Registration";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { useState } from "react";
-import Switcher from "../UI/Switcher/Switcher";
 import Welcome from "../components/Welcome";
 
 export default function StartPage() {

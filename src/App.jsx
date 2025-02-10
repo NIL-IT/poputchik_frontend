@@ -116,11 +116,7 @@ function App() {
         <Routes>
           <Route
             path='/'
-            element={
-              <div className='container-custom'>
-                <StartPage />
-              </div>
-            }
+            element={<StartPage />}
           />
           <Route
             path='/preview'

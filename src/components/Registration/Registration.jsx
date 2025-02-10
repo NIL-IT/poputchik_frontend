@@ -9,13 +9,11 @@ import { urlToFile } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
-import { useMap } from "../../state/MapRoutesStore";
 import Switcher from "../../UI/Switcher/Switcher";
 import { getUserById, registration } from "../../api/user";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
-  const { center } = useMap();
   const [userId, setUserId] = useState(null);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
@@ -186,7 +184,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   }, [step]);
 
   return (
-    <main className='px-5 flex flex-col justify-between pb-6 relative w-full min-h-screen'>
+    <main className='container-custom px-5 flex flex-col justify-between pb-6 relative w-full min-h-screen'>
       <div>
         <header className='pt-[30px] flex items-center mb-12'>
           <button
@@ -203,7 +201,6 @@ export default function Registration({ backFunc, step, nextStep }) {
 
         <form
           encType='multipart/form-data'
-          // onSubmit={handleSubmit}
           className='flex flex-col gap-5 justify-center items-center container-custom'>
           {step === 0 && (
             <>
