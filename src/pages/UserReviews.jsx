@@ -3,10 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../state/ModalStore";
 import ReviewCard from "../UI/ReviewCard/ReviewCard";
 import { useDriverById, useDriverReviews } from "../api/driver";
+import { useDriversTripsList, usePassengerTripsList } from "../api/trips";
+import { useUserStore } from "../state/UserStore";
 
 export default function UserReviews() {
   const navigate = useNavigate();
   const { selectedDriver } = useModal();
+  const { currentUser, currentRole } = useUserStore();
+  const hasDriverProfile = currentUser.driver_profile?.id;
+
+  const historyList =
+    currentRole === "passenger"
+      ? usePassengerTripsList(currentUser.passenger_profile.id, "finished")
+      : hasDriverProfile
+      ? useDriversTripsList(currentUser.driver_profile.id, "finished")
+      : [];
   const { user, rating } = useDriverById(selectedDriver.driver_id).data;
   const reviews = useDriverReviews(selectedDriver.driver_id);
   return (
@@ -46,7 +57,7 @@ export default function UserReviews() {
         <div className='flex flex-col w-full justify-center items-center'>
           <div className='flex justify-between items-center w-[350px] border-t border-b border-[#CECECE]'>
             <div className='flex flex-col text-[16px] py-6 '>
-              <span className='font-bold  pb-2'>0</span>
+              <span className='font-bold  pb-2'>{historyList ? historyList.length : 0}</span>
               <span>поездок</span>
             </div>
             <div className='flex flex-col'>

@@ -1,12 +1,11 @@
-import { useUserByUserId } from "../../api/user";
 import { formatDate } from "../../utils/utils";
 import "./ReviewCard.css";
 export default function ReviewCard({ review }) {
-  const user = useUserByUserId(review.id).data;
+  const user = review.user;
   return (
     <div className='review shadow-custom'>
       <div className='review-info'>
-        <p className='review-name'>{}</p>
+        <p className='review-name'>{user.name}</p>
         <p className='review-date'>{formatDate(review.created_at)}</p>
       </div>
       <div className='review-rating flex gap-2'>

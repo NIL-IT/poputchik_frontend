@@ -5,6 +5,7 @@ import { useTrip } from "../../state/TripStore";
 
 import FeedbackSummary from "./FeedbackSummary";
 import { createReviewByDriver } from "../../api/driver";
+import { useUserStore } from "../../state/UserStore";
 
 export default function FeedBack() {
   const [grade, setGrade] = useState(-1);
@@ -13,6 +14,8 @@ export default function FeedBack() {
   const { setFeedbackTarget, feedbackTarget } = useTrip();
   const { toggleFeedback } = useModal();
   const [step, setStep] = useState(0);
+
+  const { currentUser } = useUserStore();
 
   function renderReview() {
     switch (grade) {
@@ -46,6 +49,7 @@ export default function FeedBack() {
         rating: grade,
         comment: feedbackText,
         created_at: isoString,
+        user_id: currentUser.id,
       };
 
       try {

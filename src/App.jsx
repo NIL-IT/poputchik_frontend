@@ -22,6 +22,7 @@ function App() {
   const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
+
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -170,9 +171,9 @@ function App() {
             path='/userReview/:userId'
             element={
               <div className='container-custom'>
-                {/* <ProtectedRoute> */}
-                <UserReviews />
-                {/* </ProtectedRoute> */}
+                <ProtectedRoute>
+                  <UserReviews />
+                </ProtectedRoute>
               </div>
             }
           />
