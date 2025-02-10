@@ -1,23 +1,21 @@
 import CloseBtn from "../UI/CloseBtn";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../state/ModalStore";
 import ReviewCard from "../UI/ReviewCard/ReviewCard";
 import { useDriverById, useDriverReviews } from "../api/driver";
-import { useDriversTripsList, usePassengerTripsList } from "../api/trips";
-import { useUserStore } from "../state/UserStore";
+import { useDriversTripsList } from "../api/trips";
+import { useUserById } from "../api/user";
 
 export default function UserReviews() {
   const navigate = useNavigate();
   const { selectedDriver } = useModal();
-  const { currentUser, currentRole } = useUserStore();
-  const hasDriverProfile = currentUser.driver_profile?.id;
+  const { userId } = useParams();
+  console.log(selectedDriver);
+  const registerDate = useUserById(userId);
+  console.log(registerDate);
 
-  const historyList =
-    currentRole === "passenger"
-      ? usePassengerTripsList(currentUser.passenger_profile.id, "finished")
-      : hasDriverProfile
-      ? useDriversTripsList(currentUser.driver_profile.id, "finished")
-      : [];
+  const historyList = useDriversTripsList(selectedDriver.driver_id, "finished");
+
   const { user, rating } = useDriverById(selectedDriver.driver_id).data;
   const reviews = useDriverReviews(selectedDriver.driver_id);
   return (
