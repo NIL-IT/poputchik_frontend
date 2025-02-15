@@ -19,6 +19,7 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
   const { setIsRouteEnabled } = useMap();
   const { setBookedDrive } = useTrip();
   const driverData = useDriverById(drive?.driver_id)?.data;
+  const [disabled, setDisabled] = useState(false);
 
   if (!drive) {
     console.error("Drive is not provided", drive);
@@ -36,25 +37,31 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
     return null;
   }
 
+  const isDriver = currentRole === "driver";
+
   const date = formatDate(departure_time, true);
-  const user = currentRole === "driver" ? passenger : driverData?.user || {};
-  const rating = currentRole === "driver" ? "" : driverData?.rating ?? "";
+  const user = isDriver ? passenger : driverData?.user || {};
+  const rating = isDriver ? "" : driverData?.rating ?? "";
 
   if (!user || Object.keys(user).length === 0) return null;
 
   function chooseDrive(event) {
     event.stopPropagation();
+    if (disabled) return;
+
     if (drive.state === "active" && currentRole === "passenger" && currentUser.passenger_profile) {
       setBookedDrive(drive);
       toggleBookedModal(true);
       setIsRouteEnabled(true);
+      setDisabled(true);
+
       if (onList === true) navigate("/main");
     }
   }
 
   function openChat(e) {
     e.stopPropagation();
-    if (currentRole === "driver") {
+    if (isDriver) {
       navigate(`/chat/${id}/${user.id}`);
     } else {
       navigate(`/chat/${id}/${currentUser.id}`);

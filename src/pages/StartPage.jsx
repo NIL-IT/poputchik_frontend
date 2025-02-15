@@ -6,6 +6,7 @@ import Welcome from "../components/Welcome";
 
 export default function StartPage() {
   const { currentUser, changeCurrentRole, currentRole } = useUserStore();
+  const isDriver = currentRole === "driver";
   const navigate = useNavigate();
   const [isAuth, setAuth] = useState(false);
   const [toReg, setToReg] = useState(false);
@@ -46,14 +47,14 @@ export default function StartPage() {
     if (step < 1 && currentRole == "passenger") {
       setStep((prev) => prev + 1);
       setSwitcherPos((prev) => prev + 1);
-    } else if (step < 2 && currentRole == "driver") {
+    } else if (step < 2 && isDriver) {
       setStep((prev) => prev + 1);
       setSwitcherPos((prev) => prev + 1);
     }
     if (currentRole == "passenger" && step == 1) {
       setAuth(true);
       navigate("/main");
-    } else if (currentRole == "driver" && step == 2) {
+    } else if (isDriver && step == 2) {
       setAuth(true);
       navigate("/main");
     }

@@ -11,14 +11,26 @@ import { useMap } from "../state/MapRoutesStore";
 import { useUserStore } from "../state/UserStore";
 import { useTripsList } from "../api/trips";
 import { usePassengerList } from "../api/passenger";
+import { useList } from "../state/listStore";
+import { useEffect } from "react";
 
 export default function MainPage() {
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
-  const { currentUser, currentRole } = useUserStore();
-  const driverList =
-    currentRole === "driver" ? usePassengerList(currentUser.driver_profile?.id) : useTripsList(currentUser.city);
+  const { currentUser } = useUserStore();
+  const { setMainList, mainList } = useList();
+  const isDriver = useUserStore((state) => state.currentRole === "driver");
+  const passengerList = usePassengerList(currentUser.driver_profile?.id);
+  const tripsList = useTripsList(currentUser.city);
+
+  const driverList = isDriver ? passengerList : tripsList;
+  // console.log(driverList);
+  useEffect(() => {
+    setMainList(driverList);
+    console.log(mainList);
+  }, [driverList, setMainList]);
+
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -50,7 +62,7 @@ export default function MainPage() {
   }
 
   const nerbiest =
-    driverList && currentRole === "driver"
+    driverList && isDriver
       ? driverList &&
         driverList.filter((i) => i.driver_id !== currentUser.driver_profile.id && i.state !== "booked").slice(0, 2)
       : currentUser
@@ -76,7 +88,7 @@ export default function MainPage() {
     } else {
       return (
         <DriverList
-          list={driverList ? nerbiest : []}
+          list={mainList ? mainList.slice(0, 2) : []}
           toggleCreating={toggleCreating}
           isCreating={isCreating}
         />

@@ -6,7 +6,7 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
-import { bookedTripByPassenger, tripRequestByPassenger, updateTripState } from "../../api/trips";
+import { tripRequestByPassenger, updateTripState } from "../../api/trips";
 import { cleanAddress } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,7 @@ export default function DriveInfo() {
   const { currentUser, currentRole } = useUserStore();
   const { bookedDrive, setFeedbackTarget } = useTrip();
   const { toggleBookedModal, toggleFeedback, setCarPhoto, toggleCarModal } = useModal();
-  const { setIsRouteEnabled, isRouteEnabled, setStartPoint, setEndPoint } = useMap();
+  const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const navigate = useNavigate();
   const data = useDriverById(bookedDrive.driver_id).data;
   const driver = data.user;
@@ -24,6 +24,8 @@ export default function DriveInfo() {
   const [text, setText] = useState("");
 
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
+
+  const isDriver = currentRole === "driver";
 
   function bookingByPassenger(e) {
     e.preventDefault();
@@ -70,7 +72,7 @@ export default function DriveInfo() {
   }
 
   function renderButton() {
-    if (currentRole === "driver" && bookedDrive.state === "started") {
+    if (isDriver && bookedDrive.state === "started") {
       return (
         <Button
           onClick={finishDrive}

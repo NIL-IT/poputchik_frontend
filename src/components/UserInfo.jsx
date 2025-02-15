@@ -6,13 +6,28 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import { useNavigate } from "react-router-dom";
 import { useDriverById, useDriverReviews } from "../api/driver";
 
-export default function UserInfo({ isEditable, value, setCity, setPhone, setMail, setProfilePhoto }) {
+export default function UserInfo({
+  isEditable,
+  value,
+  setCity,
+  setPhone,
+  setMail,
+  setProfilePhoto,
+  setVisiblePhoto,
+  setInfo,
+}) {
   const { currentUser, currentRole } = useUserStore();
   const navigate = useNavigate();
 
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
   const hasDriverProfile = currentUser.driver_profile?.id;
+  const isDriver = currentRole === "driver";
+
+  const handlePhotoChange = (e) => {
+    setProfilePhoto(e.target.files[0]);
+    setVisiblePhoto(URL.createObjectURL(e.target.files[0]));
+  };
 
   const reviews = useDriverReviews(currentUser.driver_profile?.id || null);
   const user = hasDriverProfile ? useDriverById(currentUser.driver_profile.id).data : null;
@@ -27,10 +42,11 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
             type='file'
             accept='image/*'
             disabled={!isEditable}
+            onChange={handlePhotoChange}
           />
           <label
             style={{
-              backgroundImage: `url(${currentUser.profile_photo})`,
+              backgroundImage: `url(${value.visiblePhoto})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -51,7 +67,7 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
         </div>
         <h1 className='font-bold text-[24px] leading-6 pt-6'>{currentUser.name}</h1>
       </div>
-      {currentRole === "driver" && (
+      {isDriver && (
         <div className='w-full balance-bg py-8 rounded-[10px] mb-10'>
           <h3 className='pb-7  text-[32px] leading-8 text-white'>Баланс, ₽</h3>
           <button
@@ -77,6 +93,13 @@ export default function UserInfo({ isEditable, value, setCity, setPhone, setMail
           readOnly={!isEditable}
           value={value.mail}
           onChange={(e) => setMail(e.target.value)}
+        />
+        <Input
+          type={"text"}
+          readOnly={!isEditable}
+          value={value.info}
+          onChange={(e) => setInfo(e.target.value)}
+          placeholder={"О себе"}
         />
         <Select
           readOnly={!isEditable}

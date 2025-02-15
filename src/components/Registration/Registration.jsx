@@ -14,12 +14,14 @@ import { getUserById, registration } from "../../api/user";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
+  const isDriver = currentRole === "driver";
   const [userId, setUserId] = useState(null);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState(null);
+  const [about, setAbout] = useState("");
 
   const [carNumber, setCarNumber] = useState("");
   const [carModel, setCarModel] = useState("");
@@ -72,7 +74,7 @@ export default function Registration({ backFunc, step, nextStep }) {
   const validateStep = () => {
     const errors = {};
 
-    if (currentRole === "driver") {
+    if (isDriver) {
       switch (step) {
         case 0:
           if (!name || !nameRegex.test(name)) errors.name = "Имя обязательно (2-50 символов)";
@@ -113,7 +115,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
     if (!validateStep()) return;
 
-    if ((currentRole === "driver" && step < 2) || (currentRole === "passenger" && step < 0)) {
+    if ((isDriver && step < 2) || (currentRole === "passenger" && step < 0)) {
       nextStep();
       return;
     }
@@ -126,8 +128,9 @@ export default function Registration({ backFunc, step, nextStep }) {
       formData.append("city", city);
       formData.append("email", email);
       formData.append("profile_photo", avatar);
+      formData.append("info", about);
       formData.append("register_date", new Date().toISOString());
-      if (currentRole === "driver") {
+      if (isDriver) {
         formData.append("passport_photo", passportPhoto);
         formData.append("driver_license", driverLicensePhoto);
         formData.append("car_number", carNumber);
@@ -139,7 +142,7 @@ export default function Registration({ backFunc, step, nextStep }) {
         formData.append("car_type", carType);
       }
       await registration(formData, currentRole);
-      if (currentRole == "driver" && !currentUser.passenger_profile) {
+      if (isDriver && !currentUser.passenger_profile) {
         await registration(formData, "passenger");
       }
       const { data } = await getUserById(userId);
@@ -262,6 +265,15 @@ export default function Registration({ backFunc, step, nextStep }) {
               </div>
 
               <div className='w-full relative'>
+                <Input
+                  type='text'
+                  placeholder='О себе'
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                />
+              </div>
+
+              <div className='w-full relative'>
                 <Select
                   selectedValue={city}
                   options={["село Майма", "Горно-Алтайск", "село Манжерок", "село Ая"]}
@@ -273,7 +285,7 @@ export default function Registration({ backFunc, step, nextStep }) {
             </>
           )}
 
-          {step === 1 && currentRole === "driver" && (
+          {step === 1 && isDriver && (
             <>
               <div className='flex flex-col gap-10 items-center justify-center'>
                 <fieldset className='relative'>
@@ -344,7 +356,7 @@ export default function Registration({ backFunc, step, nextStep }) {
             </>
           )}
 
-          {step === 2 && currentRole === "driver" && (
+          {step === 2 && isDriver && (
             <ChooseCar
               selectedCar={carType}
               setSelectedCar={setCarType}
@@ -365,7 +377,7 @@ export default function Registration({ backFunc, step, nextStep }) {
           onClick={handleSubmit}
           classNames=' mb-10'
           size='large'>
-          {currentRole === "driver" && step < 2 ? "Далее" : "Завершить"}
+          {isDriver && step < 2 ? "Далее" : "Завершить"}
         </Button>
         <Switcher position={step} />
       </div>

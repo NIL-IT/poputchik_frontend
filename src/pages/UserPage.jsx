@@ -20,14 +20,18 @@ export default function UserPage() {
   const { isFeedBackOpen } = useModal();
 
   const [profilePhoto, setProfilePhoto] = useState(currentUser.profile_photo);
+  const [visiblePhoto, setVisibleAvatarPhoto] = useState(currentUser.profile_photo);
   const [phone, setPhone] = useState(currentUser.phone_number);
   const [mail, setMail] = useState(currentUser.email);
   const [city, setCity] = useState(currentUser.city);
+  const [info, setInfo] = useState(currentUser.info);
   const value = {
     profilePhoto,
     phone,
     mail,
     city,
+    info,
+    visiblePhoto,
   };
   const [error, setError] = useState();
 
@@ -41,8 +45,6 @@ export default function UserPage() {
       : hasDriverProfile
       ? useDriversTripsList(currentUser.driver_profile.id, "finished")
       : [];
-
-  const [userId, setUserId] = useState(currentUser.telegram_id);
 
   function toggleHistory() {
     navigate("/history");
@@ -62,23 +64,30 @@ export default function UserPage() {
   }
 
   async function updateUserData() {
-    const profile_photo = await urlToFile(profilePhoto);
+    const profile_photo = profilePhoto === currentUser.profile_photo ? await urlToFile(profilePhoto) : profilePhoto;
     const updates = {
       phone_number: phone,
       city: city,
       email: mail,
       profile_photo: URL.createObjectURL(profile_photo),
+      info: info,
     };
+
     updateCurrentUser(updates);
   }
 
   async function editHandler() {
     if (isEditable) {
-      if (phone !== currentUser.phone_number || mail !== currentUser.email || city !== currentUser.city) {
+      if (
+        phone !== currentUser.phone_number ||
+        mail !== currentUser.email ||
+        city !== currentUser.city ||
+        profilePhoto !== currentUser.profile_photo ||
+        info !== currentUser.info
+      ) {
         if (!validation()) return;
         const tgId = currentUser.telegram_id;
-        const profile_photo = await urlToFile(profilePhoto);
-
+        const profile_photo = profilePhoto === currentUser.profile_photo ? await urlToFile(profilePhoto) : profilePhoto;
         try {
           const formData = new FormData();
           formData.append("telegram_id", tgId);
@@ -86,6 +95,7 @@ export default function UserPage() {
           formData.append("city", city);
           formData.append("email", mail);
           formData.append("profile_photo", profile_photo);
+          formData.append("info", info);
           await updateUser(formData);
           updateUserData();
         } catch (error) {
@@ -107,7 +117,9 @@ export default function UserPage() {
             setCity={setCity}
             setPhone={setPhone}
             setMail={setMail}
+            setVisiblePhoto={setVisibleAvatarPhoto}
             setProfilePhoto={setProfilePhoto}
+            setAbout={setInfo}
           />
           <div className='flex gap-5'>
             <Button

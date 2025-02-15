@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -22,7 +22,6 @@ function App() {
   const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -49,7 +48,6 @@ function App() {
 
   const requestLocation = async () => {
     const tg = window.Telegram.WebApp;
-
     if (!tg || !tg.LocationManager) {
       console.error("Telegram WebApp или LocationManager недоступен");
       return false;
@@ -63,25 +61,28 @@ function App() {
       tg.LocationManager.getLocation((data) => {
         if (data) {
           setCenter([data.latitude, data.longitude]);
-          return true;
-        } else {
-          return false;
         }
       });
+      return true;
     } else {
+      console.error("Данные о местоположении недоступны");
       return false;
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchLocation = async () => {
       const success = await requestLocation();
       if (success) {
         await getCityByCoordinates();
       }
     };
 
-    fetchData();
+    fetchLocation();
+
+    const intervalId = setInterval(fetchLocation, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const getCityByCoordinates = async () => {
