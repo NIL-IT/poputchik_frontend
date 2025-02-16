@@ -12,10 +12,35 @@ function filterList(list) {
 
 export const useList = create((set) => ({
   mainList: [],
-  setMainList: (value) => set({ mainList: filterList(value) }),
   chatList: [],
-  setChatList: (value) => set({ chatList: value }),
   activeList: [],
-  setActiveList: (value) => set({ activeList: value }),
   historyList: [],
+  waitingList: [],
+  filteredList: [],
+
+  setMainList: (value) => set({ mainList: filterList(value) }),
+  setChatList: (value) => set({ chatList: value }),
+  setActiveList: (value) => set({ activeList: value }),
+  setWaitingList: (value) => set({ waitingList: value }),
+  setHistoryList: (value) => set({ historyList: value }),
+  setFilteredList: (value) => set({ filteredList: value }),
+
+  filterTripsByTime: (startDateTime, endDateTime) => {
+    set((state) => {
+      const filtered = state.mainList.filter((trip) => {
+        const tripTime = new Date(trip.departure_time);
+        return tripTime >= startDateTime && tripTime <= endDateTime;
+      });
+
+      return {
+        filteredList: filtered,
+      };
+    });
+  },
+
+  clearTimeFilter: () => {
+    set((state) => ({
+      filteredList: state.mainList,
+    }));
+  },
 }));

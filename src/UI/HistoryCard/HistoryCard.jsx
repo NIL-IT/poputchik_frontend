@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { cleanAddress } from "../../api/api";
+import PropTypes from "prop-types";
 
 export default function HistoryCard({ drive }) {
   const { currentUser } = useUserStore();
@@ -91,7 +92,7 @@ export default function HistoryCard({ drive }) {
     return null;
   }
   if (!driver) {
-    return <div>Loading...</div>;
+    return <div>Загрузка...</div>;
   }
 
   function openFeedback(event) {
@@ -175,3 +176,19 @@ export default function HistoryCard({ drive }) {
     </div>
   );
 }
+
+HistoryCard.propTypes = {
+  drive: PropTypes.shape({
+    state: PropTypes.string,
+    driver_id: PropTypes.number,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    departure_time: PropTypes.string,
+    start_address: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    end_address: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    price: PropTypes.number,
+  }),
+};

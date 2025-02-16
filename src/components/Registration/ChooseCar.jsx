@@ -1,13 +1,18 @@
 import Input from "../../UI/Input/Input";
+import PropTypes from "prop-types";
 
 export default function ChooseCar({
   selectedCar,
   setSelectedCar,
+  carNumber,
+  carModel,
+  carMake,
+  carColor,
   setCarNumber,
   setCarModel,
   setCarMake,
   setCarColor,
-  errors,
+  formError,
 }) {
   return (
     <div className='flex flex-col gap-5'>
@@ -154,26 +159,44 @@ export default function ChooseCar({
         onChange={(e) => setCarNumber(e.target.value)}
         placeholder={"Номер"}
         required
+        value={carNumber}
       />
-      {errors.carNumber && <p className='text-red-500 text-sm'>{errors.carNumber}</p>}
+      {formError.carNumber && <p className='text-red-500 text-sm'>{formError.carNumber}</p>}
       <Input
         onChange={(e) => setCarMake(e.target.value)}
         placeholder={"Марка"}
+        value={carMake}
         required
       />
-      {errors.carMake && <p className='text-red-500 text-sm'>{errors.carMake}</p>}
+      {formError.carMake && <p className='text-red-500 text-sm'>{formError.carMake}</p>}
       <Input
         onChange={(e) => setCarModel(e.target.value)}
         placeholder={"Модель"}
+        value={carModel}
         required
       />
-      {errors.carModel && <p className='text-red-500 text-sm'>{errors.carModel}</p>}
+      {formError.carModel && <p className='text-red-500 text-sm'>{formError.carModel}</p>}
       <Input
         onChange={(e) => setCarColor(e.target.value)}
         placeholder={"Цвет"}
         required
+        value={carColor}
       />
-      {errors.carColor && <p className='text-red-500 text-sm'>{errors.carColor}</p>}
+      {formError.carColor && <p className='text-red-500 text-sm'>{formError.carColor}</p>}
     </div>
   );
 }
+
+ChooseCar.propTypes = {
+  selectedCar: PropTypes.string,
+  setSelectedCar: PropTypes.func.isRequired,
+  carNumber: PropTypes.string.isRequired,
+  carModel: PropTypes.string.isRequired,
+  carMake: PropTypes.string.isRequired,
+  carColor: PropTypes.string.isRequired,
+  setCarNumber: PropTypes.func.isRequired,
+  setCarModel: PropTypes.func.isRequired,
+  setCarMake: PropTypes.func.isRequired,
+  setCarColor: PropTypes.func.isRequired,
+  formError: PropTypes.object,
+};

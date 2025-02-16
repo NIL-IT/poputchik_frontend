@@ -1,19 +1,43 @@
+import { motion } from "framer-motion";
 import Button from "../../UI/Button/Button";
 import Footer from "../../UI/Footer/Footer";
 import Input from "../../UI/Input/Input";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useEffect, useState } from "react";
-
 import { useMap } from "../../state/MapRoutesStore";
 import { formatDate } from "../../utils/utils";
 import { useUserStore } from "../../state/UserStore";
 import { createTripByDriver } from "../../api/trips";
 import { cleanAddress } from "../../api/api";
+
+const createTripAnimation = {
+  initial: {
+    y: "100%",
+    opacity: 0,
+  },
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 300,
+    },
+  },
+  exit: {
+    y: "100%",
+    opacity: 0,
+    transition: {
+      duration: 0.2,
+    },
+  },
+};
+
 export default function CreateTrip() {
   const { tripFrom, tripTo, date, persons, price } = useTrip();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
-  const { toggleCalendar, togglePersonModal, togglePrice, toggleSearch, setActiveInput, setIsCreating } = useModal();
+  const { toggleCalendar, togglePersonModal, toggleSearch, setActiveInput, setIsCreating } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
   const { currentUser } = useUserStore();
 
@@ -119,71 +143,78 @@ export default function CreateTrip() {
   }, [routeDistance]);
 
   return (
-    <Footer className={`bg-[#fff] px-5 flex justify-center`}>
-      <div className='relative w-[350px]'>
-        <h2 className='text-left font-bold text-[20px] leading-5 mb-6 '>Создайте поездку</h2>
-        <form
-          onSubmit={createTrip}
-          encType='application/json'
-          className='rounded-[15px] create '>
-          <>
-            <div className='first geo'>
-              <Input
-                readOnly
-                placeholder={"откуда"}
-                value={cleanAddress(tripFrom.name)}
-                onChange={() => {}}
-                onClick={() => openSearch("from")}
-              />
-            </div>
-            <div className='geo'>
-              <Input
-                readOnly
-                placeholder={"куда"}
-                value={cleanAddress(tripTo.name)}
-                onChange={() => {}}
-                onClick={() => openSearch("to")}
-              />
-            </div>
-            <div className='date'>
-              <Input
-                readOnly
-                onClick={() => toggleCalendar(true)}
-                value={date.length > 0 ? formatDate(date, true) : "00.00.00"}
-                onChange={() => {}}
-                type={"text"}
-                placeholder={"00.00.00"}
-              />
-            </div>
-            <div className='person'>
-              <Input
-                readOnly
-                onChange={() => {}}
-                onClick={() => togglePersonModal(true)}
-                type={"number"}
-                value={Number(persons)}
-              />
-            </div>
-            <div className='price'>
-              <Input
-                readOnly
-                // onClick={() => togglePrice(true)}
-                // type={"number"}
-                onChange={() => {}}
-                value={price}
-              />
-            </div>
-          </>
+    <motion.div
+      variants={createTripAnimation}
+      initial='initial'
+      animate='animate'
+      exit='exit'
+      className='fixed bottom-0 left-0 right-0 bg-white z-10'>
+      <div className='px-5 py-6'>
+        <div className='relative w-[350px] mx-auto'>
+          <h2 className='text-left font-bold text-[20px] leading-5 mb-6'>Создайте поездку</h2>
+          <form
+            onSubmit={createTrip}
+            encType='application/json'
+            className='rounded-[15px] create'>
+            <>
+              <div className='first geo'>
+                <Input
+                  readOnly
+                  placeholder={"откуда"}
+                  value={cleanAddress(tripFrom.name)}
+                  onChange={() => {}}
+                  onClick={() => openSearch("from")}
+                />
+              </div>
+              <div className='geo'>
+                <Input
+                  readOnly
+                  placeholder={"куда"}
+                  value={cleanAddress(tripTo.name)}
+                  onChange={() => {}}
+                  onClick={() => openSearch("to")}
+                />
+              </div>
+              <div className='date'>
+                <Input
+                  readOnly
+                  onClick={() => toggleCalendar(true)}
+                  value={date.length > 0 ? formatDate(date, true) : "00.00.00"}
+                  onChange={() => {}}
+                  type={"text"}
+                  placeholder={"00.00.00"}
+                />
+              </div>
+              <div className='person'>
+                <Input
+                  readOnly
+                  onChange={() => {}}
+                  onClick={() => togglePersonModal(true)}
+                  type={"number"}
+                  value={Number(persons)}
+                />
+              </div>
+              <div className='price'>
+                <Input
+                  readOnly
+                  // onClick={() => togglePrice(true)}
+                  // type={"number"}
+                  onChange={() => {}}
+                  value={price}
+                />
+              </div>
+            </>
 
-          {formError ? <>{formError}</> : <></>}
-          <Button
-            type='submit'
-            size={"large"}
-            classNames={"btn-form"}>
-            Сохранить
-          </Button>
-        </form>
+            {formError ? <>{formError}</> : <></>}
+            <Button
+              type='submit'
+              size={"large"}
+              classNames={"btn-form"}>
+              Сохранить
+            </Button>
+          </form>
+        </div>
       </div>
-    </Footer>
+    </motion.div>
   );
 }

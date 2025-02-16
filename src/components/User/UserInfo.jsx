@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useUserStore } from "../state/UserStore";
-import Input from "../UI/Input/Input";
-import Select from "../UI/Select/Select";
+import { useUserStore } from "../../state/UserStore";
+import Input from "../../UI/Input/Input";
+import Select from "../../UI/Select/Select";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import { useNavigate } from "react-router-dom";
-import { useDriverById, useDriverReviews } from "../api/driver";
+import { useDriverById, useDriverReviews } from "../../api/driver";
 
 export default function UserInfo({
   isEditable,

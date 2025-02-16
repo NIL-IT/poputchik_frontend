@@ -2,7 +2,6 @@
   padding: 15px 18px;
   max-width: 350px;
   width: 100%;
-  align-items: center;
   border-radius: 10px;
   background: #fefefe;
 }
@@ -15,7 +14,6 @@
   background-color: var(--grey-color);
 }
 .profile-wrapper {
-  display: flex;
   align-items: center;
   justify-content: center;
   background-color: white;
@@ -76,14 +74,17 @@
 }
 
 .profile-date {
-  margin-top: 8px;
   color: #747474;
   font-size: 14px;
   line-height: 16.1px;
   background: url("../../assets/icons/profile-date.svg") no-repeat;
   padding-left: 22px;
 }
-
+.profile-seats {
+  color: #747474;
+  font-size: 14px;
+  line-height: 16.1px;
+}
 .profile-pending {
   padding-top: 6px;
 }

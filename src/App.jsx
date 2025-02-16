@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/Wrappers/ProtectedRoute";
 import UserPage from "./pages/UserPage";
 import { useEffect, useState } from "react";
 import { useUserStore } from "./state/UserStore";
@@ -17,6 +17,9 @@ import PeopleList from "./pages/PeopleList";
 import PaymentPage from "./pages/PaymentPage";
 import Chat from "./pages/ChatPage";
 import ChatList from "./pages/ChatList";
+import AppInitializer from "./components/AppInitializer";
+import AnimatedRoute from "./components/Wrappers/AnimatedRoute";
+import { pageSlideLeft, slideDownIn, slideUpIn } from "./utils/animation";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -83,7 +86,7 @@ function App() {
     const intervalId = setInterval(fetchLocation, 10000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  });
 
   const getCityByCoordinates = async () => {
     try {
@@ -114,10 +117,15 @@ function App() {
   return (
     <div className='container'>
       <Router>
+        <AppInitializer />
         <Routes>
           <Route
             path='/'
-            element={<StartPage />}
+            element={
+              <AnimatedRoute>
+                <StartPage />
+              </AnimatedRoute>
+            }
           />
           <Route
             path='/preview'
@@ -132,7 +140,9 @@ function App() {
             path='/main'
             element={
               <ProtectedRoute>
-                <MainPage />
+                <AnimatedRoute variants={slideDownIn}>
+                  <MainPage />
+                </AnimatedRoute>
               </ProtectedRoute>
             }
           />
@@ -140,7 +150,12 @@ function App() {
             path='/user'
             element={
               <ProtectedRoute>
-                <UserPage />
+                <AnimatedRoute
+                  key='user-page'
+                  variants={pageSlideLeft}
+                  className='w-full h-full overflow-hidden'>
+                  <UserPage />
+                </AnimatedRoute>
               </ProtectedRoute>
             }
           />
@@ -149,7 +164,9 @@ function App() {
             element={
               <div className='container-custom'>
                 <ProtectedRoute>
-                  <ActiveDrivesPage />
+                  <AnimatedRoute variants={slideUpIn}>
+                    <ActiveDrivesPage />
+                  </AnimatedRoute>
                 </ProtectedRoute>
               </div>
             }
@@ -159,7 +176,9 @@ function App() {
             element={
               <div className='container-custom'>
                 <ProtectedRoute>
-                  <HistoryPage />
+                  <AnimatedRoute variants={pageSlideLeft}>
+                    <HistoryPage />
+                  </AnimatedRoute>
                 </ProtectedRoute>
               </div>
             }
@@ -169,7 +188,9 @@ function App() {
             element={
               <div className='container-custom'>
                 <ProtectedRoute>
-                  <UserReviews />
+                  <AnimatedRoute variants={slideUpIn}>
+                    <UserReviews />
+                  </AnimatedRoute>
                 </ProtectedRoute>
               </div>
             }
@@ -179,7 +200,9 @@ function App() {
             element={
               <div className='container-custom'>
                 <ProtectedRoute>
-                  <PeopleList />
+                  <AnimatedRoute variants={slideUpIn}>
+                    <PeopleList />{" "}
+                  </AnimatedRoute>
                 </ProtectedRoute>
               </div>
             }
@@ -199,7 +222,9 @@ function App() {
             element={
               <div className=''>
                 <ProtectedRoute>
-                  <Chat />
+                  <AnimatedRoute variants={slideUpIn}>
+                    <Chat />{" "}
+                  </AnimatedRoute>
                 </ProtectedRoute>
               </div>
             }
@@ -209,7 +234,9 @@ function App() {
             element={
               <div className=''>
                 <ProtectedRoute>
-                  <ChatList />
+                  <AnimatedRoute variants={slideDownIn}>
+                    <ChatList />{" "}
+                  </AnimatedRoute>
                 </ProtectedRoute>
               </div>
             }

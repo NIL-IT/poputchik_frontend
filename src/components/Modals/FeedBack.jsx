@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useModal } from "../../state/ModalStore";
 import Button from "../../UI/Button/Button";
 import { useTrip } from "../../state/TripStore";
-
 import FeedbackSummary from "./FeedbackSummary";
 import { createReviewByDriver } from "../../api/driver";
 import { useUserStore } from "../../state/UserStore";
@@ -14,7 +13,6 @@ export default function FeedBack() {
   const { setFeedbackTarget, feedbackTarget } = useTrip();
   const { toggleFeedback } = useModal();
   const [step, setStep] = useState(0);
-
   const { currentUser } = useUserStore();
 
   function renderReview() {
@@ -35,7 +33,6 @@ export default function FeedBack() {
   }
 
   function closeFeedback() {
-    document.body.classList.remove("overflow-y-hidden");
     toggleFeedback(false);
     setFeedbackTarget("");
   }
@@ -72,15 +69,11 @@ export default function FeedBack() {
   }
 
   return (
-    <>
-      <div
-        className='absolute top-0 left-0 h-[30%] w-full backdrop-blur blur-sm z-30'
-        onClick={closeFeedback}></div>
-
-      <div className='absolute bottom-0 flex flex-col items-center w-full h-[70%] bg-white rounded-tl-[24px] rounded-tr-[24px] z-30'>
-        <div className='relative container-custom pt-[66px] w-full px-5'>
+    <div className='w-full bg-white rounded-t-[24px]'>
+      <div className='container-custom pt-8 px-5 pb-20'>
+        <div className='relative w-full'>
           <button
-            className='absolute top-4 right-4'
+            className='absolute top-0 right-0'
             onClick={closeFeedback}>
             <svg
               width='10'
@@ -94,7 +87,8 @@ export default function FeedBack() {
               />
             </svg>
           </button>
-          <div className='flex items-center justify-center gap-4 pb-8'>
+
+          <div className='flex items-center justify-center gap-4 py-8'>
             {[0, 1, 2, 3, 4].map((star, i) => (
               <svg
                 key={i}
@@ -111,21 +105,23 @@ export default function FeedBack() {
               </svg>
             ))}
           </div>
-          <span>{renderReview()}</span>
+          <div className='text-center mb-8'>{renderReview()}</div>
           <textarea
-            className='border border-[#B8B8B8] text-[14px] leading-[19px] min-h-[180px] w-full bg-inherit mt-10 px-2 pt-5'
+            className='border border-[#B8B8B8] text-[14px] leading-[19px] min-h-[180px] w-full bg-inherit px-2 pt-5 rounded-lg mb-4'
             placeholder='Напишите отзыв'
             onChange={(e) => setFeedbackText(e.target.value)}
-            value={feedbackText}></textarea>
+            value={feedbackText}
+          />
+          {error && <span className='block text-center font-bold text-red-600 mt-4'>{error}</span>}
         </div>
-        {error && <span className='font-bold text-red-600'>{error}</span>}
+      </div>
+      <div className='fixed bottom-0 left-0 right-0 p-4 bg-white '>
         <Button
           onClick={postFeedback}
-          size='large'
-          classNames='absolute bottom-4'>
+          size='large'>
           Отправить
         </Button>
       </div>
-    </>
+    </div>
   );
 }

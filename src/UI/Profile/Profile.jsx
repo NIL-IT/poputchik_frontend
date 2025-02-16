@@ -26,7 +26,7 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
     return null;
   }
 
-  const { start_address, end_address, departure_time, id } = drive;
+  const { start_address, end_address, departure_time, id, seats_available } = drive;
 
   if (!start_address || !end_address) {
     console.error("Не заданы адреса отправления или прибытия для", drive);
@@ -36,7 +36,6 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
   if (request && reqStatus !== "pending") {
     return null;
   }
-
   const isDriver = currentRole === "driver";
 
   const date = formatDate(departure_time, true);
@@ -110,7 +109,6 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
                 cleanAddress(end_address?.name) || "Не указан"
               }`}
             </span>
-            <div className='profile-date'>{date}</div>
           </div>
           <button
             onClick={(e) => openChat(e)}
@@ -121,7 +119,12 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
             />
           </button>
         </div>
+        <div className='flex justify-between items-center mt-2'>
+          <div className='profile-date'>{date}</div>
+          {currentRole === "passenger" && <div className='profile-seats'>Свободные места {seats_available}</div>}
+        </div>
       </div>
+
       {pending && (
         <div className='profile-pending mt-2'>
           <div className='pending-message text-left'>{request.text}</div>

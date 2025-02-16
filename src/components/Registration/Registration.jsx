@@ -1,16 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import "react-phone-number-input/style.css";
-import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
-import Input from "../../UI/Input/Input";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
-import Select from "../../UI/Select/Select";
 import { urlToFile } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
 import ChooseCar from "./ChooseCar";
 import Button from "../../UI/Button/Button";
 import Switcher from "../../UI/Switcher/Switcher";
 import { getUserById, registration } from "../../api/user";
+import RegistrationPhoto from "./RegistrationPhoto";
+import RegistrationInfo from "./RegistrationInfo";
+import { motion } from "framer-motion";
+import { swipeLeft } from "../../utils/animation";
+import { validateRegistrationStep } from "../../utils/regitarionValidation";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
@@ -39,10 +41,10 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState({});
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const nameRegex = /^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ'’\- ]{2,50}$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -67,95 +69,90 @@ export default function Registration({ backFunc, step, nextStep }) {
       setEmail(currentUser.email);
       setVisibleAvatarPhoto(currentUser.profile_photo);
       setVisiblePassportPhoto(currentUser.passport_photo);
+      setAbout(currentUser.info);
     };
     loadData();
   }, [currentUser, currentRole]);
 
-  const validateStep = () => {
-    const errors = {};
-
-    if (isDriver) {
-      switch (step) {
-        case 0:
-          if (!name || !nameRegex.test(name)) errors.name = "Имя обязательно (2-50 символов)";
-          if (!isValidPhoneNumber(phone)) errors.phone = "Неверный формат телефона";
-          if (!email || !emailRegex.test(email)) errors.email = "Некорректная почта";
-          if (!city) errors.city = "Выберите город";
-          if (!avatar) errors.avatar = "Загрузите аватар";
-          break;
-        case 1:
-          if (!passportPhoto) errors.passport = "Загрузите фото паспорта";
-          if (!driverLicensePhoto) errors.license = "Загрузите водительское удостоверение";
-          if (!carPhoto) errors.carPhoto = "Загрузите фото машины";
-          break;
-        case 2:
-          if (!carNumber.trim()) errors.carNumber = "Введите номер авто";
-          if (!carModel.trim()) errors.carModel = "Введите модель";
-          if (!carMake.trim()) errors.carMake = "Введите марку";
-          if (!carColor.trim()) errors.carColor = "Введите цвет";
-          if (!carType) errors.carType = "Выберите тип авто";
-          break;
-        default:
-          break;
-      }
-    } else {
-      if (!name || !nameRegex.test(name)) errors.name = "Имя обязательно (2-50 символов)";
-      if (!isValidPhoneNumber(phone)) errors.phone = "Неверный формат телефона";
-      if (!email || !emailRegex.test(email)) errors.email = "Некорректная почта";
-      if (!city) errors.city = "Выберите город";
-      if (!avatar) errors.avatar = "Загрузите аватар";
-    }
-
-    setFormError(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateStep()) return;
+    const errors = validateRegistrationStep(
+      step,
+      {
+        name,
+        phone,
+        email,
+        city,
+        avatar,
+        privacyAccepted,
+        passportPhoto,
+        driverLicensePhoto,
+        carPhoto,
+        carNumber,
+        carModel,
+        carMake,
+        carColor,
+        carType,
+      },
+      isDriver,
+    );
 
-    if ((isDriver && step < 2) || (currentRole === "passenger" && step < 0)) {
+    setFormError(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    if (shouldProceedToNextStep()) {
       nextStep();
       return;
     }
 
     try {
-      const formData = new FormData();
-      formData.append("telegram_id", userId);
-      formData.append("phone_number", phone);
-      formData.append("name", name);
-      formData.append("city", city);
-      formData.append("email", email);
-      formData.append("profile_photo", avatar);
-      formData.append("info", about);
-      formData.append("register_date", new Date().toISOString());
-      if (isDriver) {
-        formData.append("passport_photo", passportPhoto);
-        formData.append("driver_license", driverLicensePhoto);
-        formData.append("car_number", carNumber);
-        formData.append("car_photo", carPhoto);
-
-        formData.append("car_model", carModel);
-        formData.append("car_make", carMake);
-        formData.append("car_color", carColor);
-        formData.append("car_type", carType);
-      }
-      await registration(formData, currentRole);
-      if (isDriver && !currentUser.passenger_profile) {
-        await registration(formData, "passenger");
-      }
-      const { data } = await getUserById(userId);
-      setCurrentUser(data);
-
+      setIsLoading(true);
+      await submitRegistrationForm();
       navigate("/main");
     } catch (error) {
-      setFormError({ general: error.response.data.detail || "Неизвестная ошибка" });
+      setFormError({ general: error.response?.data?.detail || "Неизвестная ошибка" });
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const shouldProceedToNextStep = () => {
+    return (isDriver && step < 2) || (currentRole === "passenger" && step < 0);
+  };
+
+  const submitRegistrationForm = async () => {
+    const formData = new FormData();
+    formData.append("telegram_id", userId);
+    formData.append("phone_number", phone);
+    formData.append("name", name);
+    formData.append("city", city);
+    formData.append("email", email);
+    formData.append("profile_photo", avatar);
+    formData.append("info", about);
+    formData.append("register_date", new Date().toISOString());
+    if (isDriver) {
+      formData.append("passport_photo", passportPhoto);
+      formData.append("driver_license", driverLicensePhoto);
+      formData.append("car_number", carNumber);
+      formData.append("car_photo", carPhoto);
+
+      formData.append("car_model", carModel);
+      formData.append("car_make", carMake);
+      formData.append("car_color", carColor);
+      formData.append("car_type", carType);
+    }
+    await registration(formData, currentRole);
+    if (isDriver && !currentUser.passenger_profile) {
+      await registration(formData, "passenger");
+    }
+    const { data } = await getUserById(userId);
+    setCurrentUser(data);
+  };
+
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
-
+  console.log(carPhoto);
   const handleFileChange = (e) => {
     setAvatar(e.target.files[0]);
     setVisibleAvatarPhoto(URL.createObjectURL(e.target.files[0]));
@@ -186,10 +183,54 @@ export default function Registration({ backFunc, step, nextStep }) {
     setFormError({});
   }, [step]);
 
+  const infoProps = {
+    handleFileChange,
+    avatar,
+    setName,
+    visibleAvatarPhoto,
+    formError,
+    name,
+    phone,
+    handlePhoneChange,
+    email,
+    setEmail,
+    about,
+    setAbout,
+    city,
+    handleCityChange,
+    privacyAccepted,
+    setPrivacyAccepted,
+  };
+  const photoProps = {
+    handlePassportChange,
+    passportPhoto,
+    visiblePassportPhoto,
+    formError,
+    handleLicenseChange,
+    driverLicensePhoto,
+    visibleLicensePhoto,
+    handleCarChange,
+    carPhoto,
+    visibleCarPhoto,
+  };
+  const carProps = {
+    selectedCar: carType,
+    setSelectedCar: setCarType,
+    carNumber,
+    carModel,
+    carMake,
+    carColor,
+    setCarNumber,
+    setCarModel,
+    setCarMake,
+    setCarColor,
+    formError,
+  };
+
   return (
     <main className='container-custom px-5 flex flex-col justify-between pb-6 relative w-full min-h-screen'>
       <div>
-        <header className='pt-[30px] flex items-center mb-12'>
+        <header className='pt-[30px] flex items-center mb-1'>
           <button
             className='absolute flex items-center'
             onClick={backFunc}>
@@ -204,168 +245,41 @@ export default function Registration({ backFunc, step, nextStep }) {
 
         <form
           encType='multipart/form-data'
-          className='flex flex-col gap-5 justify-center items-center container-custom'>
+          className=''>
           {step === 0 && (
-            <>
-              <fieldset className='w-[121px] h-[121px] mb-10 relative'>
-                <input
-                  id='upload-file'
-                  type='file'
-                  accept='image/*'
-                  onChange={handleFileChange}
-                  className='visually-hidden'
-                />
-                <label
-                  htmlFor='upload-file'
-                  className='img-upload__label img-upload__control'
-                  style={{
-                    backgroundImage: avatar && `url(${visibleAvatarPhoto})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}>
-                  Загрузить
-                </label>
-                {formError.avatar && (
-                  <p className='text-red-500 text-sm absolute -bottom-6 text-center w-full'>{formError.avatar}</p>
-                )}
-              </fieldset>
-
-              <div className='w-full relative'>
-                <Input
-                  type='text'
-                  placeholder='Имя'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength='17'
-                />
-                {formError.name && <p className='text-red-500 text-sm mt-1'>{formError.name}</p>}
-              </div>
-
-              <div className='w-full relative'>
-                <PhoneInput
-                  className={`input tel ${phone?.length <= 2 ? "grey" : ""}`}
-                  placeholder='Номер телефона'
-                  value={phone}
-                  onChange={handlePhoneChange}
-                  international
-                  defaultCountry='RU'
-                  maxLength='16'
-                />
-                {formError.phone && <p className='text-red-500 text-sm mt-1'>{formError.phone}</p>}
-              </div>
-
-              <div className='w-full relative'>
-                <Input
-                  type='email'
-                  placeholder='Почта'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                {formError.email && <p className='text-red-500 text-sm mt-1'>{formError.email}</p>}
-              </div>
-
-              <div className='w-full relative'>
-                <Input
-                  type='text'
-                  placeholder='О себе'
-                  value={about}
-                  onChange={(e) => setAbout(e.target.value)}
-                />
-              </div>
-
-              <div className='w-full relative'>
-                <Select
-                  selectedValue={city}
-                  options={["село Майма", "Горно-Алтайск", "село Манжерок", "село Ая"]}
-                  placeholder='Город'
-                  onChange={handleCityChange}
-                />
-                {formError.city && <p className='text-red-500 text-sm mt-1'>{formError.city}</p>}
-              </div>
-            </>
+            <motion.div
+              className='flex flex-col gap-5 justify-center items-center container-custom'
+              key='registration-info'
+              variants={swipeLeft}
+              initial='initial'
+              animate='animate'
+              exit='exit'>
+              <RegistrationInfo {...infoProps} />
+            </motion.div>
           )}
 
           {step === 1 && isDriver && (
-            <>
-              <div className='flex flex-col gap-10 items-center justify-center'>
-                <fieldset className='relative'>
-                  <input
-                    id='upload-passport'
-                    type='file'
-                    accept='image/*'
-                    onChange={handlePassportChange}
-                    className='visually-hidden'
-                  />
-                  <label
-                    htmlFor='upload-passport'
-                    className='img-upload__label img-upload__control docs'
-                    style={{
-                      backgroundImage: passportPhoto && `url(${visiblePassportPhoto})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}>
-                    Загрузить
-                  </label>
-                  <span className='block mt-2'>Фото паспорта</span>
-                  {formError.passport && <p className='text-red-500 text-sm mt-1 text-center'>{formError.passport}</p>}
-                </fieldset>
-
-                <fieldset className='relative w-[200px]'>
-                  <input
-                    id='upload-license'
-                    type='file'
-                    accept='image/*'
-                    onChange={handleLicenseChange}
-                    className='visually-hidden'
-                  />
-                  <label
-                    htmlFor='upload-license'
-                    className='img-upload__label img-upload__control docs'
-                    style={{
-                      backgroundImage: driverLicensePhoto && `url(${visibleLicensePhoto})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}>
-                    Загрузить
-                  </label>
-                  <span className='block mt-2'>Водительское удостоверение</span>
-                  {formError.license && <p className='text-red-500 text-sm mt-1 text-center'>{formError.license}</p>}
-                </fieldset>
-                <fieldset className='relative w-[200px]'>
-                  <input
-                    id='upload-carPhoto'
-                    type='file'
-                    accept='image/*'
-                    onChange={handleCarChange}
-                    className='visually-hidden'
-                  />
-                  <label
-                    htmlFor='upload-carPhoto'
-                    className='img-upload__label img-upload__control docs'
-                    style={{
-                      backgroundImage: carPhoto && `url(${visibleCarPhoto})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}>
-                    Загрузить
-                  </label>
-                  <span className='block mt-2'>Фото машины</span>
-                  {formError.license && <p className='text-red-500 text-sm mt-1 text-center'>{formError.carPhoto}</p>}
-                </fieldset>
-              </div>
-            </>
+            <motion.div
+              className='flex flex-col gap-5 justify-center items-center container-custom'
+              key='registration-photo'
+              variants={swipeLeft}
+              initial='initial'
+              animate='animate'
+              exit='exit'>
+              <RegistrationPhoto {...photoProps} />
+            </motion.div>
           )}
 
           {step === 2 && isDriver && (
-            <ChooseCar
-              selectedCar={carType}
-              setSelectedCar={setCarType}
-              setCarNumber={setCarNumber}
-              setCarModel={setCarModel}
-              setCarMake={setCarMake}
-              setCarColor={setCarColor}
-              errors={formError}
-            />
+            <motion.div
+              className='flex flex-col gap-5 justify-center items-center container-custom'
+              key='registration-car'
+              variants={swipeLeft}
+              initial='initial'
+              animate='animate'
+              exit='exit'>
+              <ChooseCar {...carProps} />
+            </motion.div>
           )}
 
           {formError.general && <p className='text-red-500 text-sm'>{formError.general}</p>}

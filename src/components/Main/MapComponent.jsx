@@ -66,6 +66,9 @@ const MapComponent = () => {
             iconImageHref: mapIcon,
             iconImageSize: [30, 30],
             iconImageOffset: [-15, -15],
+            hasBalloon: false,
+            hasHint: false,
+            interactive: false,
           },
         );
         mapRef.current.geoObjects.add(userPlacemarkRef.current);
@@ -89,6 +92,10 @@ const MapComponent = () => {
           }}
           options={{
             controls: [],
+            minZoom: 9,
+            suppressMapOpenBlock: true,
+            yandexMapDisablePoiInteractivity: true,
+            suppressObsoleteBrowserNotifier: true,
           }}></Map>
       </div>
     </YMaps>

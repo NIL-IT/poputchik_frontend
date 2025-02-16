@@ -1,22 +1,22 @@
 import BackButton from "../UI/BackButton";
 import Button from "../UI/Button/Button";
-import HistoryCard from "../UI/HistoryCard/HistoryCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { isValidPhoneNumber } from "react-phone-number-input";
-
 import { useModal } from "../state/ModalStore";
-import UserInfo from "../components/UserInfo";
+import UserInfo from "../components/User/UserInfo";
 import FeedBack from "../components/Modals/FeedBack";
 import { urlToFile } from "../api/api";
 import { updateUser } from "../api/passenger";
-import { useDriversTripsList, usePassengerTripsList } from "../api/trips";
+import { renderHistoryCard } from "../utils/renderListUtils";
+import { useList } from "../state/listStore";
 
 export default function UserPage() {
   const navigate = useNavigate();
 
-  const { changeCurrentRole, currentRole, updateCurrentUser, currentUser } = useUserStore();
+  const { historyList } = useList;
+  const { changeCurrentRole, updateCurrentUser, currentUser } = useUserStore();
   const { isFeedBackOpen } = useModal();
 
   const [profilePhoto, setProfilePhoto] = useState(currentUser.profile_photo);
@@ -37,14 +37,6 @@ export default function UserPage() {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [isEditable, setIsEditable] = useState(false);
-
-  const hasDriverProfile = currentUser.driver_profile?.id;
-  const historyList =
-    currentRole === "passenger"
-      ? usePassengerTripsList(currentUser.passenger_profile.id, "finished")
-      : hasDriverProfile
-      ? useDriversTripsList(currentUser.driver_profile.id, "finished")
-      : [];
 
   function toggleHistory() {
     navigate("/history");
@@ -106,8 +98,14 @@ export default function UserPage() {
 
     setIsEditable((prev) => !prev);
   }
+
+  function renderList() {
+    const historyItem = historyList ? [...historyList[0]] : [];
+    return renderHistoryCard(historyItem, "История пустая");
+  }
+
   return (
-    <div className='pt-10'>
+    <div className='h-full w-full'>
       <div className='container-custom relative'>
         <div className='pt-8 pb-10 px-5 border-b border-[#919191] '>
           <BackButton />
@@ -157,14 +155,17 @@ export default function UserPage() {
               </svg>
             </button>
           </div>
-          {historyList && <HistoryCard drive={historyList[0]} />}
+          {renderList()}
         </div>
       </div>
       {isFeedBackOpen && (
-        <>
-          <div className='absolute top-0 left-0 backdrop-blur  h-[30%] block w-full blur-sm'></div>
+        <AnimatedModal
+          isOpen={isFeedBackOpen}
+          onClose={() => toggleFeedback(false)}
+          variants={modalSlideUp}
+          modalType='bottom'>
           <FeedBack />
-        </>
+        </AnimatedModal>
       )}
     </div>
   );

@@ -52,6 +52,7 @@ export function useUserByUserId(user_id) {
   const { data } = useQuery({
     queryKey: ["user", user_id],
     queryFn: () => getUserByUserId(user_id),
+    enabled: !!user_id,
     select: (data) => data.data,
   });
 

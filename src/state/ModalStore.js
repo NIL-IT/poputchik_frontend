@@ -4,9 +4,6 @@ export const useModal = create((set) => ({
   isCalendarOpen: false,
   toggleCalendar: (state) => set({ isCalendarOpen: state }),
 
-  isPriceOpen: false,
-  togglePrice: (state) => set({ isPriceOpen: state }),
-
   isPersonOpen: false,
   togglePersonModal: (state) => set({ isPersonOpen: state }),
 
@@ -28,11 +25,12 @@ export const useModal = create((set) => ({
   isCreating: false,
   setIsCreating: (value) => set({ isCreating: value }),
 
-  isFeedbackSummaryOpen: true,
-  setIsFeedbackSummaryOpen: (value) => set({ isFeedbackSummaryOpen: value }),
   carPhoto: "",
   setCarPhoto: (value) => set({ carPhoto: value }),
 
   carModal: false,
   toggleCarModal: (value) => set({ carModal: value }),
+
+  isFilterModalOpen: false,
+  setFilterModalOpen: (value) => set({ isFilterModalOpen: value }),
 }));

@@ -23,6 +23,7 @@ export function usePassengerList(driver_id) {
   const { data } = useQuery({
     queryKey: ["passengerList"],
     queryFn: () => getPassengerByDriver(driver_id),
+    enabled: !!driver_id,
     select: (data) => data.data,
   });
   return data;
@@ -36,6 +37,7 @@ export function useBookedTripsList(passenger_id) {
   const { data } = useQuery({
     queryKey: ["bookedTripList", passenger_id],
     queryFn: () => getBookedTripsByPassengerId(passenger_id),
+    enabled: !!passenger_id,
     select: (data) => data.data,
   });
   return data;
@@ -48,6 +50,7 @@ export function useChatHistory(chat_id) {
   const { data } = useQuery({
     queryKey: ["chatId", chat_id],
     queryFn: () => getChatHistory(chat_id),
+    enabled: !!chat_id,
     select: (data) => data.data,
   });
   return data;
@@ -59,6 +62,7 @@ export function usePassengerById(passenger_id) {
   const { data } = useQuery({
     queryKey: ["chatId", passenger_id],
     queryFn: () => getPassengerById(passenger_id),
+    enabled: !!passenger_id,
     select: (data) => data.data,
   });
   return data;
