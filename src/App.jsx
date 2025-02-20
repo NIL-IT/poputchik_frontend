@@ -25,6 +25,7 @@ function App() {
   const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
+
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function App() {
     }
   }, [user, setCurrentUser]);
 
-  const requestLocation = async () => {
+  const initialLocationRequest = async () => {
     const tg = window.Telegram.WebApp;
     if (!tg || !tg.LocationManager) {
       console.error("Telegram WebApp или LocationManager недоступен");
@@ -61,11 +62,6 @@ function App() {
     }
 
     if (tg.LocationManager.isLocationAvailable) {
-      tg.LocationManager.getLocation((data) => {
-        if (data) {
-          setCenter([data.latitude, data.longitude]);
-        }
-      });
       return true;
     } else {
       console.error("Данные о местоположении недоступны");
@@ -73,20 +69,35 @@ function App() {
     }
   };
 
+  const updateLocation = () => {
+    const tg = window.Telegram.WebApp;
+    if (!tg || !tg.LocationManager) return;
+
+    tg.LocationManager.getLocation((data) => {
+      if (data) {
+        setCenter([data.latitude, data.longitude]);
+      }
+    });
+  };
+
   useEffect(() => {
-    const fetchLocation = async () => {
-      const success = await requestLocation();
-      if (success) {
-        await getCityByCoordinates();
+    const setupLocation = async () => {
+      const hasPermission = await initialLocationRequest();
+      if (hasPermission) {
+        updateLocation();
+        const intervalId = setInterval(updateLocation, 10000);
+        return () => clearInterval(intervalId);
       }
     };
 
-    fetchLocation();
+    setupLocation();
+  }, []);
 
-    const intervalId = setInterval(fetchLocation, 10000);
-
-    return () => clearInterval(intervalId);
-  });
+  useEffect(() => {
+    if (center && center.length === 2) {
+      getCityByCoordinates();
+    }
+  }, [center]);
 
   const getCityByCoordinates = async () => {
     try {
