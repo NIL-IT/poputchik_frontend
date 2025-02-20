@@ -1,12 +1,12 @@
-import Profile from "../UI/Profile/Profile";
 import HistoryCard from "../UI/HistoryCard/HistoryCard";
+import ProfileComponent from "../components/ProfileComponent/ProfileComponent";
 
 export const renderWaitingItems = (waitingList) => {
   if (!waitingList || waitingList.length === 0) return [];
   return waitingList
     .filter((i) => i.status === "pending")
     .map((request) => (
-      <Profile
+      <ProfileComponent
         key={`waiting-${request.id}`}
         drive={request.trip}
         passenger={request.passenger.user}
@@ -16,35 +16,29 @@ export const renderWaitingItems = (waitingList) => {
     ));
 };
 
-export const renderMainList = (list, isDriver) => {
-  if (!list || list.length === 0) return [];
-
+export const renderMainList = (isDriver, list, onList = false, onChat = false) => {
   if (isDriver) {
-    const passengerList = list
-      .map((item) =>
-        item.booked_trips
-          ? item.booked_trips.slice(0, 2).map((trip) => (
-              <Profile
-                key={trip.id}
-                drive={trip}
-                passenger={item.user}
-              />
-            ))
-          : null,
-      )
-      .filter(Boolean);
-    return passengerList.flat().slice(0, 2);
-  } else if (!isDriver) {
-    return list
-      .map((obj) => (
-        <Profile
-          key={obj.id}
-          drive={obj}
-        />
-      ))
-      .slice(0, 2);
+    if (!list || list.length === 0) return [];
+    return list.map((trip) => (
+      <ProfileComponent
+        key={trip.id}
+        drive={trip}
+        passenger={trip.passenger?.user || trip.passenger}
+        onList={onList}
+        onChat={onChat}
+      />
+    ));
+  } else {
+    if (!list || list.length === 0) return [];
+    return list.map((obj) => (
+      <ProfileComponent
+        key={obj.id}
+        drive={obj}
+        onList={onList}
+        onChat={onChat}
+      />
+    ));
   }
-  return [];
 };
 
 export const renderHistoryCard = (list, empytText) => {

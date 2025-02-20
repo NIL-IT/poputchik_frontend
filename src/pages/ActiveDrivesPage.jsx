@@ -6,6 +6,7 @@ import { renderHistoryCard } from "../utils/renderListUtils.jsx";
 export default function ActiveDrivesPage() {
   const { activeList } = useList();
   const navigate = useNavigate();
+  console.log(activeList);
   function renderList() {
     return renderHistoryCard(activeList, "У вас сейчас нет активных поездок");
   }

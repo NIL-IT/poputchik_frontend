@@ -9,16 +9,12 @@ import SearchComponent from "../components/Main/SearchComponent";
 import MapComponent from "../components/Main/MapComponent";
 import { useTrip } from "../state/TripStore";
 import { useMap } from "../state/MapRoutesStore";
-import { useList } from "../state/listStore";
-import AnimatedRoute from "../components/Wrappers/AnimatedRoute";
 import { headerAnimation, searchAnimation, backButtonAnimation, slideUpIn } from "../utils/animation";
 
 export default function MainPage() {
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
-  const { mainList } = useList();
-
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -51,32 +47,6 @@ export default function MainPage() {
 
   function toggleCreating() {
     setIsCreating((prev) => !prev);
-  }
-
-  function renderContent() {
-    if (isCreating) {
-      return (
-        <AnimatedRoute variants={slideUpIn}>
-          <CreateTrip />
-        </AnimatedRoute>
-      );
-    } else if (bookedModal) {
-      return (
-        <AnimatedRoute variants={slideUpIn}>
-          <DriveInfo />
-        </AnimatedRoute>
-      );
-    } else {
-      return (
-        <AnimatedRoute variants={slideUpIn}>
-          <DriverList
-            list={mainList ? mainList.slice(0, 2) : []}
-            toggleCreating={toggleCreating}
-            isCreating={isCreating}
-          />
-        </AnimatedRoute>
-      );
-    }
   }
 
   function onButtonClick() {
@@ -146,7 +116,6 @@ export default function MainPage() {
             animate='animate'
             exit='exit'>
             <DriverList
-              list={mainList ? mainList.slice(0, 2) : []}
               toggleCreating={toggleCreating}
               isCreating={isCreating}
             />

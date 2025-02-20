@@ -1,103 +1,30 @@
 import "./Profile.css";
 import message from "../../assets/icons/message.svg";
-import { useModal } from "../../state/ModalStore";
-import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../../state/UserStore";
-import { formatDate } from "../../utils/utils";
-import { useMap } from "../../state/MapRoutesStore";
-import { useTrip } from "../../state/TripStore";
-import { useDriverById } from "../../api/driver";
 import { cleanAddress } from "../../api/api";
-import { approveRequest, rejectRequest } from "../../api/trips";
-import { useState } from "react";
 
-export default function Profile({ drive, passenger, onList, pending, request }) {
-  const { setSelectedDriver, toggleBookedModal } = useModal();
-  const navigate = useNavigate();
-  const [reqStatus, setReqStatus] = useState(request ? request.status : null);
-  const { currentRole, currentUser } = useUserStore();
-  const { setIsRouteEnabled } = useMap();
-  const { setBookedDrive } = useTrip();
-  const driverData = useDriverById(drive?.driver_id)?.data;
-  const [disabled, setDisabled] = useState(false);
-
-  if (!drive) {
-    console.error("Drive is not provided", drive);
-    return null;
-  }
-
-  const { start_address, end_address, departure_time, id, seats_available } = drive;
-
-  if (!start_address || !end_address) {
-    console.error("Не заданы адреса отправления или прибытия для", drive);
-    return null;
-  }
-
-  if (request && reqStatus !== "pending") {
-    return null;
-  }
-  const isDriver = currentRole === "driver";
-
-  const date = formatDate(departure_time, true);
-  const user = isDriver ? passenger : driverData?.user || {};
-  const rating = isDriver ? "" : driverData?.rating ?? "";
-
-  if (!user || Object.keys(user).length === 0) return null;
-
-  function chooseDrive(event) {
-    event.stopPropagation();
-    if (disabled) return;
-
-    if (drive.state === "active" && currentRole === "passenger" && currentUser.passenger_profile) {
-      setBookedDrive(drive);
-      toggleBookedModal(true);
-      setIsRouteEnabled(true);
-      setDisabled(true);
-
-      if (onList === true) navigate("/main");
-    }
-  }
-
-  function openChat(e) {
-    e.stopPropagation();
-    if (isDriver) {
-      navigate(`/chat/${id}/${user.id}`);
-    } else {
-      navigate(`/chat/${id}/${currentUser.id}`);
-    }
-  }
-
-  const openProfile = (e) => {
-    e.stopPropagation();
-    if (currentRole === "passenger") {
-      setSelectedDriver(drive);
-      navigate(`/userReview/${user.id}`);
-    }
-  };
-
-  const handleReject = (e) => {
-    e.stopPropagation();
-    rejectRequest(request.id);
-    setReqStatus("reject");
-  };
-
-  const handleApprove = (e) => {
-    e.stopPropagation();
-    approveRequest(request.id);
-    setReqStatus("approve");
-  };
-
+export default function Profile({
+  user,
+  date,
+  rating,
+  start_address,
+  end_address,
+  seats_available,
+  currentRole,
+  pending,
+  request,
+  handlers,
+}) {
   return (
     <div
       className='profile'
-      onClick={(e) => chooseDrive(e)}>
+      onClick={handlers.chooseDrive}>
       <div className='profile-wrapper'>
         <div className='profile-info'>
           <img
             className='profile-img'
             src={user.profile_photo}
             alt='Profile'
-            onClick={(e) => openProfile(e)}
+            onClick={handlers.openProfile}
           />
           <div className='profile-text'>
             <div className='flex gap-5'>
@@ -111,7 +38,7 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
             </span>
           </div>
           <button
-            onClick={(e) => openChat(e)}
+            onClick={handlers.openChat}
             className='profile-message'>
             <img
               src={message}
@@ -131,12 +58,12 @@ export default function Profile({ drive, passenger, onList, pending, request }) 
           <div className='pending-btns'>
             <button
               className='pending-reject pending-btn'
-              onClick={handleReject}>
+              onClick={handlers.handleReject}>
               Отклонить
             </button>
             <button
               className='pending-approve pending-btn'
-              onClick={handleApprove}>
+              onClick={handlers.handleApprove}>
               Принять
             </button>
           </div>

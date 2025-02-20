@@ -4,7 +4,7 @@ import { formatDate, getStatus } from "../../utils/utils";
 import "./HistoryCard.css";
 import { useDriverById } from "../../api/driver";
 import { useEffect, useState } from "react";
-import { updateTripState } from "../../api/trips";
+import { updateTripState, useTripById } from "../../api/trips";
 import { useNavigate } from "react-router-dom";
 import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
@@ -12,26 +12,26 @@ import { cleanAddress } from "../../api/api";
 import PropTypes from "prop-types";
 
 export default function HistoryCard({ drive }) {
-  const { currentUser } = useUserStore();
-  const { toggleFeedback, toggleBookedModal } = useModal();
+  const { currentUser, currentRole } = useUserStore();
+  const { toggleFeedback, toggleBookedModal, setSelectedDriver } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
   const { setIsRouteEnabled } = useMap();
   const [showStartButton, setShowStartButton] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const navigate = useNavigate();
+  const { is_passenger_create } = drive;
+  const tripData = useTripById(drive.id);
 
-  const driverQuery = useDriverById(drive ? drive.driver_id : null, { skip: !drive });
-  const driver = driverQuery?.data;
+  const userIdToFetch = is_passenger_create && tripData ? tripData.passengers[0]?.user_id : drive?.driver_id;
+
+  const userQuery = useDriverById(drive ? userIdToFetch : null, { skip: !drive });
+  const user = userQuery?.data;
 
   useEffect(() => {
     if (!drive) return;
 
     const handleTime = () => {
-      if (
-        currentUser.driver_profile &&
-        currentUser.driver_profile.id === drive.driver_id &&
-        drive.state !== "finished"
-      ) {
+      if (currentUser.driver_profile && currentUser.driver_profile.id === userIdToFetch && drive.state !== "finished") {
         const departure = new Date(drive.departure_time);
         const startAllowedTime = new Date(departure.getTime() - 10 * 60 * 1000);
         const now = new Date();
@@ -49,7 +49,7 @@ export default function HistoryCard({ drive }) {
     };
 
     handleTime();
-  }, [drive, currentUser.driver_profile]);
+  }, [drive, currentUser.driver_profile, userIdToFetch]);
 
   useEffect(() => {
     if (!drive) return;
@@ -88,18 +88,17 @@ export default function HistoryCard({ drive }) {
     return null;
   }
 
-  if (!drive) {
-    return null;
-  }
-  if (!driver) {
+  if (!drive || !tripData) {
     return <div>Загрузка...</div>;
   }
-
+  if (!user) {
+    return <div>Загрузка...</div>;
+  }
   function openFeedback(event) {
     event.stopPropagation();
     window.scrollTo(0, 0);
     document.body.classList.add("overflow-y-hidden");
-    setFeedbackTarget(drive.driver_id);
+    setFeedbackTarget(userIdToFetch);
     toggleFeedback(true);
   }
 
@@ -125,7 +124,12 @@ export default function HistoryCard({ drive }) {
       navigate("/main");
     }
   }
-
+  const openProfile = (e) => {
+    e.stopPropagation();
+    setSelectedDriver(user.user);
+    navigate(`/userReview/${user.user.id}`);
+  };
+  console.log(currentUser);
   return (
     <div
       className='history'
@@ -137,12 +141,14 @@ export default function HistoryCard({ drive }) {
         </div>
         <div className='history-info'>
           <div className='history-date'>{formatDate(drive.departure_time)}</div>
-          <div className='history-driver'>
-            <div className='history-rating'>{driver.rating}</div>
+          <div
+            className='history-driver'
+            onClick={openProfile}>
+            <div className='history-rating'>{user.rating}</div>
             <img
               className='history-img'
-              src={driver.user.profile_photo}
-              alt='Driver'
+              src={user.profile_photo}
+              alt={is_passenger_create ? "Passenger" : "Driver"}
             />
           </div>
         </div>
@@ -190,5 +196,12 @@ HistoryCard.propTypes = {
       name: PropTypes.string,
     }),
     price: PropTypes.number,
+    is_passenger_create: PropTypes.bool,
+    passengers: PropTypes.arrayOf(
+      PropTypes.shape({
+        user_id: PropTypes.number,
+        id: PropTypes.number,
+      }),
+    ),
   }),
 };

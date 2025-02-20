@@ -5,11 +5,12 @@ import { renderMainList } from "../utils/renderListUtils.jsx";
 import { useList } from "../state/listStore.js";
 
 export default function ChatList() {
-  const { currentRole } = useUserStore();
-  const { mainList } = useList();
+  const isDriver = useUserStore((state) => state.currentRole === "driver");
+  const { driveList, passengerTripsList } = useList();
 
   function renderList() {
-    return renderMainList(mainList, currentRole === "driver");
+    const listToRender = isDriver ? passengerTripsList : driveList;
+    return renderMainList(isDriver, listToRender, true, true);
   }
 
   const navigate = useNavigate();

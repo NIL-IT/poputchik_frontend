@@ -6,9 +6,10 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
-import { tripRequestByPassenger, updateTripState } from "../../api/trips";
+import { bookedTripByDriver, tripRequestByPassenger, updateTripState, useTripById } from "../../api/trips";
 import { cleanAddress } from "../../api/api";
 import { useNavigate } from "react-router-dom";
+import { useUserByUserId } from "../../api/user";
 
 export default function DriveInfo() {
   const { currentUser, currentRole } = useUserStore();
@@ -16,15 +17,23 @@ export default function DriveInfo() {
   const { toggleBookedModal, toggleFeedback, setCarPhoto, toggleCarModal } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
   const navigate = useNavigate();
-  const data = useDriverById(bookedDrive.driver_id).data;
-  const driver = data.user;
-  const rating = data.rating;
-  const carPhoto = driver.driver_profile.car_photo;
+  const { is_passenger_create } = bookedDrive;
+  const tripData = useTripById(bookedDrive.id);
+  const driverData = useDriverById(tripData.driver_id).data;
+  const passengerData = useUserByUserId(tripData?.passengers?.[0]?.user_id)?.data;
+  let targetUser;
+  if (is_passenger_create) {
+    targetUser = passengerData;
+  } else {
+    targetUser = driverData?.user;
+  }
+  console.log(targetUser);
+
+  const rating = driverData?.rating;
+  const carPhoto = driverData?.user?.driver_profile?.car_photo;
 
   const [text, setText] = useState("");
-
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
-
   const isDriver = currentRole === "driver";
 
   function bookingByPassenger(e) {
@@ -38,12 +47,21 @@ export default function DriveInfo() {
     tripRequestByPassenger(formData);
     toggleBookedModal(false);
   }
+  function bookingByDriver(e) {
+    e.preventDefault();
+    const formData = {
+      driver_id: currentUser.driver_profile.id,
+      trip_id: bookedDrive.id,
+    };
+    bookedTripByDriver(formData);
+    toggleBookedModal(false);
+  }
 
   function openFeedback(event) {
     event.stopPropagation();
     window.scrollTo(0, 0);
     document.body.classList.add("overflow-y-hidden");
-    setFeedbackTarget(driver.driver_id);
+    setFeedbackTarget(is_passenger_create ? targetUser?.id : driverData?.user?.driver_id);
     toggleFeedback(true);
   }
 
@@ -72,7 +90,7 @@ export default function DriveInfo() {
   }
 
   function renderButton() {
-    if (isDriver && bookedDrive.state === "started") {
+    if (isDriver && tripData.state === "started") {
       return (
         <Button
           onClick={finishDrive}
@@ -80,7 +98,7 @@ export default function DriveInfo() {
           Закончить
         </Button>
       );
-    } else if (currentRole === "passenger" && bookedDrive.state !== "started") {
+    } else if (tripData.state !== "started") {
       if (!isTextAreaVisible) {
         return (
           <Button
@@ -93,7 +111,7 @@ export default function DriveInfo() {
         return (
           <>
             <Button
-              onClick={bookingByPassenger}
+              onClick={isDriver ? bookingByDriver : bookingByPassenger}
               size={"large"}>
               Забронировать
             </Button>
@@ -116,6 +134,14 @@ export default function DriveInfo() {
     toggleCarModal(true);
   }
 
+  function openChat() {
+    if (isDriver) {
+      navigate(`/chat/${bookedDrive.id}/${targetUser?.id}`);
+    } else {
+      navigate(`/chat/${bookedDrive.id}/${currentUser.id}`);
+    }
+  }
+
   return (
     <Footer className={"bg-[#fff] w-full z-10 flex flex-col items-center "}>
       <div className=''>
@@ -132,20 +158,22 @@ export default function DriveInfo() {
               <div className='flex text-left'>
                 <img
                   className='w-[50px] h-[50px] rounded-full mr-4'
-                  src={driver.profile_photo}
+                  src={targetUser?.profile_photo}
                 />
                 <div className='text-[#343B71] font-medium text-[17px] leading-5'>
-                  <h3 className='pb-3'>{driver.name}</h3>
-                  <div>
-                    <p className='profile-stars'>{rating}</p>
-                  </div>
+                  <h3 className='pb-3'>{targetUser?.name}</h3>
+                  {!is_passenger_create && (
+                    <div>
+                      <p className='profile-stars'>{rating}</p>
+                    </div>
+                  )}
                 </div>
               </div>
               {currentRole === "passenger" && (
                 <div className='flex gap-4'>
                   <button
                     className='w-10 h-10 bg-[#007BFF] rounded-full flex justify-center items-center'
-                    onClick={() => navigate(`/chat/${bookedDrive.id}/${currentUser.id}`)}>
+                    onClick={openChat}>
                     <svg
                       width='28'
                       height='28'
@@ -183,7 +211,7 @@ export default function DriveInfo() {
                   </button>
                   <button
                     className='w-10 h-10 bg-[#4CE5B1] rounded-full flex justify-center items-center'
-                    onClick={() => (window.location.href = `tel:${driver.phone_number}`)}>
+                    onClick={() => (window.location.href = `tel:${targetUser?.phone_number}`)}>
                     <svg
                       width='28'
                       height='30'

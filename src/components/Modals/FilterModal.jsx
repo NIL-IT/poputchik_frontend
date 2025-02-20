@@ -2,14 +2,15 @@ import { useState } from "react";
 import Button from "../../UI/Button/Button";
 import { useList } from "../../state/listStore";
 import Input from "../../UI/Input/Input";
+import { useUserStore } from "../../state/UserStore";
 
 export default function FilterModal({ onClose }) {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [errors, setErrors] = useState({});
-  const { filterTripsByTime, clearTimeFilter } = useList();
-
+  const { applyTimeFilter, clearTimeFilter, setIsFiltered, passengerTripsList, driveList } = useList();
+  const isDriver = useUserStore((state) => state.currentRole === "driver");
   const validateInputs = () => {
     const newErrors = {};
     const currentDate = new Date();
@@ -47,9 +48,11 @@ export default function FilterModal({ onClose }) {
 
   const handleApplyFilter = () => {
     if (date && startTime && endTime && validateInputs()) {
+      const listToFilter = isDriver ? passengerTripsList : driveList;
       const startDateTime = new Date(`${date}T${startTime}`);
       const endDateTime = new Date(`${date}T${endTime}`);
-      filterTripsByTime(startDateTime, endDateTime);
+      applyTimeFilter(startDateTime, endDateTime, listToFilter);
+      setIsFiltered(true);
       onClose();
     }
   };

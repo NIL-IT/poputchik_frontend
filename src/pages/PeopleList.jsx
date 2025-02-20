@@ -7,19 +7,21 @@ import { renderWaitingItems, renderMainList } from "../utils/renderListUtils.jsx
 export default function PeopleList() {
   const navigate = useNavigate();
 
-  const { mainList, waitingList } = useList();
+  const { driveList, passengersList, waitingList, isFiltered, filteredList } = useList();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
 
   function renderList() {
-    if (mainList.length > 0 || waitingList.length > 0) {
-      return (
-        <>
-          {isDriver ? renderWaitingItems(waitingList) : null}
-          {renderMainList(mainList, isDriver)}
-        </>
-      );
+    const listToRender = isFiltered ? filteredList : isDriver ? passengersList : driveList;
+    const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
+    const mainItems = renderMainList(isDriver, listToRender, true);
+    if (mainItems.length > 0 || waitingItems.length > 0) {
+      if (isDriver) {
+        return [...waitingItems, ...mainItems];
+      } else {
+        return [...waitingItems, ...mainItems];
+      }
     } else {
-      return <>Активных водителей сейчас нет</>;
+      return <>Список пустой</>;
     }
   }
 
@@ -30,7 +32,11 @@ export default function PeopleList() {
         Список {isDriver ? "пассажиров твоих поездок" : "водителей"}
       </h3>
       <div className='flex flex-col gap-4 w-full justify-center items-center'>
-        {mainList ? renderList() : <>Активных водителей сейчас нет</>}
+        {driveList.length > 0 || passengersList.length > 0 || waitingList.length > 0 ? (
+          renderList()
+        ) : (
+          <>Активных водителей сейчас нет</>
+        )}
       </div>
     </div>
   );

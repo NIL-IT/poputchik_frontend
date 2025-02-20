@@ -15,6 +15,19 @@ export function useTripsList(city) {
   });
   return data;
 }
+async function getTripsListByPassenger(city) {
+  return axios.get(`${url}/trips/driver/city_from/${city}`);
+}
+
+export function useTripsListByPassenger(city) {
+  const { data } = useQuery({
+    queryKey: ["tripsListByPass", city],
+    queryFn: () => getTripsListByPassenger(city),
+    enabled: !!city,
+    select: (data) => data?.data || [],
+  });
+  return data;
+}
 
 export async function createTripByDriver(data) {
   const response = await axios({
@@ -29,7 +42,19 @@ export async function createTripByDriver(data) {
     throw new Error(response.data);
   }
 }
-
+export async function createTripByPassenger(data) {
+  const response = await axios({
+    method: "post",
+    url: `${url}/trips/passenger`,
+    data: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.status !== 201) {
+    throw new Error(response.data);
+  }
+}
 async function getDrviersTrips(id, state) {
   try {
     const response = await axios.get(`${url}/trips/driver/${id}?trip_status=${state}`);
@@ -57,6 +82,19 @@ export async function bookedTripByPassenger(passenger_id, trip_id, seats_to_book
   const response = await axios({
     method: "post",
     url: `${url}/trips/booking?passenger_id=${passenger_id}&trip_id=${trip_id}&seats_to_book=${seats_to_book}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.status !== 201) {
+    throw new Error(response.data);
+  }
+}
+
+export async function bookedTripByDriver(driver_id, trip_id) {
+  const response = await axios({
+    method: "post",
+    url: `${url}/trips/booking_driver?driver_id=${driver_id}&trip_id=${trip_id}`,
     headers: {
       "Content-Type": "application/json",
     },

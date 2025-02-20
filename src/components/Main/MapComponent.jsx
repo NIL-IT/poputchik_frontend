@@ -13,7 +13,7 @@ const MapComponent = () => {
   const defaultZoom = 13;
 
   const mapState = {
-    center: center,
+    center: center ?? [55.75, 37.57],
     zoom: defaultZoom,
   };
 
@@ -96,7 +96,8 @@ const MapComponent = () => {
             suppressMapOpenBlock: true,
             yandexMapDisablePoiInteractivity: true,
             suppressObsoleteBrowserNotifier: true,
-          }}></Map>
+          }}
+        />
       </div>
     </YMaps>
   );

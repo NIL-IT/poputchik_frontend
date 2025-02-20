@@ -14,7 +14,6 @@ export function getStatus(state) {
 export function formatDate(dateString, showTime = false) {
   const date = new Date(dateString);
 
-  // Проверяем валидность даты
   if (isNaN(date.getTime())) {
     return "";
   }

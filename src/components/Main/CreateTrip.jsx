@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useMap } from "../../state/MapRoutesStore";
 import { formatDate } from "../../utils/utils";
 import { useUserStore } from "../../state/UserStore";
-import { createTripByDriver } from "../../api/trips";
+import { createTripByDriver, createTripByPassenger } from "../../api/trips";
 import { cleanAddress } from "../../api/api";
 
 const createTripAnimation = {
@@ -40,6 +40,7 @@ export default function CreateTrip() {
   const { toggleCalendar, togglePersonModal, toggleSearch, setActiveInput, setIsCreating } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
   const { currentUser } = useUserStore();
+  const isDriver = useUserStore((state) => state.currentRole === "driver");
 
   const [step, setStep] = useState(0);
   const [tripText, setTripText] = useState("");
@@ -79,23 +80,44 @@ export default function CreateTrip() {
     event.preventDefault();
 
     if (tripFrom.name.length > 0 && tripTo.name.length > 0 && date && persons && price) {
-      const trip = {
-        driver_id: currentUser.driver_profile.id,
-        start_address: tripFrom,
-        end_address: tripTo,
-        departure_time: date,
-        seats_available: parseInt(persons),
-        price: parseInt(price),
-        state: "active",
-        distance: routeDistance,
-        travel_time: routeDuration,
-      };
+      if (isDriver) {
+        const trip = {
+          driver_id: currentUser.driver_profile.id,
+          start_address: tripFrom,
+          end_address: tripTo,
+          departure_time: date,
+          seats_available: parseInt(persons),
+          price: parseInt(price),
+          state: "active",
+          distance: routeDistance,
+          travel_time: routeDuration,
+        };
 
-      try {
-        await createTripByDriver(trip);
-        clearData();
-      } catch (error) {
-        setFormError(error.message || "Неизвестная ошибка");
+        try {
+          await createTripByDriver(trip);
+          clearData();
+        } catch (error) {
+          setFormError(error.message || "Неизвестная ошибка");
+        }
+      } else {
+        const trip = {
+          passenger_id: currentUser.passenger_profile.id,
+          start_address: tripFrom,
+          end_address: tripTo,
+          departure_time: date,
+          seats_available: 2,
+          price: parseInt(price),
+          state: "active",
+          distance: routeDistance,
+          travel_time: routeDuration,
+        };
+
+        try {
+          await createTripByPassenger(trip);
+          clearData();
+        } catch (error) {
+          setFormError(error.message || "Неизвестная ошибка");
+        }
       }
     } else {
       setFormError("Заполните форму");
@@ -186,13 +208,23 @@ export default function CreateTrip() {
                 />
               </div>
               <div className='person'>
-                <Input
-                  readOnly
-                  onChange={() => {}}
-                  onClick={() => togglePersonModal(true)}
-                  type={"number"}
-                  value={Number(persons)}
-                />
+                {isDriver ? (
+                  <Input
+                    readOnly
+                    onChange={() => {}}
+                    onClick={() => togglePersonModal(true)}
+                    type={"number"}
+                    value={Number(persons)}
+                  />
+                ) : (
+                  <Input
+                    readOnly
+                    onChange={() => {}}
+                    onClick={() => {}}
+                    type={"number"}
+                    value={1}
+                  />
+                )}
               </div>
               <div className='price'>
                 <Input

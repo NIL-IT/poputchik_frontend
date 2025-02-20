@@ -6,15 +6,15 @@ import { renderWaitingItems, renderMainList } from "../../utils/renderListUtils.
 import { useList } from "../../state/listStore.js";
 import PropTypes from "prop-types";
 import { useModal } from "../../state/ModalStore.js";
+import { p } from "framer-motion/client";
 
 export default function DriverList({ toggleCreating }) {
   const { currentUser } = useUserStore();
   const navigate = useNavigate();
   const { setFilterModalOpen } = useModal();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
-  const { activeList, waitingList, mainList } = useList();
+  const { passengerTripsList, activeList, waitingList, filteredList, isFiltered, driveList } = useList();
   const driverId = currentUser.driver_profile ? currentUser.driver_profile.id : null;
-
   const filteredDrives = activeList?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
   function renderLength() {
@@ -25,26 +25,32 @@ export default function DriverList({ toggleCreating }) {
   }
 
   function renderList() {
+    const listToRender = isFiltered ? filteredList : isDriver ? passengerTripsList : driveList;
     const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
-    const mainItems = renderMainList(mainList, isDriver);
-    if (mainItems.length > 0 && waitingItems.length > 0) {
-      return [...waitingItems, ...mainItems];
+    const mainItems = renderMainList(isDriver, listToRender);
+    if (mainItems.length > 0 || waitingItems.length > 0) {
+      if (isDriver) {
+        return [...mainItems];
+      } else {
+        return [...waitingItems, ...mainItems].slice(0, 2);
+      }
     } else {
       return <>Список пустой</>;
     }
   }
-
+  console.log(passengerTripsList);
   function openFilter() {
     document.body.classList.add("overflow-y-hidden");
     setFilterModalOpen(true);
   }
-
   return (
     <Footer className={`bg-[#F6F6F6] flex justify-center`}>
       <div className='w-full h-full flex flex-col justify-between relative'>
         <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>Список {!isDriver ? "водителей" : "пассажиров"}</h2>
         <button
-          className='absolute right-0 top-0 w-[35px] h-[35px] flex justify-center items-center border border-[#323232] rounded-[12px] cursor-pointer'
+          className={`absolute right-0 top-0 w-[35px] h-[35px] flex justify-center items-center border border-[#323232] rounded-[12px] cursor-pointer ${
+            isFiltered ? "bg-[#EF7828]" : "bg-white"
+          }`}
           onClick={openFilter}>
           <svg
             xmlns='http://www.w3.org/2000/svg'
