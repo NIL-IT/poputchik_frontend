@@ -13,7 +13,7 @@ const MapComponent = () => {
   const defaultZoom = 13;
 
   const mapState = {
-    center: center ?? [55.75, 37.57],
+    center: center,
     zoom: defaultZoom,
   };
 
@@ -77,7 +77,7 @@ const MapComponent = () => {
   }, [center, isMapLoaded]);
 
   return (
-    <YMaps query={{ apikey: API_KEY, load: ["multiRouter.MultiRoute", "Placemark"] }}>
+    <YMaps query={{ load: ["multiRouter.MultiRoute", "Placemark"] }}>
       <div style={{ width: "100%", height: "100%" }}>
         <Map
           defaultState={mapState}
