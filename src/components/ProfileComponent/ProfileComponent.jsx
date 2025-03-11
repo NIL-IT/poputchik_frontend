@@ -51,22 +51,20 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   }
   const chooseDrive = (event) => {
     event.stopPropagation();
-
+    console.log("isBooked: " + isBooked, "disabled: " + disabled, "onChat: " + onChat);
     if (isBooked || disabled || onChat) return;
 
-    if (drive.state === "active") {
-      const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");
-      bookedTrips.push(drive.id);
-      localStorage.setItem("bookedTrips", JSON.stringify(bookedTrips));
+    const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");
+    bookedTrips.push(drive.id);
+    localStorage.setItem("bookedTrips", JSON.stringify(bookedTrips));
 
-      setBookedDrive(drive);
-      toggleBookedModal(true);
-      setIsRouteEnabled(true);
-      setIsBooked(true);
-      setDisabled(true);
+    setBookedDrive(drive);
+    toggleBookedModal(true);
+    setIsRouteEnabled(true);
+    setIsBooked(true);
+    setDisabled(true);
 
-      if (onList === true) navigate("/main");
-    }
+    if (onList === true) navigate("/main");
   };
 
   const openChat = (e) => {

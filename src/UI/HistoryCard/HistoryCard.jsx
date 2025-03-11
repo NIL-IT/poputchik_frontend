@@ -10,11 +10,13 @@ import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { cleanAddress } from "../../api/api";
 import PropTypes from "prop-types";
+import { useList } from "../../state/listStore";
 
 export default function HistoryCard({ drive }) {
-  const { currentUser, currentRole } = useUserStore();
+  const { currentUser } = useUserStore();
   const { toggleFeedback, toggleBookedModal, setSelectedDriver } = useModal();
   const { setBookedDrive, setFeedbackTarget } = useTrip();
+  const { activeList, setActiveList } = useList();
   const { setIsRouteEnabled } = useMap();
   const [showStartButton, setShowStartButton] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
@@ -23,6 +25,7 @@ export default function HistoryCard({ drive }) {
   const tripData = useTripById(drive.id);
 
   const userIdToFetch = is_passenger_create && tripData ? tripData.passengers[0]?.user_id : drive?.driver_id;
+  console.log(drive);
 
   const userQuery = useDriverById(drive ? userIdToFetch : null, { skip: !drive });
   const user = userQuery?.data;
@@ -61,23 +64,25 @@ export default function HistoryCard({ drive }) {
     const now = Date.now();
 
     if (now >= expirationTime) {
-      updateTripState(drive.id, "canceled")
+      updateTripState(drive.id, "cancelled")
         .then(() => {
           setIsExpired(true);
         })
         .catch((error) => {
           console.error("Ошибка при обновлении состояния поездки:", error);
         });
+      setActiveList(activeList.filter((i) => i.id !== drive.id));
     } else {
       const delay = expirationTime - now;
       const timer = setTimeout(() => {
-        updateTripState(drive.id, "canceled")
+        updateTripState(drive.id, "cancelled")
           .then(() => {
             setIsExpired(true);
           })
           .catch((error) => {
             console.error("Ошибка при обновлении состояния поездки:", error);
           });
+        setActiveList(activeList.filter((i) => i.id !== drive.id));
       }, delay);
 
       return () => clearTimeout(timer);
@@ -129,7 +134,6 @@ export default function HistoryCard({ drive }) {
     setSelectedDriver(user.user);
     navigate(`/userReview/${user.user.id}`);
   };
-  console.log(currentUser);
   return (
     <div
       className='history'

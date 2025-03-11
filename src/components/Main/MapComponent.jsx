@@ -77,7 +77,7 @@ const MapComponent = () => {
   }, [center, isMapLoaded]);
 
   return (
-    <YMaps query={{ load: ["multiRouter.MultiRoute", "Placemark"] }}>
+    <YMaps query={{ apikey: API_KEY, load: ["multiRouter.MultiRoute", "Placemark"] }}>
       <div style={{ width: "100%", height: "100%" }}>
         <Map
           defaultState={mapState}

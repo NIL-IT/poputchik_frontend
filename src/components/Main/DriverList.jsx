@@ -6,7 +6,6 @@ import { renderWaitingItems, renderMainList } from "../../utils/renderListUtils.
 import { useList } from "../../state/listStore.js";
 import PropTypes from "prop-types";
 import { useModal } from "../../state/ModalStore.js";
-import { p } from "framer-motion/client";
 
 export default function DriverList({ toggleCreating }) {
   const { currentUser } = useUserStore();
@@ -26,8 +25,17 @@ export default function DriverList({ toggleCreating }) {
 
   function renderList() {
     const listToRender = isFiltered ? filteredList : isDriver ? passengerTripsList : driveList;
+
+    const currentDate = new Date();
+
+    const filteredListToRender = listToRender.filter((trip) => {
+      const tripDate = new Date(trip.date);
+      return tripDate >= currentDate;
+    });
+
     const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
-    const mainItems = renderMainList(isDriver, listToRender);
+    const mainItems = renderMainList(isDriver, filteredListToRender);
+
     if (mainItems.length > 0 || waitingItems.length > 0) {
       if (isDriver) {
         return [...mainItems];
@@ -38,7 +46,7 @@ export default function DriverList({ toggleCreating }) {
       return <>Список пустой</>;
     }
   }
-  console.log(passengerTripsList);
+
   function openFilter() {
     document.body.classList.add("overflow-y-hidden");
     setFilterModalOpen(true);
