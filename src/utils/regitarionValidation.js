@@ -15,6 +15,8 @@ export const validateRegistrationStep = (step, data, isDriver) => {
         if (!data.city) errors.city = "Выберите город";
         if (!data.avatar) errors.avatar = "Загрузите аватар";
         if (!data.privacyAccepted) errors.privacy = "Необходимо принять политику конфиденциальности";
+        if (!data.infoAccepted) errors.info = "Необходимо ознакомиться с приложением";
+
         break;
       case 1:
         if (!data.passportPhoto) errors.passport = "Загрузите фото паспорта";

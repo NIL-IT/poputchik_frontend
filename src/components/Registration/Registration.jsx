@@ -42,6 +42,8 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
   const [formError, setFormError] = useState({});
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [infoAccepted, setInfoAccepted] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -86,6 +88,7 @@ export default function Registration({ backFunc, step, nextStep }) {
         city,
         avatar,
         privacyAccepted,
+        infoAccepted,
         passportPhoto,
         driverLicensePhoto,
         carPhoto,
@@ -152,7 +155,6 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   const handleCityChange = (value) => setCity(value);
   const handlePhoneChange = (value) => setPhone(value);
-  console.log(carPhoto);
   const handleFileChange = (e) => {
     setAvatar(e.target.files[0]);
     setVisibleAvatarPhoto(URL.createObjectURL(e.target.files[0]));
@@ -199,6 +201,8 @@ export default function Registration({ backFunc, step, nextStep }) {
     city,
     handleCityChange,
     privacyAccepted,
+    infoAccepted,
+    setInfoAccepted,
     setPrivacyAccepted,
   };
   const photoProps = {

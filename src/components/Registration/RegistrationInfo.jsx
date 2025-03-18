@@ -19,6 +19,8 @@ export default function RegistrationInfo({
   handleCityChange,
   privacyAccepted,
   setPrivacyAccepted,
+  infoAccepted,
+  setInfoAccepted,
 }) {
   return (
     <>
@@ -113,13 +115,36 @@ export default function RegistrationInfo({
             className='text-sm'>
             Я согласен с{" "}
             <a
-              href='#'
+              href='/privacy'
               className='text-blue-600 underline'>
               политикой конфиденциальности
             </a>
           </label>
         </div>
         {formError.privacy && <p className='text-red-500 text-sm mt-1'>{formError.privacy}</p>}
+      </div>
+      <div className='w-full flex items-start gap-2 mt-2 flex-col'>
+        <div className='flex gap-2'>
+          <input
+            type='checkbox'
+            id='privacy'
+            checked={infoAccepted}
+            onChange={(e) => setInfoAccepted(e.target.checked)}
+            className='mt-1'
+            required
+          />
+          <label
+            htmlFor='privacy'
+            className='text-sm'>
+            ознакомлен с{" "}
+            <a
+              href='/info'
+              className='text-blue-600 underline'>
+              приложением
+            </a>
+          </label>
+        </div>
+        {formError.info && <p className='text-red-500 text-sm mt-1'>{formError.info}</p>}
       </div>
     </>
   );
