@@ -20,12 +20,13 @@ import ChatList from "./pages/ChatList";
 import AppInitializer from "./components/AppInitializer";
 import AnimatedRoute from "./components/Wrappers/AnimatedRoute";
 import { pageSlideLeft, slideDownIn, slideUpIn } from "./utils/animation";
+import Privacy from "./pages/Privacy";
+import Info from "./pages/Info";
 
 function App() {
   const { setCurrentUser } = useUserStore();
   const { setCenter, center, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -212,7 +213,7 @@ function App() {
               <div className='container-custom'>
                 <ProtectedRoute>
                   <AnimatedRoute variants={slideUpIn}>
-                    <PeopleList />{" "}
+                    <PeopleList />
                   </AnimatedRoute>
                 </ProtectedRoute>
               </div>
@@ -234,7 +235,7 @@ function App() {
               <div className=''>
                 <ProtectedRoute>
                   <AnimatedRoute variants={slideUpIn}>
-                    <Chat />{" "}
+                    <Chat />
                   </AnimatedRoute>
                 </ProtectedRoute>
               </div>
@@ -246,9 +247,29 @@ function App() {
               <div className=''>
                 <ProtectedRoute>
                   <AnimatedRoute variants={slideDownIn}>
-                    <ChatList />{" "}
+                    <ChatList />
                   </AnimatedRoute>
                 </ProtectedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/privacy'
+            element={
+              <div className='custom-container'>
+                <AnimatedRoute variants={slideDownIn}>
+                  <Privacy />
+                </AnimatedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/info'
+            element={
+              <div className='custom-container'>
+                <AnimatedRoute variants={slideDownIn}>
+                  <Info />
+                </AnimatedRoute>
               </div>
             }
           />
