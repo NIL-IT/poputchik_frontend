@@ -15,7 +15,7 @@ export default function Info() {
         <h1>Информация о приложении</h1>
       </div>
 
-      <div className='flex-1 w-full p-4 flex flex-col text-left text-[16px]'>
+      <div className='flex-1 w-full p-4 flex flex-col text-left text-[16px] '>
         <div className='leading-relaxed text-black'>
           <h2 className='text-base font-bold mb-2'>Как пользоваться приложением:</h2>
 

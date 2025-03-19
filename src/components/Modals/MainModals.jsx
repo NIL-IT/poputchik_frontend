@@ -30,6 +30,11 @@ export default function MainModals() {
     setFilterModalOpen(false);
   }
 
+  function closeFeedback() {
+    document.body.classList.remove("overflow-y-hidden");
+    toggleFeedback(false);
+  }
+
   return (
     <>
       {isCalendarOpen && (
@@ -112,7 +117,7 @@ export default function MainModals() {
       {isFeedBackOpen && (
         <AnimatedModal
           isOpen={isFeedBackOpen}
-          onClose={() => toggleFeedback(false)}
+          onClose={closeFeedback}
           variants={modalSlideUp}
           modalType='bottom'>
           <FeedBack />

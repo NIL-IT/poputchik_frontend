@@ -11,11 +11,13 @@ import { urlToFile } from "../api/api";
 import { updateUser } from "../api/passenger";
 import { renderHistoryCard } from "../utils/renderListUtils";
 import { useList } from "../state/listStore";
+import AnimatedModal from "../components/Wrappers/AnimatedModal";
+import { modalSlideUp } from "../utils/animation";
 
 export default function UserPage() {
   const navigate = useNavigate();
 
-  const { historyList } = useList;
+  const { historyList } = useList();
   const { changeCurrentRole, updateCurrentUser, currentUser } = useUserStore();
   const { isFeedBackOpen } = useModal();
 
@@ -100,7 +102,7 @@ export default function UserPage() {
   }
 
   function renderList() {
-    const historyItem = historyList ? [...historyList[0]] : [];
+    const historyItem = historyList ? [historyList[0]] : [];
     return renderHistoryCard(historyItem, "История пустая");
   }
 
@@ -134,6 +136,11 @@ export default function UserPage() {
               </Button>
             )}
           </div>
+          <div className='mt-5'>
+            <Button size={"large"}>
+              <a href='/info'>Информация о приложении</a>
+            </Button>
+          </div>
         </div>
         <div className='p-5'>
           <div className='font-bold text-[20px] leading-5 mb-6 relative'>
@@ -155,10 +162,10 @@ export default function UserPage() {
               </svg>
             </button>
           </div>
-          {renderList()}
+          <div className='flex flex-col justify-center items-center'>{renderList()}</div>
         </div>
       </div>
-      {isFeedBackOpen && (
+      {/* {isFeedBackOpen && (
         <AnimatedModal
           isOpen={isFeedBackOpen}
           onClose={() => toggleFeedback(false)}
@@ -166,7 +173,7 @@ export default function UserPage() {
           modalType='bottom'>
           <FeedBack />
         </AnimatedModal>
-      )}
+      )} */}
     </div>
   );
 }
