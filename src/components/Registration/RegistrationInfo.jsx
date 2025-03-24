@@ -1,6 +1,7 @@
 import PhoneInput from "react-phone-number-input";
 import Select from "../../UI/Select/Select";
 import Input from "../../UI/Input/Input";
+import { Link } from "react-router-dom";
 
 export default function RegistrationInfo({
   setName,
@@ -114,11 +115,11 @@ export default function RegistrationInfo({
             htmlFor='privacy'
             className='text-sm'>
             Я согласен с{" "}
-            <a
-              href='/privacy'
+            <Link
+              to='/privacy'
               className='text-blue-600 underline'>
               политикой конфиденциальности
-            </a>
+            </Link>
           </label>
         </div>
         {formError.privacy && <p className='text-red-500 text-sm mt-1'>{formError.privacy}</p>}
@@ -137,11 +138,11 @@ export default function RegistrationInfo({
             htmlFor='privacy'
             className='text-sm'>
             ознакомлен с{" "}
-            <a
-              href='/info'
+            <Link
+              to='/info'
               className='text-blue-600 underline'>
               приложением
-            </a>
+            </Link>
           </label>
         </div>
         {formError.info && <p className='text-red-500 text-sm mt-1'>{formError.info}</p>}

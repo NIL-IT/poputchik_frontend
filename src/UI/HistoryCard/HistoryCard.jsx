@@ -25,7 +25,6 @@ export default function HistoryCard({ drive }) {
   const tripData = useTripById(drive.id);
 
   const userIdToFetch = is_passenger_create && tripData ? tripData.passengers[0]?.user_id : drive?.driver_id;
-  console.log(drive);
 
   const userQuery = useDriverById(drive ? userIdToFetch : null, { skip: !drive });
   const user = userQuery?.data;

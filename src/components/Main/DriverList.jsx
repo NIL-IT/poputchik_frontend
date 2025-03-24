@@ -27,20 +27,21 @@ export default function DriverList({ toggleCreating }) {
     const listToRender = isFiltered ? filteredList : isDriver ? passengerTripsList : driveList;
 
     const currentDate = new Date();
-
-    const filteredListToRender = listToRender.filter((trip) => {
-      const tripDate = new Date(trip.date);
-      return tripDate >= currentDate;
-    });
-
-    const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
-    const mainItems = renderMainList(isDriver, filteredListToRender);
-
-    if (mainItems.length > 0 || waitingItems.length > 0) {
-      if (isDriver) {
-        return [...mainItems];
+    if (listToRender) {
+      const filteredListToRender = listToRender.filter((trip) => {
+        const tripDate = new Date(trip.date);
+        return tripDate >= currentDate;
+      });
+      const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
+      const mainItems = renderMainList(isDriver, filteredListToRender);
+      if (mainItems.length > 0 || waitingItems.length > 0) {
+        if (isDriver) {
+          return [...mainItems];
+        } else {
+          return [...waitingItems, ...mainItems].slice(0, 2);
+        }
       } else {
-        return [...waitingItems, ...mainItems].slice(0, 2);
+        return <>Список пустой</>;
       }
     } else {
       return <>Список пустой</>;

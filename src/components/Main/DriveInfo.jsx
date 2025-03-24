@@ -27,7 +27,6 @@ export default function DriveInfo() {
   } else {
     targetUser = driverData?.user;
   }
-  console.log(targetUser);
 
   const rating = driverData?.rating;
   const carPhoto = driverData?.user?.driver_profile?.car_photo;

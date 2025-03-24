@@ -14,7 +14,7 @@ export default function UserInfo({
   setMail,
   setProfilePhoto,
   setVisiblePhoto,
-  setInfo,
+  setAbout,
 }) {
   const { currentUser, currentRole } = useUserStore();
   const navigate = useNavigate();
@@ -28,10 +28,8 @@ export default function UserInfo({
     setProfilePhoto(e.target.files[0]);
     setVisiblePhoto(URL.createObjectURL(e.target.files[0]));
   };
-
   const reviews = useDriverReviews(currentUser.driver_profile?.id || null);
   const user = hasDriverProfile ? useDriverById(currentUser.driver_profile.id).data : null;
-
   return (
     <div className='flex flex-col justify-center items-center '>
       <div className='edit flex flex-col justify-center items-center mb-8'>
@@ -46,7 +44,7 @@ export default function UserInfo({
           />
           <label
             style={{
-              backgroundImage: `url(${value.visiblePhoto})`,
+              backgroundImage: `url("${value.visiblePhoto}")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -98,7 +96,7 @@ export default function UserInfo({
           type={"text"}
           readOnly={!isEditable}
           value={value.info}
-          onChange={(e) => setInfo(e.target.value)}
+          onChange={(e) => setAbout(e.target.value)}
           placeholder={"О себе"}
         />
         <Select

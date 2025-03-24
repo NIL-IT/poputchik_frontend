@@ -51,7 +51,6 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   }
   const chooseDrive = (event) => {
     event.stopPropagation();
-    console.log("isBooked: " + isBooked, "disabled: " + disabled, "onChat: " + onChat);
     if (isBooked || disabled || onChat) return;
 
     const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");

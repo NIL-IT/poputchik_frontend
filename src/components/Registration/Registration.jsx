@@ -47,7 +47,6 @@ export default function Registration({ backFunc, step, nextStep }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (tg?.initDataUnsafe) {

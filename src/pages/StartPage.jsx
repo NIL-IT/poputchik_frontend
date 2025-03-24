@@ -32,6 +32,11 @@ export default function StartPage() {
     changeCurrentRole(value);
   };
   const backFunc = () => {
+    if (step === 1 && !currentUser.driver_profile && currentRole === "driver") {
+      setToReg(false);
+      setSwitcherPos(-1);
+    }
+
     if (step > 0) {
       setStep((prev) => prev - 1);
 

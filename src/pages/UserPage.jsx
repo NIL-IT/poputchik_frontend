@@ -1,25 +1,21 @@
 import BackButton from "../UI/BackButton";
 import Button from "../UI/Button/Button";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { useModal } from "../state/ModalStore";
 import UserInfo from "../components/User/UserInfo";
-import FeedBack from "../components/Modals/FeedBack";
 import { urlToFile } from "../api/api";
 import { updateUser } from "../api/passenger";
 import { renderHistoryCard } from "../utils/renderListUtils";
 import { useList } from "../state/listStore";
-import AnimatedModal from "../components/Wrappers/AnimatedModal";
-import { modalSlideUp } from "../utils/animation";
 
 export default function UserPage() {
   const navigate = useNavigate();
 
   const { historyList } = useList();
   const { changeCurrentRole, updateCurrentUser, currentUser } = useUserStore();
-  const { isFeedBackOpen } = useModal();
 
   const [profilePhoto, setProfilePhoto] = useState(currentUser.profile_photo);
   const [visiblePhoto, setVisibleAvatarPhoto] = useState(currentUser.profile_photo);
@@ -36,7 +32,6 @@ export default function UserPage() {
     visiblePhoto,
   };
   const [error, setError] = useState();
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [isEditable, setIsEditable] = useState(false);
 
@@ -102,7 +97,7 @@ export default function UserPage() {
   }
 
   function renderList() {
-    const historyItem = historyList ? [historyList[0]] : [];
+    const historyItem = historyList && historyList.length > 0 ? [historyList[0]] : [];
     return renderHistoryCard(historyItem, "История пустая");
   }
 
@@ -138,7 +133,7 @@ export default function UserPage() {
           </div>
           <div className='mt-5'>
             <Button size={"large"}>
-              <a href='/info'>Информация о приложении</a>
+              <Link to='/info'>Информация о приложении</Link>
             </Button>
           </div>
         </div>
