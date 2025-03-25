@@ -96,7 +96,7 @@ export default function FilterModal({ onClose }) {
                   setStartTime(e.target.value);
                   setErrors({});
                 }}
-                className='w-full py-2 border rounded-md bg-inherit text-center'
+                className='w-full h-10 py-2 border rounded-md bg-inherit text-center'
               />
             </div>
 
@@ -109,7 +109,7 @@ export default function FilterModal({ onClose }) {
                   setEndTime(e.target.value);
                   setErrors({});
                 }}
-                className='w-full py-2 border rounded-md bg-inherit text-center'
+                className='w-full h-10 py-2 border rounded-md bg-inherit text-center'
               />
             </div>
           </div>
