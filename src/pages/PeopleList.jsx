@@ -12,8 +12,8 @@ export default function PeopleList() {
 
   function renderList() {
     const listToRender = isFiltered ? filteredList : isDriver ? passengersList : driveList;
-    const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
-    const mainItems = renderMainList(isDriver, listToRender, true);
+    const waitingItems = waitingList && isDriver ? renderWaitingItems(waitingList) : [];
+    const mainItems = listToRender && renderMainList(isDriver, listToRender, true);
     if (mainItems.length > 0 || waitingItems.length > 0) {
       if (isDriver) {
         return [...waitingItems, ...mainItems];
@@ -32,7 +32,9 @@ export default function PeopleList() {
         Список {isDriver ? "пассажиров твоих поездок" : "водителей"}
       </h3>
       <div className='flex flex-col gap-4 w-full justify-center items-center'>
-        {driveList.length > 0 || passengersList.length > 0 || waitingList.length > 0 ? (
+        {(driveList && driveList.length > 0) ||
+        (passengersList && passengersList.length > 0) ||
+        (waitingList && waitingList.length > 0) ? (
           renderList()
         ) : (
           <>Активных водителей сейчас нет</>
