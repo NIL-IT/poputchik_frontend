@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { API_KEY } from "../../api/api";
+import { API_KEY } from "../../../../api/api";
 import "./SearchList.css";
-import { useModal } from "../../state/ModalStore";
-import { useTrip } from "../../state/TripStore";
-import { useMap } from "../../state/MapRoutesStore";
+import { useModal } from "../../../../state/ModalStore";
+import { useTrip } from "../../../../state/TripStore";
+import { useMap } from "../../../../state/MapRoutesStore";
 export default function SearchList({ value, setValue, options, setOptions }) {
   const { setTripFrom, tripFrom, setTripTo, tripTo } = useTrip();
   const { toggleSearch, setActiveInput, activeInput } = useModal();

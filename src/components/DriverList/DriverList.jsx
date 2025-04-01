@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../../state/UserStore";
-import Button from "../../UI/Button/Button";
-import Footer from "../../UI/Footer/Footer";
+import { useUserStore } from "../../state/UserStore.js";
+import Button from "../Button/Button.jsx";
+import Footer from "../Footer/Footer.jsx";
 import { renderWaitingItems, renderMainList } from "../../utils/renderListUtils.jsx";
 import { useList } from "../../state/listStore.js";
 import PropTypes from "prop-types";

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CloseBtn from "../UI/CloseBtn";
+import CloseBtn from "../components/NavigationButton/components/CloseBtn/CloseBtn";
 
 export default function Info() {
   const navigate = useNavigate();

@@ -24,12 +24,8 @@ export function filterTripsByTime(startDateTime, endDateTime, list) {
 }
 
 export const useList = create((set) => ({
-  passengersList: [],
-  passengerTripsList: [],
-  driversList: [],
   mainList: [],
-  driveList: [],
-  chatList: [],
+
   activeList: [],
   historyList: [],
   waitingList: [],
@@ -41,7 +37,6 @@ export const useList = create((set) => ({
   setDriversList: (value) => set({ driversList: value }),
   setMainList: (value) => set({ mainList: filterList(value) }),
   setDriveList: (value) => set({ driveList: filterList(value) }),
-  setChatList: (value) => set({ chatList: value }),
   setActiveList: (value) => set({ activeList: value }),
   setWaitingList: (value) => set({ waitingList: value }),
   setHistoryList: (value) => set({ historyList: value }),

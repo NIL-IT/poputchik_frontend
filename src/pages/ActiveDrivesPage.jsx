@@ -1,7 +1,7 @@
-import CloseBtn from "../UI/CloseBtn";
 import { useNavigate } from "react-router-dom";
 import { useList } from "../state/listStore";
 import { renderHistoryCard } from "../utils/renderListUtils.jsx";
+import CloseBtn from "../components/NavigationButton/components/CloseBtn/CloseBtn.jsx";
 
 export default function ActiveDrivesPage() {
   const { activeList } = useList();

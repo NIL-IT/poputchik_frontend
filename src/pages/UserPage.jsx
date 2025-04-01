@@ -1,15 +1,14 @@
-import BackButton from "../UI/BackButton";
-import Button from "../UI/Button/Button";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { isValidPhoneNumber } from "react-phone-number-input";
-import { useModal } from "../state/ModalStore";
 import UserInfo from "../components/User/UserInfo";
 import { urlToFile } from "../api/api";
 import { updateUser } from "../api/passenger";
 import { renderHistoryCard } from "../utils/renderListUtils";
 import { useList } from "../state/listStore";
+import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
+import Button from "../components/Button/Button";
 
 export default function UserPage() {
   const navigate = useNavigate();

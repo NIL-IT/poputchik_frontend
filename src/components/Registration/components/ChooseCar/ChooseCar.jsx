@@ -1,5 +1,5 @@
-import Input from "../../UI/Input/Input";
 import PropTypes from "prop-types";
+import Input from "../../../Input/Input";
 
 export default function ChooseCar({
   selectedCar,

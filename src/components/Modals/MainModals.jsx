@@ -1,13 +1,13 @@
-import FullScreenList from "../../UI/FullScreenList/FullScreenList";
-import CalendarComponent from "../../UI/Calendar/Calendar";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
-import Button from "../../UI/Button/Button";
 import FeedBack from "./FeedBack";
 import CarModal from "./CarModal";
 import FilterModal from "./FilterModal";
 import AnimatedModal from "../Wrappers/AnimatedModal";
 import { modalSlideUp, modalFade } from "../../utils/animation";
+import FullScreenList from "./components/FullScreenList/FullScreenList";
+import CalendarComponent from "./components/Calendar/Calendar";
+import Button from "../Button/Button";
 
 export default function MainModals() {
   const { isCalendarOpen, toggleCalendar } = useModal();

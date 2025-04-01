@@ -1,7 +1,7 @@
 import PhoneInput from "react-phone-number-input";
-import Select from "../../UI/Select/Select";
-import Input from "../../UI/Input/Input";
 import { Link } from "react-router-dom";
+import Select from "../../../Select/Select";
+import Input from "../../../Input/Input";
 
 export default function RegistrationInfo({
   setName,

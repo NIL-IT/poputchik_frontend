@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Button from "../../UI/Button/Button";
 import { useList } from "../../state/listStore";
-import Input from "../../UI/Input/Input";
+import Input from "../Input/Input";
 import { useUserStore } from "../../state/UserStore";
+import Button from "../Button/Button";
 
 export default function FilterModal({ onClose }) {
   const [date, setDate] = useState("");

@@ -1,5 +1,5 @@
 .profile {
-  padding: 15px 18px;
+  padding: 15px;
   max-width: 350px;
   width: 100%;
   border-radius: 10px;
@@ -35,7 +35,6 @@
   font-size: 14px;
   line-height: 16.1px;
   padding-right: 20px;
-  padding-left: 12px;
   color: #464646;
   background: url("../../assets/icons/geo-profile.svg") no-repeat;
   background-position-y: 3px;
@@ -66,8 +65,9 @@
 
 .profile-stars {
   padding-left: 22px;
-  background: url("../../assets/icons/star.svg") no-repeat;
+  background: url("../../../../assets/icons/star.svg") no-repeat;
 }
+
 .profile-comments {
   padding-left: 22px;
   background: url("../../assets/icons/comment.svg") no-repeat;
@@ -78,7 +78,6 @@
   font-size: 14px;
   line-height: 16.1px;
   background: url("../../assets/icons/profile-date.svg") no-repeat;
-  padding-left: 22px;
 }
 .profile-seats {
   color: #747474;

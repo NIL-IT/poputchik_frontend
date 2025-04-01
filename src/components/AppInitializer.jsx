@@ -74,7 +74,6 @@ export default function AppInitializer() {
     }
     return [];
   }, [isDriver, tripsList, currentUser?.city]);
-
   const effectiveDriveList = hasValidUser ? tripsList : [];
   const effectiveActiveDrives = hasValidUser ? activeDrives : [];
   const effectiveWaitingList = hasValidUser ? waitingList : [];

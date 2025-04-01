@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTrip } from "../../state/TripStore";
-import Button from "../../UI/Button/Button";
-import Footer from "../../UI/Footer/Footer";
+import Button from "../Button/Button";
+import Footer from "../Footer/Footer";
 import { useMap } from "../../state/MapRoutesStore";
 import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";

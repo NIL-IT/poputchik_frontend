@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import BackButton from "../UI/BackButton";
-import Input from "../UI/Input/Input";
 import { useState } from "react";
-import Button from "../UI/Button/Button";
+import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
+import Button from "../components/Button/Button";
+import Input from "../components/Input/Input";
 
 export default function PaymentPage() {
   const navigate = useNavigate();

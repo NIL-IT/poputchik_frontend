@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import BackButton from "../UI/BackButton";
 import { useList } from "../state/listStore";
 import { renderHistoryCard } from "../utils/renderListUtils";
+import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
 
 export default function HistoryPage() {
   const { historyList } = useList();

@@ -16,7 +16,7 @@ export async function updateUser(data) {
   }
 }
 
-async function getPassengerByDriver(driver_id) {
+export async function getPassengerByDriver(driver_id) {
   return axios.get(`${url}/users/trip_passengers/${driver_id}`);
 }
 export function usePassengerList(driver_id) {
@@ -29,7 +29,7 @@ export function usePassengerList(driver_id) {
   return data;
 }
 
-async function getBookedTripsByPassengerId(passenger_id) {
+export async function getBookedTripsByPassengerId(passenger_id) {
   return axios.get(`${url}/users/passenger/booked_trips/${passenger_id}`);
 }
 

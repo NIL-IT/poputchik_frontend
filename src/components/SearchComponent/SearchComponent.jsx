@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useModal } from "../../state/ModalStore";
-import SearchList from "../../UI/SearchList/SearchList";
-import CloseBtn from "../../UI/CloseBtn";
+import SearchList from "./components/SearchList/SearchList";
+import CloseBtn from "../NavigationButton/components/CloseBtn/CloseBtn";
 import { useMap } from "../../state/MapRoutesStore";
 import { API_KEY } from "../../api/api";
 

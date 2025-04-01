@@ -1,6 +1,5 @@
-import { useModal } from "../../state/ModalStore";
-import BackButton from "../BackButton";
-import CloseBtn from "../CloseBtn";
+import BackButton from "../../../NavigationButton/components/BackButton/BackButton";
+import CloseBtn from "../../../NavigationButton/components/CloseBtn/CloseBtn";
 import "./FullScreenList.css";
 
 export default function FullScreenList({ children, isOpen, toggle, isCreating, isNumbers, isClose }) {

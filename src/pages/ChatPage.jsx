@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import Message from "../UI/Message/Message";
-import MessageInput from "../UI/MessageInput/MessageInput";
 import { useUserStore } from "../state/UserStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { useChatHistory } from "../api/passenger";
-import CloseBtn from "../UI/CloseBtn";
+import CloseBtn from "../components/NavigationButton/components/CloseBtn/CloseBtn";
 import { useDriverById } from "../api/driver";
 import { useUserByUserId } from "../api/user";
-
 import { useTripById } from "../api/trips";
+import MessageInput from "../components/Chat/components/MessageInput/MessageInput";
+import Message from "../components/Chat/components/Message/Message";
 
 const Chat = () => {
   const { currentUser, currentRole } = useUserStore();
