@@ -10,6 +10,7 @@ import { formatDate } from "../../utils/utils";
 import { useUserStore } from "../../state/UserStore";
 import { createTripByDriver, createTripByPassenger } from "../../api/trips";
 import { cleanAddress } from "../../api/api";
+import { useList } from "../../state/listStore";
 
 const createTripAnimation = {
   initial: {
@@ -39,6 +40,7 @@ export default function CreateTrip() {
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { toggleCalendar, togglePersonModal, toggleSearch, setActiveInput, setIsCreating } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint, routeDistance, routeDuration } = useMap();
+  const { activeList, setActiveList } = useList();
   const { currentUser } = useUserStore();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
 
@@ -73,7 +75,6 @@ export default function CreateTrip() {
     setIsRouteEnabled(false);
     setStartPoint([]);
     setEndPoint([]);
-    // setStep(0);
   }
 
   async function createTrip(event) {
@@ -95,6 +96,7 @@ export default function CreateTrip() {
 
         try {
           await createTripByDriver(trip);
+          setActiveList([...activeList, trip]);
           clearData();
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
@@ -114,6 +116,7 @@ export default function CreateTrip() {
 
         try {
           await createTripByPassenger(trip);
+          setActiveList([...activeList, trip]);
           clearData();
         } catch (error) {
           setFormError(error.message || "Неизвестная ошибка");
