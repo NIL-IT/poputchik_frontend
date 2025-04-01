@@ -7,8 +7,8 @@ import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
 import { approveRequest, rejectRequest, useTripById } from "../../api/trips";
 import { formatDate } from "../../utils/utils";
-import Profile from "../Profile/Profile";
 import { useUserByUserId } from "../../api/user";
+import Profile from "./components/Profile/Profile";
 
 export default function ProfileComponent({ drive, passenger, onList, pending, request, onChat }) {
   const { setSelectedDriver, toggleBookedModal } = useModal();
@@ -21,10 +21,6 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   const driverData = useDriverById(drive?.driver_id)?.data;
 
   const [disabled, setDisabled] = useState(false);
-  const [isBooked, setIsBooked] = useState(() => {
-    const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");
-    return bookedTrips.includes(drive.id);
-  });
   if (!drive) return null;
 
   const { start_address, end_address, departure_time, id, seats_available, is_passenger_create, driver_id } = drive;
@@ -51,16 +47,11 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   }
   const chooseDrive = (event) => {
     event.stopPropagation();
-    if (isBooked || disabled || onChat) return;
-
-    const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");
-    bookedTrips.push(drive.id);
-    localStorage.setItem("bookedTrips", JSON.stringify(bookedTrips));
-
+    console.log(disabled, onChat);
+    if (disabled || onChat) return;
     setBookedDrive(drive);
     toggleBookedModal(true);
     setIsRouteEnabled(true);
-    setIsBooked(true);
     setDisabled(true);
 
     if (onList === true) navigate("/main");

@@ -1,6 +1,6 @@
 import "./Profile.css";
-import message from "../../assets/icons/message.svg";
-import { cleanAddress } from "../../api/api";
+import message from "../../../../assets/icons/message.svg";
+import { cleanAddress } from "../../../../api/api";
 
 export default function Profile({
   user,
@@ -29,7 +29,7 @@ export default function Profile({
           <div className='profile-text'>
             <div className='flex gap-5'>
               <h3 className='profile-name'>{user.name}</h3>
-              {currentRole === "passenger" && <p className='profile-stars'>{rating}</p>}
+              {currentRole === "passenger" && rating > 0 && <p className='profile-stars'>{rating}</p>}
             </div>
             <span className='profile-path'>
               {`${cleanAddress(start_address?.name) || "Не указан"} - ${

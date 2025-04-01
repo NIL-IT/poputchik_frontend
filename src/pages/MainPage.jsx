@@ -69,26 +69,26 @@ export default function MainPage() {
     }
   }
 
-  useEffect(() => {
-    async function getList() {
-      if (isDriver) {
-        const driverId = currentUser.driver_profile.id;
-        const passengerList = (await getPassengerByDriver(driverId)).data;
-        setMainList(passengerList);
-        const activeTrips = (await getDrviersTrips(driverId, "active")).data;
-        const startedTrips = (await getDrviersTrips(driverId, "started")).data;
-        const bookedTrips = (await getDrviersTrips(driverId, "booked")).data;
-        setActiveList([...activeTrips, ...startedTrips, ...bookedTrips]);
-      } else {
-        const drivesList = (await getTripsList(currentUser.city)).data;
-        setMainList(drivesList);
-        const bookedTripsList = (await getBookedTripsByPassengerId(currentUser?.passenger_profile?.id)).data;
-        setActiveList(bookedTripsList);
-      }
-    }
-    getList();
-    console.log(mainList);
-  }, []);
+  // useEffect(() => {
+  //   async function getList() {
+  //     if (isDriver) {
+  //       const driverId = currentUser.driver_profile.id;
+  //       const passengerList = (await getPassengerByDriver(driverId)).data;
+  //       setMainList(passengerList);
+  //       const activeTrips = (await getDrviersTrips(driverId, "active")).data;
+  //       const startedTrips = (await getDrviersTrips(driverId, "started")).data;
+  //       const bookedTrips = (await getDrviersTrips(driverId, "booked")).data;
+  //       setActiveList([...activeTrips, ...startedTrips, ...bookedTrips]);
+  //     } else {
+  //       const drivesList = (await getTripsList(currentUser.city)).data;
+  //       setMainList(drivesList);
+  //       const bookedTripsList = (await getBookedTripsByPassengerId(currentUser?.passenger_profile?.id)).data;
+  //       setActiveList(bookedTripsList);
+  //     }
+  //   }
+  //   getList();
+  //   console.log(mainList);
+  // }, []);
 
   return (
     <div className='bg-black h-screen relative'>
