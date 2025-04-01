@@ -17,7 +17,6 @@ import PeopleList from "./pages/PeopleList";
 import PaymentPage from "./pages/PaymentPage";
 import Chat from "./pages/ChatPage";
 import ChatList from "./pages/ChatList";
-import AppInitializer from "./components/AppInitializer";
 import AnimatedRoute from "./components/Wrappers/AnimatedRoute";
 import { pageSlideLeft, slideDownIn, slideUpIn } from "./utils/animation";
 import Privacy from "./pages/Privacy";
@@ -129,7 +128,6 @@ function App() {
   return (
     <div className='container'>
       <Router>
-        <AppInitializer />
         <Routes>
           <Route
             path='/'

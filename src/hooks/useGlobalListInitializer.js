@@ -4,7 +4,7 @@ import { useUserStore } from "../state/UserStore";
 
 function useGlobalListInitializer({
   passengersList,
-  passengerTripsList, // добавляем новый параметр
+  passengerTripsList,
   driversList,
   driveList,
   activeDrives,
@@ -14,7 +14,7 @@ function useGlobalListInitializer({
   const { currentUser } = useUserStore();
   const {
     setPassengersList,
-    setPassengerTripsList, // добавляем новый сеттер
+    setPassengerTripsList,
     setDriversList,
     setMainList,
     setActiveList,

@@ -7,7 +7,7 @@ import { useTrip } from "../../state/TripStore";
 import { useDriverById } from "../../api/driver";
 import { approveRequest, rejectRequest, useTripById } from "../../api/trips";
 import { formatDate } from "../../utils/utils";
-import Profile from "../../UI/Profile/Profile";
+import Profile from "../Profile/Profile";
 import { useUserByUserId } from "../../api/user";
 
 export default function ProfileComponent({ drive, passenger, onList, pending, request, onChat }) {

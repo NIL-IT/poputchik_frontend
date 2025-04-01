@@ -1,4 +1,4 @@
-import HistoryCard from "../UI/HistoryCard/HistoryCard";
+import HistoryCard from "../components/HistoryCard/HistoryCard";
 import ProfileComponent from "../components/ProfileComponent/ProfileComponent";
 
 export const renderWaitingItems = (waitingList) => {

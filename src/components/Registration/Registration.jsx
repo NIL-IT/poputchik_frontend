@@ -4,15 +4,16 @@ import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
 import { urlToFile } from "../../api/api";
 import { useUserStore } from "../../state/UserStore";
-import ChooseCar from "./ChooseCar";
-import Button from "../../UI/Button/Button";
-import Switcher from "../../UI/Switcher/Switcher";
+
+import Button from "../Button/Button";
+import Switcher from "../Switcher/Switcher";
 import { getUserById, registration } from "../../api/user";
-import RegistrationPhoto from "./RegistrationPhoto";
-import RegistrationInfo from "./RegistrationInfo";
+import RegistrationPhoto from "./components/RegistrationPhoto/RegistrationPhoto";
 import { motion } from "framer-motion";
 import { swipeLeft } from "../../utils/animation";
 import { validateRegistrationStep } from "../../utils/regitarionValidation";
+import ChooseCar from "./components/ChooseCar/ChooseCar";
+import RegistrationInfo from "./components/RegistrationInfo/RegistrationInfo";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
@@ -125,7 +126,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   const submitRegistrationForm = async () => {
     const formData = new FormData();
-    formData.append("telegram_id", userId);
+    formData.append("telegram_id", "1233128012");
     formData.append("phone_number", phone);
     formData.append("name", name);
     formData.append("city", city);

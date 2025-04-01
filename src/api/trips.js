@@ -2,7 +2,7 @@ import axios from "axios";
 import { url } from "./api";
 import { useQuery } from "@tanstack/react-query";
 
-async function getTripsList(city) {
+export async function getTripsList(city) {
   return axios.get(`${url}/trips/city_from/${city}`);
 }
 
@@ -15,7 +15,7 @@ export function useTripsList(city) {
   });
   return data;
 }
-async function getTripsListByPassenger(city) {
+export async function getTripsListByPassenger(city) {
   return axios.get(`${url}/trips/driver/city_from/${city}`);
 }
 
@@ -55,7 +55,7 @@ export async function createTripByPassenger(data) {
     throw new Error(response.data);
   }
 }
-async function getDrviersTrips(id, state) {
+export async function getDrviersTrips(id, state) {
   try {
     const response = await axios.get(`${url}/trips/driver/${id}?trip_status=${state}`);
     return response;

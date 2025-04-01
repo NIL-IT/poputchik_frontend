@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import Button from "../../UI/Button/Button";
-import Footer from "../../UI/Footer/Footer";
-import Input from "../../UI/Input/Input";
+import Button from "../Button/Button";
+import Footer from "../Footer/Footer";
+import Input from "../Input/Input";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
 import { useEffect, useState } from "react";

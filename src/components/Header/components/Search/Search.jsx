@@ -1,4 +1,4 @@
-import { useModal } from "../../state/ModalStore";
+import { useModal } from "../../../../state/ModalStore";
 import "./Search.css";
 export default function Search() {
   const { isSearch, toggleSearch } = useModal();

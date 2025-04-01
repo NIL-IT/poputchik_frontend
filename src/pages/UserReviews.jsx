@@ -1,10 +1,10 @@
-import CloseBtn from "../UI/CloseBtn";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../state/ModalStore";
-import ReviewCard from "../UI/ReviewCard/ReviewCard";
 import { useDriverById, useDriverReviews } from "../api/driver";
 import { useDriversTripsList, usePassengerTripsList } from "../api/trips";
 import { useUserById } from "../api/user";
+import CloseBtn from "../components/NavigationButton/components/CloseBtn/CloseBtn";
+import ReviewCard from "../components/ReviewCard/ReviewCard";
 
 export default function UserReviews() {
   const navigate = useNavigate();

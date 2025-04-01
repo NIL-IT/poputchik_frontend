@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CloseBtn from "../UI/CloseBtn";
+import CloseBtn from "../components/NavigationButton/components/CloseBtn/CloseBtn.jsx";
 import { useUserStore } from "../state/UserStore";
 import { renderMainList } from "../utils/renderListUtils.jsx";
 import { useList } from "../state/listStore.js";

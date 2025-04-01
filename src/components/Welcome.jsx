@@ -1,7 +1,7 @@
-import Footer from "../UI/Footer/Footer";
-import Button from "../UI/Button/Button";
 import Background from "../assets/welcome/startScreen.png";
-import Switcher from "../UI/Switcher/Switcher";
+import Button from "./Button/Button";
+import Footer from "./Footer/Footer";
+import Switcher from "./Switcher/Switcher";
 
 export default function Welcome({ func, step }) {
   return (

@@ -1,5 +1,6 @@
 import Background from "../assets/welcome/startScreen.png";
-import Footer from "../UI/Footer/Footer";
+import Footer from "../components/Footer/Footer";
+
 export default function PreviewPage() {
   return (
     <div className='flex justify-center items-center h-screen container-custom'>

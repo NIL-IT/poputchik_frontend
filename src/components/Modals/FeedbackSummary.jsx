@@ -1,6 +1,6 @@
-import Button from "../../UI/Button/Button";
 import goodReviewImg from "../../assets/icons/reviewCheck.png";
 import badReviewImg from "../../assets/icons/badReview.png";
+import Button from "../Button/Button";
 
 export default function FeedbackSummary({ isGood, closeFeedback }) {
   return (

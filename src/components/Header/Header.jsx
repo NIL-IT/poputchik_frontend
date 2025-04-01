@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../state/UserStore";
-import Avatar from "../Avatar/Avatar";
-import Burger from "../Burger/Burger";
-import Search from "../Search/Search";
+import Avatar from "./components/Avatar/Avatar";
+import Burger from "./components/Burger/Burger";
+import Search from "./components/Search/Search";
 
 export default function Header() {
   const { currentUser } = useUserStore();

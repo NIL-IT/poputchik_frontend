@@ -1,20 +1,30 @@
 import { motion, AnimatePresence } from "framer-motion";
-import Header from "../UI/Header/Header";
+import Header from "../components/Header/Header";
 import { useModal } from "../state/ModalStore";
-import BackButton from "../UI/BackButton";
-import CreateTrip from "../components/Main/CreateTrip";
-import DriveInfo from "../components/Main/DriveInfo";
-import DriverList from "../components/Main/DriverList";
-import SearchComponent from "../components/Main/SearchComponent";
-import MapComponent from "../components/Main/MapComponent";
+import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
+
 import { useTrip } from "../state/TripStore";
 import { useMap } from "../state/MapRoutesStore";
 import { headerAnimation, searchAnimation, backButtonAnimation, slideUpIn } from "../utils/animation";
+import DriverList from "../components/DriverList/DriverList";
+import DriveInfo from "../components/DriveInfo/DriveInfo";
+import CreateTrip from "../components/CreateTrip/CreateTrip";
+import MapComponent from "../components/Map/MapComponent";
+import SearchComponent from "../components/SearchComponent/SearchComponent";
+import { useEffect } from "react";
+import { useUserStore } from "../state/UserStore";
+import { useList } from "../state/listStore";
+import { getBookedTripsByPassengerId, getPassengerByDriver, useBookedTripsList } from "../api/passenger";
+import { getDrviersTrips, getTripsList, getTripsListByPassenger, useDriversTripsList } from "../api/trips";
 
 export default function MainPage() {
+  const { currentUser } = useUserStore();
+  const isDriver = useUserStore((state) => state.currentRole === "driver");
+  const { setMainList, mainList, setActiveList, activeList } = useList();
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
+
   function clearCreatingData() {
     setTripFrom({
       name: "",
@@ -58,6 +68,27 @@ export default function MainPage() {
       clearCreatingData();
     }
   }
+
+  useEffect(() => {
+    async function getList() {
+      if (isDriver) {
+        const driverId = currentUser.driver_profile.id;
+        const passengerList = (await getPassengerByDriver(driverId)).data;
+        setMainList(passengerList);
+        const activeTrips = (await getDrviersTrips(driverId, "active")).data;
+        const startedTrips = (await getDrviersTrips(driverId, "started")).data;
+        const bookedTrips = (await getDrviersTrips(driverId, "booked")).data;
+        setActiveList([...activeTrips, ...startedTrips, ...bookedTrips]);
+      } else {
+        const drivesList = (await getTripsList(currentUser.city)).data;
+        setMainList(drivesList);
+        const bookedTripsList = (await getBookedTripsByPassengerId(currentUser?.passenger_profile?.id)).data;
+        setActiveList(bookedTripsList);
+      }
+    }
+    getList();
+    console.log(mainList);
+  }, []);
 
   return (
     <div className='bg-black h-screen relative'>

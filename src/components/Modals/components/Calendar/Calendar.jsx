@@ -1,9 +1,9 @@
 import "./Calendar.css";
-import { useTrip } from "../../state/TripStore";
-import { useModal } from "../../state/ModalStore";
+import { useTrip } from "../../../../state/TripStore";
+import { useModal } from "../../../../state/ModalStore";
 import { useState } from "react";
-import Button from "../Button/Button";
-import Input from "../Input/Input";
+import Button from "../../../Button/Button";
+import Input from "../../../Input/Input";
 
 function CalendarComponent() {
   const { setTripDate } = useTrip();

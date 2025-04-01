@@ -1,4 +1,4 @@
-import Input from "../Input/Input";
+import Input from "../../../Input/Input";
 
 export default function MessageInput({ input, setInput, sendMessage }) {
   return (
