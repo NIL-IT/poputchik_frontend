@@ -21,10 +21,7 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   const driverData = useDriverById(drive?.driver_id)?.data;
 
   const [disabled, setDisabled] = useState(false);
-  const [isBooked, setIsBooked] = useState(() => {
-    const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");
-    return bookedTrips.includes(drive.id);
-  });
+
   if (!drive) return null;
 
   const { start_address, end_address, departure_time, id, seats_available, is_passenger_create, driver_id } = drive;
@@ -51,7 +48,7 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   }
   const chooseDrive = (event) => {
     event.stopPropagation();
-    if (isBooked || disabled || onChat) return;
+    if (disabled || onChat) return;
 
     const bookedTrips = JSON.parse(localStorage.getItem("bookedTrips") || "[]");
     bookedTrips.push(drive.id);
@@ -60,7 +57,6 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
     setBookedDrive(drive);
     toggleBookedModal(true);
     setIsRouteEnabled(true);
-    setIsBooked(true);
     setDisabled(true);
 
     if (onList === true) navigate("/main");

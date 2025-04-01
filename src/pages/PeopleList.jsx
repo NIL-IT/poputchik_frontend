@@ -13,7 +13,7 @@ export default function PeopleList() {
   function renderList() {
     const listToRender = isFiltered ? filteredList : isDriver ? passengersList : driveList;
     const waitingItems = waitingList && isDriver ? renderWaitingItems(waitingList) : [];
-    const mainItems = listToRender && renderMainList(isDriver, listToRender, true);
+    const mainItems = listToRender && renderMainList(isDriver, listToRender, true, false);
     if (mainItems.length > 0 || waitingItems.length > 0) {
       if (isDriver) {
         return [...waitingItems, ...mainItems];
