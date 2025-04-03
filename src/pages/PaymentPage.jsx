@@ -17,18 +17,21 @@ export default function PaymentPage() {
   async function pay(e) {
     e.preventDefault();
     const form = {
-      terminalkey: terminalkey,
-      frame: "true",
-      language: "ru",
-      amount: 100 * summ,
-      order: "222123",
-      description: "",
-      name: "",
-      email: currentUser.email,
-      phone: currentUser.phone_number,
+      TerminalKey: terminalkey,
+      paymentInfo: {
+        PaymentData: {
+          TerminalKey: terminalkey,
+          Amount: summ * 100,
+        },
+      },
     };
     console.log("first");
-    await getStatus();
+    try {
+      await getStatus();
+      await payment(form);
+    } catch (error) {
+      console.log(error.message || "Неизвестная ошибка");
+    }
   }
   return (
     <div className='py-10 relative flex flex-col items-center justify-between w-full min-h-screen'>
