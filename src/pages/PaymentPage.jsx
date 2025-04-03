@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
 import Button from "../components/Button/Button";
-import { payment } from "../api/payment";
+import { getStatus, payment } from "../api/payment";
 import { useUserStore } from "../state/UserStore";
 <script src='https://securepay.tinkoff.ru/html/payForm/js/tinkoff.js'></script>;
 // import Input from "../components/Input/Input";
@@ -28,7 +28,7 @@ export default function PaymentPage() {
       phone: currentUser.phone_number,
     };
     console.log("first");
-    await payment(form);
+    await getStatus();
   }
   return (
     <div className='py-10 relative flex flex-col items-center justify-between w-full min-h-screen'>
