@@ -13,6 +13,7 @@
     "@pbe/react-yandex-maps": "^1.2.5",
     "@tanstack/react-query": "^5.64.1",
     "axios": "^1.7.9",
+    "crypto-js": "^4.2.0",
     "framer-motion": "^12.4.3",
     "libphonenumber-js": "^1.11.17",
     "react": "^18.3.1",

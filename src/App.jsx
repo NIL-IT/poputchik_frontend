@@ -21,6 +21,7 @@ import AnimatedRoute from "./components/Wrappers/AnimatedRoute";
 import { pageSlideLeft, slideDownIn, slideUpIn } from "./utils/animation";
 import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
+import { getStatus } from "./api/payment";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -31,7 +32,7 @@ function App() {
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
-
+    getStatus();
     tg.ready();
     tg.expand();
     tg.setHeaderColor("#F6F6F6");
