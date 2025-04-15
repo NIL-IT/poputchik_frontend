@@ -7,7 +7,7 @@ import { getStatus, payment } from "../api/payment";
 
 export default function PaymentPage() {
   const terminalkey = "1743154896913DEMO";
-  const password = "5agKh^xldCr9okSw";
+  const password = "5agKh^xIdCr9okSw";
   const [summ, setSumm] = useState("");
   const { currentUser } = useUserStore();
   const navigate = useNavigate();
@@ -23,34 +23,34 @@ export default function PaymentPage() {
     };
   }, []);
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   getStatus();
-  //   if (window.pay) {
-  //     window.pay(event.target);
-  //   } else {
-  //     console.error("Скрипт оплаты не загружен");
-  //   }
-  // };
-  async function pay(e) {
-    e.preventDefault();
-    const form = {
-      TerminalKey: terminalkey,
-      paymentInfo: {
-        PaymentData: {
-          TerminalKey: terminalkey,
-          Amount: summ * 100,
-        },
-      },
-    };
-    console.log("first");
-    try {
-      await getStatus();
-      await payment(form);
-    } catch (error) {
-      console.log(error.message || "Неизвестная ошибка");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    getStatus();
+    if (window.pay) {
+      window.pay(event.target);
+    } else {
+      console.error("Скрипт оплаты не загружен");
     }
-  }
+  };
+  // async function pay(e) {
+  //   e.preventDefault();
+  //   const form = {
+  //     TerminalKey: terminalkey,
+  //     paymentInfo: {
+  //       PaymentData: {
+  //         TerminalKey: terminalkey,
+  //         Amount: summ * 100,
+  //       },
+  //     },
+  //   };
+  //   console.log("first");
+  //   try {
+  //     await getStatus();
+  //     await payment(form);
+  //   } catch (error) {
+  //     console.log(error.message || "Неизвестная ошибка");
+  //   }
+  // }
   return (
     <div className='py-10 relative flex flex-col items-center justify-between w-full min-h-screen'>
       <div className='flex flex-col'>
@@ -60,7 +60,7 @@ export default function PaymentPage() {
           ref={formRef}
           className='payform-tbank flex flex-col gap-5 w-full justify-center items-center'
           name='payform-tbank'
-          onSubmit={pay}>
+          onSubmit={handleSubmit}>
           <input
             className='payform-tbank-row input'
             type='hidden'
