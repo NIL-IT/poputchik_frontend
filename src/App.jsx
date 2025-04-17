@@ -22,11 +22,13 @@ import { pageSlideLeft, slideDownIn, slideUpIn } from "./utils/animation";
 import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
 import { getStatus } from "./api/payment";
+import AppInitializer from "./components/AppInitializer";
 
 function App() {
   const { setCurrentUser } = useUserStore();
-  const { setCenter, center, setCity } = useMap();
+  const { setPosition, positon, setCity } = useMap();
   const [userId, setUserId] = useState(null);
+
   const { data: user } = useUserById(userId);
 
   useEffect(() => {
@@ -76,7 +78,7 @@ function App() {
 
     tg.LocationManager.getLocation((data) => {
       if (data) {
-        setCenter([data.latitude, data.longitude]);
+        setPosition([data.latitude, data.longitude]);
       }
     });
   };
@@ -95,15 +97,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (center && center.length === 2) {
+    if (positon && positon.length === 2) {
       getCityByCoordinates();
     }
-  }, [center]);
+  }, [positon]);
 
   const getCityByCoordinates = async () => {
     try {
       const response = await fetch(
-        `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&geocode=${center[1]},${center[0]}&format=json`,
+        `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&geocode=${positon[1]},${positon[0]}&format=json`,
       );
       const data = await response.json();
 
@@ -128,6 +130,7 @@ function App() {
 
   return (
     <div className='container'>
+      <AppInitializer />
       <Router>
         <Routes>
           <Route

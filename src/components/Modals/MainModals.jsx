@@ -12,7 +12,7 @@ import Button from "../Button/Button";
 export default function MainModals() {
   const { isCalendarOpen, toggleCalendar } = useModal();
   const { persons, increaseTripPerson, decreaseTripPerson } = useTrip();
-  const { isPersonOpen, togglePersonModal, setCarModal } = useModal();
+  const { isPersonOpen, togglePersonModal, toggleCarModal } = useModal();
   const {
     isFeedBackOpen,
     toggleFeedback,
@@ -127,7 +127,7 @@ export default function MainModals() {
       {carModal && (
         <AnimatedModal
           isOpen={carModal}
-          onClose={() => setCarModal(false)}
+          onClose={() => toggleCarModal(false)}
           variants={modalFade}
           modalType='center'>
           <CarModal />

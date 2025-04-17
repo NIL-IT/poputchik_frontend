@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTrip } from "../../state/TripStore";
 import Button from "../Button/Button";
 import Footer from "../Footer/Footer";
@@ -7,21 +7,24 @@ import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
 import { bookedTripByDriver, tripRequestByPassenger, updateTripState, useTripById } from "../../api/trips";
-import { cleanAddress } from "../../api/api";
+import { cleanAddress, terminalkey } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { useUserByUserId } from "../../api/user";
+import { useList } from "../../state/listStore";
 
 export default function DriveInfo() {
   const { currentUser, currentRole } = useUserStore();
   const { bookedDrive, setFeedbackTarget } = useTrip();
   const { toggleBookedModal, toggleFeedback, setCarPhoto, toggleCarModal } = useModal();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
+  const { activeList } = useList();
   const navigate = useNavigate();
   const { is_passenger_create } = bookedDrive;
   const tripData = useTripById(bookedDrive.id);
   const driverData = useDriverById(tripData.driver_id).data;
   const passengerData = useUserByUserId(tripData?.passengers?.[0]?.user_id)?.data;
   let targetUser;
+  const formRef = useRef(null);
   if (is_passenger_create) {
     targetUser = passengerData;
   } else {
@@ -35,14 +38,25 @@ export default function DriveInfo() {
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
   const isDriver = currentRole === "driver";
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   function bookingByPassenger(e) {
     e.preventDefault();
     const formData = {
       trip_id: bookedDrive.id,
-      passenger_id: currentUser.passenger_profile.id,
+      user_id: currentUser.id,
       text: text,
       seats_requested: 1,
     };
+    console.log(formData);
     tripRequestByPassenger(formData);
     toggleBookedModal(false);
   }
@@ -83,9 +97,19 @@ export default function DriveInfo() {
     };
   }, [setEndPoint, setIsRouteEnabled, setStartPoint]);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (window.pay) {
+      window.pay(event.target);
+    } else {
+      console.error("Скрипт оплаты не загружен");
+    }
+  };
+
   function finishDrive() {
     updateTripState(bookedDrive.id, "finished");
     toggleBookedModal(false);
+    activeList.filter((i) => i !== bookedDrive.id);
   }
 
   function renderButton() {
@@ -119,11 +143,75 @@ export default function DriveInfo() {
       }
     } else if (currentRole === "passenger" && bookedDrive.state === "started") {
       return (
-        <Button
-          onClick={() => {}}
-          size={"large"}>
-          Оплатить
-        </Button>
+        <form
+          ref={formRef}
+          className='payform-tbank flex flex-col gap-5 w-full justify-center items-center'
+          name='payform-tbank'
+          onSubmit={handleSubmit}>
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            name='terminalkey'
+            value={terminalkey}
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            name='frame'
+            value='false'
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            name='language'
+            value='ru'
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='Сумма заказа'
+            name='amount'
+            value={tripData.price * 100}
+            required
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='Номер заказа'
+            name='order'
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='Описание заказа input'
+            name='description'
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='ФИО плательщика input'
+            name='name'
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='E-mail'
+            name='email'
+          />
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='Контактный телефон'
+            name='phone'
+          />
+
+          <Button
+            type='submit'
+            className='payform-tbank-btn'
+            size='large'>
+            Оплатить
+          </Button>
+        </form>
       );
     }
   }

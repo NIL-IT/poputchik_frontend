@@ -126,7 +126,7 @@ export default function Registration({ backFunc, step, nextStep }) {
 
   const submitRegistrationForm = async () => {
     const formData = new FormData();
-    formData.append("telegram_id", userId);
+    formData.append("telegram_id", "1662316939");
     formData.append("phone_number", phone);
     formData.append("name", name);
     formData.append("city", city);

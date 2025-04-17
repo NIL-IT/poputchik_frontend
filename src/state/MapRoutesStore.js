@@ -7,6 +7,9 @@ export const useMap = create((set) => ({
   setCenter: (center) => set({ center: center }),
   userLocation: "",
 
+  position: [51.9582, 85.9603],
+  setPosition: (pos) => set({ position: pos }),
+
   startPoint: [],
   setStartPoint: (state) => set({ startPoint: state }),
   endPoint: [],

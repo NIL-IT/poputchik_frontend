@@ -133,6 +133,7 @@ export default function HistoryCard({ drive }) {
     setSelectedDriver(user.user);
     navigate(`/userReview/${user.user.id}`);
   };
+  console.log(user);
   return (
     <div
       className='history'
@@ -150,7 +151,7 @@ export default function HistoryCard({ drive }) {
             <div className='history-rating'>{user.rating}</div>
             <img
               className='history-img'
-              src={user.profile_photo}
+              src={user.user.profile_photo}
               alt={is_passenger_create ? "Passenger" : "Driver"}
             />
           </div>

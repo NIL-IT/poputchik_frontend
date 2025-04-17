@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import { API_KEY } from "../../../../api/api";
 import "./SearchList.css";
 import { useModal } from "../../../../state/ModalStore";
 import { useTrip } from "../../../../state/TripStore";
 import { useMap } from "../../../../state/MapRoutesStore";
-export default function SearchList({ value, setValue, options, setOptions }) {
+export default function SearchList({ setValue, options, setOptions }) {
   const { setTripFrom, tripFrom, setTripTo, tripTo } = useTrip();
   const { toggleSearch, setActiveInput, activeInput } = useModal();
-  const { cities, setCenter, center } = useMap();
+  const { setCenter } = useMap();
   const selectALocation = (value) => {
     setValue(value);
     if (activeInput === "from" && value !== tripTo) {

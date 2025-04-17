@@ -8,7 +8,7 @@ const MapComponent = () => {
   const mapRef = useRef(null);
   const ymapsRef = useRef(null);
   const userPlacemarkRef = useRef(null);
-  const { center, startPoint, endPoint, isRouteEnabled, setRouteDistance, setRouteDuration } = useMap();
+  const { center, startPoint, endPoint, isRouteEnabled, setRouteDistance, setRouteDuration, position } = useMap();
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const defaultZoom = 13;
 
@@ -54,12 +54,12 @@ const MapComponent = () => {
   }, [isRouteEnabled, startPoint, endPoint, isMapLoaded]);
 
   useEffect(() => {
-    if (isMapLoaded && ymapsRef.current && mapRef.current && center) {
+    if (isMapLoaded && ymapsRef.current && mapRef.current && position) {
       if (userPlacemarkRef.current) {
-        userPlacemarkRef.current.geometry.setCoordinates(center);
+        userPlacemarkRef.current.geometry.setCoordinates(position);
       } else {
         userPlacemarkRef.current = new ymapsRef.current.Placemark(
-          center,
+          position,
           { balloonContent: "Вы здесь" },
           {
             iconLayout: "default#image",
@@ -74,7 +74,7 @@ const MapComponent = () => {
         mapRef.current.geoObjects.add(userPlacemarkRef.current);
       }
     }
-  }, [center, isMapLoaded]);
+  }, [position, isMapLoaded]);
 
   return (
     <YMaps query={{ apikey: API_KEY, load: ["multiRouter.MultiRoute", "Placemark"] }}>

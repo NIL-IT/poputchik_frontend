@@ -9,8 +9,7 @@ import ReviewCard from "../components/ReviewCard/ReviewCard";
 export default function UserReviews() {
   const navigate = useNavigate();
   const { selectedDriver } = useModal();
-  const { userId, role } = useParams();
-  const isDriver = role === "driver";
+  const { userId } = useParams();
   const userData = useUserById(selectedDriver.telegram_id);
 
   const driverTrips = useDriversTripsList(userId, "finished");
@@ -18,7 +17,6 @@ export default function UserReviews() {
   const driverReviews = useDriverReviews(userData?.data?.driver_profile?.id || null);
   const driverData = useDriverById(userData?.data?.driver_profile?.id || null);
 
-  // Then use the data conditionally
   const tripsList = userData?.data?.driver_profile ? driverTrips : passengerTrips;
   const reviews = userData?.data?.driver_profile ? driverReviews : [];
   const rating = driverData?.data?.rating || 0;
@@ -84,7 +82,7 @@ export default function UserReviews() {
                 />
               ))
             ) : (
-              <>{isDriver ? "У этого водителя нет отзывов" : "У этого пассажира нет отзывов"}</>
+              <>{"У этого пользователя нет отзывов"}</>
             )}
           </div>
         </div>

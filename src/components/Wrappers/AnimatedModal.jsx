@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { modalFade, backdropFade, modalSlideUp } from "../../utils/animation";
+import { modalFade, backdropFade } from "../../utils/animation";
 
 const AnimatedModal = ({ isOpen, onClose, children, variants = modalFade, modalType = "center" }) => {
   const getModalStyles = () => {
@@ -7,7 +7,7 @@ const AnimatedModal = ({ isOpen, onClose, children, variants = modalFade, modalT
       case "bottom":
         return "fixed inset-x-0 bottom-0 z-50";
       case "fullscreen":
-        return "fixed inset-0 z-50 overflow-y-auto bg-white";
+        return "fixed inset-0 z-50 overflow-y-auto";
       case "center":
         return "fixed inset-0 z-50 flex items-center justify-center";
       default:
@@ -20,9 +20,9 @@ const AnimatedModal = ({ isOpen, onClose, children, variants = modalFade, modalT
       case "bottom":
         return "w-full bg-white rounded-t-2xl";
       case "fullscreen":
-        return "w-full min-h-screen";
+        return "w-full min-h-screen bg-white";
       case "center":
-        return "mx-4";
+        return "mx-4 bg-white";
       default:
         return "";
     }
@@ -46,8 +46,13 @@ const AnimatedModal = ({ isOpen, onClose, children, variants = modalFade, modalT
             variants={variants}
             initial='initial'
             animate='animate'
-            exit='exit'>
-            <div className={getContentStyles()}>{children}</div>
+            exit='exit'
+            onClick={onClose}>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className={getContentStyles()}>
+              {children}
+            </div>
           </motion.div>
         </>
       )}

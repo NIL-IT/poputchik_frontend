@@ -1,15 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
 import Button from "../components/Button/Button";
-import { useUserStore } from "../state/UserStore";
-import { getStatus, payment } from "../api/payment";
+import { getStatus } from "../api/payment";
+import { terminalkey } from "../api/api";
 
 export default function PaymentPage() {
-  const terminalkey = "1743154896913DEMO";
   const password = "5agKh^xIdCr9okSw";
-  const [summ, setSumm] = useState("");
-  const { currentUser } = useUserStore();
   const navigate = useNavigate();
   const formRef = useRef(null);
 
