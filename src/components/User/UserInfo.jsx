@@ -66,7 +66,7 @@ export default function UserInfo({
       </div>
       {isDriver && (
         <div className='w-full balance-bg py-8 rounded-[10px] mb-10'>
-          <h3 className='pb-7  text-[32px] leading-8 text-white'>Баланс, ₽</h3>
+          <h3 className='pb-7  text-[32px] leading-8 text-white'>{currentUser.driver_profile.balance}, ₽</h3>
           <button
             className='rounded-[20px] bg-white font-bold text-[16px] text-black px-10 py-4'
             onClick={() => navigate("/payment")}>
