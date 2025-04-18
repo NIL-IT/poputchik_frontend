@@ -23,7 +23,7 @@ export default function HistoryCard({ drive }) {
   const navigate = useNavigate();
   const { is_passenger_create } = drive;
   const tripData = useTripById(drive.id);
-
+  const isStarted = drive.state === "started";
   const userIdToFetch = is_passenger_create && tripData ? tripData.passengers[0]?.user_id : drive?.driver_id;
 
   const userQuery = useDriverById(drive ? userIdToFetch : null, { skip: !drive });
@@ -119,6 +119,12 @@ export default function HistoryCard({ drive }) {
         console.error("Ошибка при обновлении состояния поездки:", error);
       });
   };
+  const navigateToDrive = () => {
+    setBookedDrive(drive);
+    toggleBookedModal(true);
+    setIsRouteEnabled(true);
+    navigate("/main");
+  };
 
   function activeClick() {
     if (drive.state == "started") {
@@ -174,12 +180,22 @@ export default function HistoryCard({ drive }) {
         </span>
         <div className='history-status'>{getStatus(drive.state)}</div>
       </div>
-      {showStartButton && (
+      {!isStarted ? (
+        showStartButton && (
+          <div className='start-wrapper'>
+            <button
+              className='history-start'
+              onClick={handleStart}>
+              Начать
+            </button>
+          </div>
+        )
+      ) : (
         <div className='start-wrapper'>
           <button
             className='history-start'
-            onClick={handleStart}>
-            Начать
+            onClick={navigateToDrive}>
+            перейти к поездке
           </button>
         </div>
       )}
