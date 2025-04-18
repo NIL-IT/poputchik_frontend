@@ -171,7 +171,7 @@ export default function DriveInfo() {
             type='hidden'
             placeholder='Сумма заказа'
             name='amount'
-            value={tripData.price * 100}
+            value={tripData.price}
             required
           />
           <input
