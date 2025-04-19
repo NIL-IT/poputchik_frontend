@@ -213,7 +213,7 @@ export default function DriveInfo() {
           type='submit'
           className='payform-tbank-btn'
           size='large'
-          onClick={() => payment(bookedDrive.price)}>
+          onClick={() => payment(1)}>
           Оплатить
         </Button>
         // </form>
