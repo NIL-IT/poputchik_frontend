@@ -23,6 +23,7 @@ import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
 import { getStatus } from "./api/payment";
 import AppInitializer from "./components/AppInitializer";
+import Success from "./pages/Success";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -227,6 +228,16 @@ function App() {
               <div className='container-custom'>
                 <ProtectedRoute>
                   <PaymentPage />
+                </ProtectedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/payment/success'
+            element={
+              <div className='container-custom'>
+                <ProtectedRoute>
+                  <Success />
                 </ProtectedRoute>
               </div>
             }

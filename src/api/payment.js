@@ -1,13 +1,13 @@
 import axios from "axios";
 
-export async function payment(data) {
+export async function payment(driver_id, data) {
   const response = await axios({
     method: "post",
-    url: `https://securepay.tinkoff.ru/v2/InitPayments`,
+    url: `/users/driver/${driver_id}/balance`,
     data: data,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    // headers: {
+    //   "Content-Type": "application/json",
+    // },
   });
   if (response.status !== 201) {
     throw new Error(response.data);

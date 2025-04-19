@@ -101,6 +101,7 @@ export default function DriveInfo() {
     event.preventDefault();
     if (window.pay) {
       window.pay(event.target);
+      console.log(event.target);
     } else {
       console.error("Скрипт оплаты не загружен");
     }
@@ -179,12 +180,14 @@ export default function DriveInfo() {
             type='hidden'
             placeholder='Номер заказа'
             name='order'
+            // value={`Order_${bookedDrive.id}`}
           />
           <input
             className='payform-tbank-row input'
             type='hidden'
-            placeholder='Описание заказа input'
+            placeholder='Описание заказа'
             name='description'
+            // value={`Описание Order_${bookedDrive.id}`}
           />
           <input
             className='payform-tbank-row input'

@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
 import Button from "../components/Button/Button";
 import { getStatus } from "../api/payment";
-import { terminalkey } from "../api/api";
+import { terminalkey, url } from "../api/api";
 
 export default function PaymentPage() {
-  const password = "5agKh^xIdCr9okSw";
   const navigate = useNavigate();
   const formRef = useRef(null);
 
@@ -29,25 +28,7 @@ export default function PaymentPage() {
       console.error("Скрипт оплаты не загружен");
     }
   };
-  // async function pay(e) {
-  //   e.preventDefault();
-  //   const form = {
-  //     TerminalKey: terminalkey,
-  //     paymentInfo: {
-  //       PaymentData: {
-  //         TerminalKey: terminalkey,
-  //         Amount: summ * 100,
-  //       },
-  //     },
-  //   };
-  //   console.log("first");
-  //   try {
-  //     await getStatus();
-  //     await payment(form);
-  //   } catch (error) {
-  //     console.log(error.message || "Неизвестная ошибка");
-  //   }
-  // }
+
   return (
     <div className='py-10 relative flex flex-col items-center justify-between w-full min-h-screen'>
       <div className='flex flex-col'>
@@ -113,7 +94,13 @@ export default function PaymentPage() {
             placeholder='Контактный телефон'
             name='phone'
           />
-
+          <input
+            className='payform-tbank-row input'
+            type='hidden'
+            placeholder='Контактный телефон'
+            name='NotificationURL'
+            value={`${url}/users/tinkoff-callback`}
+          />
           <Button
             type='submit'
             className='payform-tbank-btn'
