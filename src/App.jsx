@@ -236,9 +236,7 @@ function App() {
             path='/payment/success'
             element={
               <div className='container-custom'>
-                <ProtectedRoute>
-                  <Success />
-                </ProtectedRoute>
+                <Success />
               </div>
             }
           />
