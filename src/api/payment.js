@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export async function payment(driver_id, data) {
+export async function payment(amount) {
   const response = await axios({
     method: "post",
-    url: `/users/driver/${driver_id}/balance`,
-    data: data,
+    url: `/users/payment`,
+    data: amount,
     // headers: {
     //   "Content-Type": "application/json",
     // },

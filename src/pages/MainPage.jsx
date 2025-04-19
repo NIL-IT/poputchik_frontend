@@ -13,14 +13,14 @@ import MapComponent from "../components/Map/MapComponent";
 import SearchComponent from "../components/SearchComponent/SearchComponent";
 import { useUserStore } from "../state/UserStore";
 import { useList } from "../state/listStore";
-import { getBookedTripsByPassengerId, getPassengerByDriver, useBookedTripsList } from "../api/passenger";
-import { getDrviersTrips, getTripsList, getTripsListByPassenger, useDriversTripsList } from "../api/trips";
+import { getBookedTripsByPassengerId, getPassengerByDriver } from "../api/passenger";
+import { getDrviersTrips, getTripsList } from "../api/trips";
 import { useEffect } from "react";
 
 export default function MainPage() {
   const { currentUser } = useUserStore();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
-  const { setMainList, mainList, setActiveList, activeList } = useList();
+  const { setMainList, setActiveList } = useList();
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
