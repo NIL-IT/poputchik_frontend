@@ -3,11 +3,7 @@ import axios from "axios";
 export async function payment(amount) {
   const response = await axios({
     method: "post",
-    url: `/users/payment`,
-    data: amount,
-    // headers: {
-    //   "Content-Type": "application/json",
-    // },
+    url: `/users/payment?amount=${amount}`,
   });
   if (response.status !== 201) {
     throw new Error(response.data);
