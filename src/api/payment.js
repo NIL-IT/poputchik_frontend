@@ -19,3 +19,14 @@ export async function verifyPayment(data) {
   });
   return response.data;
 }
+
+export async function createPayout(driver_id, amount, cardNumber) {
+  const response = await axios({
+    method: "post",
+    url: `${url}/users/payout?driver_id=${driver_id}&amount=${amount}&card_number=${cardNumber}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+}

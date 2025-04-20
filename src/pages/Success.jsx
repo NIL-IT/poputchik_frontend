@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyPayment } from "../api/payment";
 import Button from "../components/Button/Button";
 
@@ -24,7 +24,7 @@ const Success = () => {
     };
     checkPayment();
   }, [paymentId, orderId]);
-
+  console.log(result);
   if (isLoading) return <div>⏳ Проверяем оплату...</div>;
   return (
     <div className='mt-10 flex flex-col justify-center items-center'>
