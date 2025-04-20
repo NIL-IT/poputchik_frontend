@@ -9,7 +9,7 @@ const Success = () => {
   useEffect(() => {
     if (paymentId) {
       // вызовем бекенд для верификации
-      fetch("/api/payment/verify", {
+      fetch("/users/verify_payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
