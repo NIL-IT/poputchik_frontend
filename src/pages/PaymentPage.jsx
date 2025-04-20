@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../components/NavigationButton/components/BackButton/BackButton";
 import Button from "../components/Button/Button";
@@ -9,24 +9,9 @@ export default function PaymentPage() {
   const navigate = useNavigate();
   const formRef = useRef(null);
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   const handleSubmit = (event) => {
     event.preventDefault();
     getStatus();
-    if (window.pay) {
-      window.pay(event.target);
-    } else {
-      console.error("Скрипт оплаты не загружен");
-    }
   };
 
   return (
