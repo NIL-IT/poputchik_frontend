@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTrip } from "../../state/TripStore";
 import Button from "../Button/Button";
 import Footer from "../Footer/Footer";
@@ -7,7 +7,7 @@ import { useUserStore } from "../../state/UserStore";
 import { useModal } from "../../state/ModalStore";
 import { useDriverById } from "../../api/driver";
 import { bookedTripByDriver, tripRequestByPassenger, updateTripState, useTripById } from "../../api/trips";
-import { cleanAddress, terminalkey } from "../../api/api";
+import { cleanAddress } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { useUserByUserId } from "../../api/user";
 import { useList } from "../../state/listStore";
@@ -25,7 +25,6 @@ export default function DriveInfo() {
   const driverData = useDriverById(tripData.driver_id).data;
   const passengerData = useUserByUserId(tripData?.passengers?.[0]?.user_id)?.data;
   let targetUser;
-  const formRef = useRef(null);
   if (is_passenger_create) {
     targetUser = passengerData;
   } else {
@@ -39,15 +38,6 @@ export default function DriveInfo() {
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
   const isDriver = currentRole === "driver";
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
 
   function bookingByPassenger(e) {
     e.preventDefault();
@@ -97,13 +87,13 @@ export default function DriveInfo() {
       setEndPoint(null);
     };
   }, [setEndPoint, setIsRouteEnabled, setStartPoint]);
-
+  console.log(bookedDrive)
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await payment(100);
+      const { data } = await payment(100, currentUser.passenger_profile.id, bookedDrive.driver_id);
       const url = data.url || data;
-      window.location.assign(url); // assign ≈ href, но более семантично
+      window.location.assign(url); 
     } catch (e) {
       console.error("Не удалось получить ссылку для оплаты", e);
     }
