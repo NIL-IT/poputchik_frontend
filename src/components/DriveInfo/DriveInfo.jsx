@@ -98,13 +98,14 @@ export default function DriveInfo() {
     };
   }, [setEndPoint, setIsRouteEnabled, setStartPoint]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (window.pay) {
-      window.pay(event.target);
-      console.log(event.target);
-    } else {
-      console.error("Скрипт оплаты не загружен");
+    try {
+      const { data } = await payment(100);
+      const url = data.url || data;
+      window.location.assign(url); // assign ≈ href, но более семантично
+    } catch (e) {
+      console.error("Не удалось получить ссылку для оплаты", e);
     }
   };
 
@@ -145,75 +146,11 @@ export default function DriveInfo() {
       }
     } else if (currentRole === "passenger" && bookedDrive.state === "started") {
       return (
-        // <form
-        //   ref={formRef}
-        //   className='payform-tbank flex flex-col gap-5 w-full justify-center items-center'
-        //   name='payform-tbank'
-        //   onSubmit={handleSubmit}>
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     name='terminalkey'
-        //     value={terminalkey}
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     name='frame'
-        //     value='false'
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     name='language'
-        //     value='ru'
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     placeholder='Сумма заказа'
-        //     name='amount'
-        //     value={1}
-        //     required
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     placeholder='Номер заказа'
-        //     name='order'
-        //     // value={`Order_${bookedDrive.id}`}
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     placeholder='Описание заказа'
-        //     name='description'
-        //     // value={`Описание Order_${bookedDrive.id}`}
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     placeholder='ФИО плательщика input'
-        //     name='name'
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     placeholder='E-mail'
-        //     name='email'
-        //   />
-        //   <input
-        //     className='payform-tbank-row input'
-        //     type='hidden'
-        //     placeholder='Контактный телефон'
-        //     name='phone'
-        //   />
-
         <Button
           type='submit'
           className='payform-tbank-btn'
           size='large'
-          onClick={() => payment(1)}>
+          onClick={handleSubmit}>
           Оплатить
         </Button>
         // </form>
