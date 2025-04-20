@@ -17,7 +17,5 @@ export async function verifyPayment(data) {
       "Content-Type": "application/json",
     },
   });
-  if (response.status !== 201) {
-    throw new Error(response.data);
-  }
+  return response.data;
 }

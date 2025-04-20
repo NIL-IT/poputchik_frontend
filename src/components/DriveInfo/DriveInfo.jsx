@@ -153,7 +153,6 @@ export default function DriveInfo() {
           onClick={handleSubmit}>
           Оплатить
         </Button>
-        // </form>
       );
     }
   }
