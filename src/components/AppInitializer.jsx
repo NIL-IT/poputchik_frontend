@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useBookedTripsList, usePassengerList } from "../api/passenger";
 import {
+  getTripsList,
   useDriversTripsList,
   usePassengerTripsList,
   useRequests,
@@ -19,7 +20,9 @@ export default function AppInitializer() {
 
   const passengerList = usePassengerList(driverId);
   const tripsList = useTripsList(currentUser?.city);
+
   const tripsListByPassenger = useTripsListByPassenger(currentUser?.city);
+
   const activeTripsData = useDriversTripsList(driverId, "active");
   const startedTripsData = useDriversTripsList(driverId, "started");
   const bookedTripsData = useDriversTripsList(driverId, "booked");
@@ -27,7 +30,6 @@ export default function AppInitializer() {
   const bookedTripsList = useBookedTripsList(passengerId);
   const passengerHistoryList = usePassengerTripsList(passengerId, "finished");
   const driverHistoryList = useDriversTripsList(driverId, "finished");
-
   const historyList = useMemo(() => {
     if (currentRole === "passenger" && passengerId) {
       return passengerHistoryList;

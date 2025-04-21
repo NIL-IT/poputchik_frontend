@@ -24,11 +24,10 @@ const Success = () => {
     };
     checkPayment();
   }, [paymentId, orderId]);
-  console.log(result);
   if (isLoading) return <div>⏳ Проверяем оплату...</div>;
   return (
     <div className='mt-10 flex flex-col justify-center items-center'>
-      {result.Status === "CONFIRMED" ? (
+      {result.status === "ok" ? (
         <div className='mb-10'>✅ Оплата успешно подтверждена!</div>
       ) : (
         <div className='mb-10'>что-то пошло не так</div>

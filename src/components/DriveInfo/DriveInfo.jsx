@@ -1,3 +1,4 @@
+import goodReviewImg from "../../assets/icons/reviewCheck.png";
 import { useEffect, useState } from "react";
 import { useTrip } from "../../state/TripStore";
 import Button from "../Button/Button";
@@ -12,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserByUserId } from "../../api/user";
 import { useList } from "../../state/listStore";
 import { payment } from "../../api/payment";
+import { checkPaymenst, checkTripState } from "../../utils/payments";
 
 export default function DriveInfo() {
   const { currentUser, currentRole } = useUserStore();
@@ -38,16 +40,18 @@ export default function DriveInfo() {
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
   const isDriver = currentRole === "driver";
 
+  const isPaid = isDriver
+    ? checkTripState(tripData.passengers, tripData.passenger_payments)
+    : checkPaymenst(tripData.passenger_payments, currentUser);
 
   function bookingByPassenger(e) {
     e.preventDefault();
     const formData = {
-      trip_id: bookedDrive.id,
+      trip_id: tripData.id,
       user_id: currentUser.id,
       text: text,
       seats_requested: 1,
     };
-    console.log(formData);
     tripRequestByPassenger(formData);
     toggleBookedModal(false);
   }
@@ -87,13 +91,12 @@ export default function DriveInfo() {
       setEndPoint(null);
     };
   }, [setEndPoint, setIsRouteEnabled, setStartPoint]);
-  console.log(bookedDrive)
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await payment(100, currentUser.passenger_profile.id, bookedDrive.driver_id);
+      const { data } = await payment(100, currentUser.passenger_profile.id, tripData.driver_id, tripData.id);
       const url = data.url || data;
-      window.location.assign(url); 
+      window.location.assign(url);
     } catch (e) {
       console.error("Не удалось получить ссылку для оплаты", e);
     }
@@ -134,7 +137,7 @@ export default function DriveInfo() {
           </>
         );
       }
-    } else if (currentRole === "passenger" && bookedDrive.state === "started") {
+    } else if (currentRole === "passenger" && bookedDrive.state === "started" && !isPaid) {
       return (
         <Button
           type='submit'
@@ -142,6 +145,16 @@ export default function DriveInfo() {
           size='large'
           onClick={handleSubmit}>
           Оплатить
+        </Button>
+      );
+    } else if (isPaid) {
+      return (
+        <Button
+          type='submit'
+          className='payform-tbank-btn'
+          size='large'
+          onClick={() => toggleBookedModal(false)}>
+          На главную
         </Button>
       );
     }
@@ -294,38 +307,53 @@ export default function DriveInfo() {
                     </div>
                   )}
                   <div className='flex flex-col justify-center items-center py-4 border rounded-2xl border-black w-[150px] h-[104px]'>
-                    <svg
-                      className=''
-                      width='25'
-                      height='25'
-                      viewBox='0 0 30 30'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'>
-                      <path
-                        d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
-                        fill='#2C2C2C'
-                      />
-                      <mask
-                        id='mask0_48_4925'
-                        maskUnits='userSpaceOnUse'
-                        x='5'
-                        y='5'
-                        width='20'
-                        height='20'>
-                        <path
-                          d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
-                          fill='white'
+                    {isPaid ? (
+                      <>
+                        {" "}
+                        <img
+                          width={25}
+                          height={25}
+                          src={goodReviewImg}
+                          alt=''
                         />
-                      </mask>
-                      <g mask='url(#mask0_48_4925)'>
-                        <rect
-                          width='30'
-                          height='30'
-                          fill='white'
-                        />
-                      </g>
-                    </svg>
-                    <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Поездка не оплачена</span>
+                        <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Поездка оплачена</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className=''
+                          width='25'
+                          height='25'
+                          viewBox='0 0 30 30'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'>
+                          <path
+                            d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
+                            fill='#2C2C2C'
+                          />
+                          <mask
+                            id='mask0_48_4925'
+                            maskUnits='userSpaceOnUse'
+                            x='5'
+                            y='5'
+                            width='20'
+                            height='20'>
+                            <path
+                              d='M16.952 15L24.596 7.356C25.1347 6.81733 25.1347 5.94267 24.596 5.404C24.0573 4.86533 23.1827 4.86533 22.644 5.404L15 13.048L7.356 5.404C6.81733 4.86533 5.94267 4.86533 5.404 5.404C4.86533 5.94267 4.86533 6.81733 5.404 7.356L13.048 15L5.404 22.644C4.86533 23.1827 4.86533 24.0573 5.404 24.596C5.94267 25.1347 6.81733 25.1347 7.356 24.596L15 16.952L22.644 24.596C23.1827 25.1347 24.0573 25.1347 24.596 24.596C25.1347 24.0573 25.1347 23.1827 24.596 22.644L16.952 15Z'
+                              fill='white'
+                            />
+                          </mask>
+                          <g mask='url(#mask0_48_4925)'>
+                            <rect
+                              width='30'
+                              height='30'
+                              fill='white'
+                            />
+                          </g>
+                        </svg>
+                        <span className='text-[#242E42] text-[17px] leading-5 font-bold'>Поездка не оплачена</span>
+                      </>
+                    )}
                   </div>
                 </button>
               </div>

@@ -139,7 +139,6 @@ export default function HistoryCard({ drive }) {
     setSelectedDriver(user.user);
     navigate(`/userReview/${user.user.id}`);
   };
-  console.log(user);
   return (
     <div
       className='history'

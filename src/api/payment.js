@@ -1,8 +1,10 @@
 import axios from "axios";
 import { url } from "./api";
 
-export async function payment(amount, passenger_id, driver_id) {
-  return axios.get(`${url}/users/payment?amount=${amount}&passenger_id=${passenger_id}&driver_id=${driver_id}`);
+export async function payment(amount, passenger_id, driver_id, trip_id) {
+  return axios.get(
+    `${url}/users/payment?amount=${amount}&passenger_id=${passenger_id}&driver_id=${driver_id}&trip_id=${trip_id}`,
+  );
 }
 export async function getStatus() {
   return axios.get(`https://securepay.tinkoff.ru/v2/TinkoffPay/terminals/1743154896934/status`);

@@ -3,7 +3,6 @@ import ProfileComponent from "../components/ProfileComponent/ProfileComponent";
 
 export const renderWaitingItems = (waitingList) => {
   if (!waitingList || waitingList.length === 0) return [];
-  console.log(waitingList);
   return waitingList
     .filter((i) => i.status === "pending")
     .map((request) => (
