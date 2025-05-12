@@ -3,7 +3,7 @@ import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/Wrappers/ProtectedRoute";
 import UserPage from "./pages/UserPage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "./state/UserStore";
 import { API_KEY } from "./api/api";
 import { useUserById } from "./api/user";
@@ -31,7 +31,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-
+  const hasRequestedGeolocation = useRef(false);
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
@@ -47,7 +47,7 @@ function App() {
       setUserId(userData.id);
     }
   }, []);
-  console.log(isUserLoaded);
+
   useEffect(() => {
     if (isFetched) {
       if (user) {
@@ -88,6 +88,8 @@ function App() {
   };
 
   useEffect(() => {
+    if (hasRequestedGeolocation.current) return;
+
     const setupLocation = async () => {
       const hasPermission = await initialLocationRequest();
       if (hasPermission) {
@@ -98,6 +100,7 @@ function App() {
     };
 
     setupLocation();
+    hasRequestedGeolocation.current = true;
   }, []);
 
   useEffect(() => {
