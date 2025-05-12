@@ -31,7 +31,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-  const hasRequestedGeolocation = useRef(false);
+  const [isRequested, setIsRequested] = useState(false);
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
@@ -88,7 +88,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (hasRequestedGeolocation.current) return;
+    if (isRequested) return;
 
     const setupLocation = async () => {
       const hasPermission = await initialLocationRequest();
@@ -100,9 +100,9 @@ function App() {
     };
 
     setupLocation();
-    hasRequestedGeolocation.current = true;
+    setIsRequested(true);
   }, []);
-
+  console.log(isRequested);
   useEffect(() => {
     if (positon && positon.length === 2) {
       getCityByCoordinates();
