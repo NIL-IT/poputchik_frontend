@@ -31,7 +31,6 @@ function App() {
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-  const [isRequested, setIsRequested] = useState(false);
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
@@ -57,52 +56,35 @@ function App() {
     }
   }, [isFetched, user, setCurrentUser]);
 
-  const initialLocationRequest = async () => {
-    const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager) {
-      console.error("Telegram WebApp или LocationManager недоступен");
-      return false;
-    }
-
-    if (!tg.LocationManager.isInited) {
-      await new Promise((resolve) => tg.LocationManager.init(resolve));
-    }
-
-    if (tg.LocationManager.isLocationAvailable) {
-      return true;
-    } else {
-      console.error("Данные о местоположении недоступны");
-      return false;
-    }
-  };
-
-  const updateLocation = () => {
-    const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager) return;
-
-    tg.LocationManager.getLocation((data) => {
-      if (data) {
-        setPosition([data.latitude, data.longitude]);
-      }
-    });
-  };
-
   useEffect(() => {
-    if (isRequested) return;
+    const tg = window.Telegram.WebApp;
+    if (!tg?.LocationManager) {
+      console.error("Telegram WebApp LocationManager недоступен");
+      return;
+    }
 
-    const setupLocation = async () => {
-      const hasPermission = await initialLocationRequest();
-      if (hasPermission) {
-        updateLocation();
-        const intervalId = setInterval(updateLocation, 10000);
-        return () => clearInterval(intervalId);
+    let intervalId;
+
+    (async () => {
+      if (!tg.LocationManager.isInited) {
+        await new Promise((resolve) => tg.LocationManager.init(resolve));
       }
-    };
 
-    setupLocation();
-    setIsRequested(true);
-  }, []);
-  console.log(isRequested);
+      tg.LocationManager.getLocation((data) => {
+        if (data) setPosition([data.latitude, data.longitude]);
+      });
+
+      intervalId = window.setInterval(() => {
+        tg.LocationManager.getLocation((data) => {
+          if (data) setPosition([data.latitude, data.longitude]);
+        });
+      }, 10000);
+    })();
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [setPosition]);
   useEffect(() => {
     if (positon && positon.length === 2) {
       getCityByCoordinates();
