@@ -1,56 +1,86 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useMap } from "../state/MapRoutesStore";
 
 export const useLocation = () => {
   const { setPosition } = useMap();
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLocationInitialized, setIsLocationInitialized] = useState(false);
+  const [locationDenied, setLocationDenied] = useState(localStorage.getItem("locationPermission") === "denied");
+  const initializationInProgress = useRef(false);
 
-  const initLocation = useCallback(() => {
+  const initialLocationRequest = useCallback(async () => {
     const tg = window.Telegram.WebApp;
-    if (!tg?.LocationManager) return false;
+    if (!tg?.LocationManager || locationDenied || initializationInProgress.current) {
+      return false;
+    }
 
-    return new Promise((resolve) => {
-      tg.LocationManager.init((error) => {
-        if (error) {
-          resolve(false);
-        } else {
-          setIsInitialized(true);
-          resolve(true);
-        }
+    try {
+      initializationInProgress.current = true;
+
+      // Проверяем, есть ли уже разрешение
+      if (localStorage.getItem("locationPermission") === "granted") {
+        setIsLocationInitialized(true);
+        return true;
+      }
+
+      const result = await new Promise((resolve) => {
+        tg.LocationManager.init((error) => {
+          if (error) {
+            localStorage.setItem("locationPermission", "denied");
+            setLocationDenied(true);
+            resolve(false);
+          } else {
+            localStorage.setItem("locationPermission", "granted");
+            setIsLocationInitialized(true);
+            resolve(true);
+          }
+        });
       });
-    });
-  }, []);
+
+      return result;
+    } catch (error) {
+      console.error("Ошибка инициализации LocationManager:", error);
+      localStorage.setItem("locationPermission", "denied");
+      setLocationDenied(true);
+      return false;
+    } finally {
+      initializationInProgress.current = false;
+    }
+  }, [locationDenied]);
 
   const updateLocation = useCallback(() => {
     const tg = window.Telegram.WebApp;
-    if (!tg?.LocationManager || !isInitialized) return;
+    if (!tg?.LocationManager || locationDenied || !isLocationInitialized) return;
 
     tg.LocationManager.getLocation((data) => {
       if (data) {
         setPosition([data.latitude, data.longitude]);
       }
     });
-  }, [setPosition, isInitialized]);
+  }, [setPosition, locationDenied, isLocationInitialized]);
 
   useEffect(() => {
     let intervalId;
 
-    const setup = async () => {
-      const hasPermission = await initLocation();
+    const setupLocation = async () => {
+      if (locationDenied) return;
+
+      const hasPermission = await initialLocationRequest();
       if (hasPermission) {
         updateLocation();
-        intervalId = setInterval(updateLocation, 10000);
+        if (isLocationInitialized) {
+          intervalId = setInterval(updateLocation, 10000);
+        }
       }
     };
 
-    setup();
+    setupLocation();
 
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
       }
     };
-  }, [initLocation, updateLocation]);
+  }, [initialLocationRequest, updateLocation, locationDenied, isLocationInitialized]);
 
-  return { isInitialized };
+  return { locationDenied, isLocationInitialized };
 };
