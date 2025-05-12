@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useBookedTripsList, usePassengerList } from "../api/passenger";
 import {
   useDriversTripsList,
@@ -9,8 +9,11 @@ import {
 } from "../api/trips";
 import { useUserStore } from "../state/UserStore";
 import useGlobalListInitializer from "../hooks/useGlobalListInitializer";
+import { useMap } from "../state/MapRoutesStore";
+import { getCityByCoordinates, initialLocationRequest, updateLocation } from "../utils/geoInit";
 
 export default function AppInitializer() {
+  const { setPosition, positon, setCity } = useMap();
   const { currentUser, currentRole } = useUserStore();
   const hasDriverProfile = Boolean(currentUser?.driver_profile?.id);
   const isDriver = useUserStore((state) => state.currentRole === "driver");
@@ -21,6 +24,23 @@ export default function AppInitializer() {
   const tripsList = useTripsList(currentUser?.city);
 
   const tripsListByPassenger = useTripsListByPassenger(currentUser?.city);
+
+  useEffect(() => {
+    const setupLocation = async () => {
+      const hasPermission = await initialLocationRequest();
+      if (hasPermission) {
+        updateLocation(setPosition);
+      }
+    };
+
+    setupLocation();
+  }, []);
+
+  useEffect(() => {
+    if (positon && positon.length === 2) {
+      getCityByCoordinates(setCity);
+    }
+  }, [positon]);
 
   const activeTripsData = useDriversTripsList(driverId, "active");
   const startedTripsData = useDriversTripsList(driverId, "started");
