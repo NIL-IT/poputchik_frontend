@@ -3,7 +3,7 @@ import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/Wrappers/ProtectedRoute";
 import UserPage from "./pages/UserPage";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useUserStore } from "./state/UserStore";
 import { API_KEY } from "./api/api";
 import { useUserById } from "./api/user";
@@ -31,6 +31,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
+
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
@@ -75,7 +76,7 @@ function App() {
     }
   };
 
-  const updateLocation = () => {
+  const updateLocation = useCallback(() => {
     const tg = window.Telegram.WebApp;
     if (!tg || !tg.LocationManager) return;
 
@@ -84,7 +85,7 @@ function App() {
         setPosition([data.latitude, data.longitude]);
       }
     });
-  };
+  }, [setPosition]);
 
   useEffect(() => {
     const setupLocation = async () => {
@@ -97,7 +98,7 @@ function App() {
     };
 
     setupLocation();
-  }, []);
+  }, [updateLocation]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
