@@ -31,6 +31,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
+  const [isLocationInitialized, setIsLocationInitialized] = useState(false);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -64,41 +65,50 @@ function App() {
       return false;
     }
 
-    if (!tg.LocationManager.isInited) {
-      await new Promise((resolve) => tg.LocationManager.init(resolve));
+    if (!isLocationInitialized) {
+      try {
+        await new Promise((resolve) => tg.LocationManager.init(resolve));
+        setIsLocationInitialized(true);
+      } catch (error) {
+        console.error("Ошибка инициализации LocationManager:", error);
+        return false;
+      }
     }
 
-    if (tg.LocationManager.isLocationAvailable) {
-      return true;
-    } else {
-      console.error("Данные о местоположении недоступны");
-      return false;
-    }
+    return tg.LocationManager.isLocationAvailable;
   };
 
   const updateLocation = useCallback(() => {
     const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager) return;
+    if (!tg || !tg.LocationManager || !isLocationInitialized) return;
 
     tg.LocationManager.getLocation((data) => {
       if (data) {
         setPosition([data.latitude, data.longitude]);
       }
     });
-  }, [setPosition]);
+  }, [setPosition, isLocationInitialized]);
 
   useEffect(() => {
+    let intervalId;
     const setupLocation = async () => {
-      const hasPermission = await initialLocationRequest();
-      if (hasPermission) {
-        updateLocation();
-        const intervalId = setInterval(updateLocation, 10000);
-        return () => clearInterval(intervalId);
+      if (!isLocationInitialized) {
+        const hasPermission = await initialLocationRequest();
+        if (hasPermission) {
+          updateLocation();
+          intervalId = setInterval(updateLocation, 10000);
+        }
       }
     };
 
     setupLocation();
-  }, [updateLocation]);
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [updateLocation, isLocationInitialized]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
