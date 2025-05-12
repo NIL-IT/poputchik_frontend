@@ -56,37 +56,48 @@ function App() {
     }
   }, [isFetched, user, setCurrentUser]);
 
-  useEffect(() => {
+  const initialLocationRequest = async () => {
     const tg = window.Telegram.WebApp;
-    if (!tg?.LocationManager) {
-      console.error("Telegram WebApp LocationManager недоступен");
-      return;
+    if (!tg || !tg.LocationManager) {
+      console.error("Telegram WebApp или LocationManager недоступен");
+      return false;
     }
 
-    let initialized = false;
-    async function initGeo() {
-      if (initialized) return;
-      initialized = true;
-
+    if (!tg.LocationManager.isInited) {
       await new Promise((resolve) => tg.LocationManager.init(resolve));
-
-      tg.LocationManager.onRequest((data) => {
-        if (!data || !data.available) {
-          console.warn("Геолокация запрещена");
-        } else {
-          setPosition([data.latitude, data.longitude]);
-        }
-      });
-
-      tg.LocationManager.getLocation((data) => {
-        if (!data) {
-          console.warn("Первоначальный запрос геолокации отклонён");
-        }
-      });
     }
 
-    initGeo().catch(console.error);
-  }, [setPosition]);
+    if (tg.LocationManager.isLocationAvailable) {
+      return true;
+    } else {
+      console.error("Данные о местоположении недоступны");
+      return false;
+    }
+  };
+
+  const updateLocation = () => {
+    const tg = window.Telegram.WebApp;
+    if (!tg || !tg.LocationManager) return;
+
+    tg.LocationManager.getLocation((data) => {
+      if (data) {
+        setPosition([data.latitude, data.longitude]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const setupLocation = async () => {
+      const hasPermission = await initialLocationRequest();
+      if (hasPermission) {
+        updateLocation();
+        const intervalId = setInterval(updateLocation, 10000);
+        return () => clearInterval(intervalId);
+      }
+    };
+
+    setupLocation();
+  }, []);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
