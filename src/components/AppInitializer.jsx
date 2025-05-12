@@ -25,22 +25,22 @@ export default function AppInitializer() {
 
   const tripsListByPassenger = useTripsListByPassenger(currentUser?.city);
 
-  useEffect(() => {
-    const setupLocation = async () => {
-      const hasPermission = await initialLocationRequest();
-      if (hasPermission) {
-        updateLocation(setPosition);
-      }
-    };
+  // useEffect(() => {
+  //   const setupLocation = async () => {
+  //     const hasPermission = await initialLocationRequest();
+  //     if (hasPermission) {
+  //       updateLocation(setPosition);
+  //     }
+  //   };
 
-    setupLocation();
-  }, []);
+  //   setupLocation();
+  // }, []);
 
-  useEffect(() => {
-    if (positon && positon.length === 2) {
-      getCityByCoordinates(setCity);
-    }
-  }, [positon]);
+  // useEffect(() => {
+  //   if (positon && positon.length === 2) {
+  //     getCityByCoordinates(setCity);
+  //   }
+  // }, [positon]);
 
   const activeTripsData = useDriversTripsList(driverId, "active");
   const startedTripsData = useDriversTripsList(driverId, "started");

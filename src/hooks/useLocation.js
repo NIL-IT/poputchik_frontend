@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useMap } from "../state/MapRoutesStore";
 
 export const useLocation = () => {
@@ -6,6 +6,7 @@ export const useLocation = () => {
   const [isLocationInitialized, setIsLocationInitialized] = useState(false);
   const [locationDenied, setLocationDenied] = useState(localStorage.getItem("locationPermission") === "denied");
   const initializationInProgress = useRef(false);
+  const locationUpdateInterval = useRef(null);
 
   const initialLocationRequest = useCallback(async () => {
     const tg = window.Telegram.WebApp;
@@ -16,7 +17,6 @@ export const useLocation = () => {
     try {
       initializationInProgress.current = true;
 
-      // Проверяем, есть ли уже разрешение
       if (localStorage.getItem("locationPermission") === "granted") {
         setIsLocationInitialized(true);
         return true;
@@ -59,28 +59,32 @@ export const useLocation = () => {
   }, [setPosition, locationDenied, isLocationInitialized]);
 
   useEffect(() => {
-    let intervalId;
+    let isMounted = true;
 
     const setupLocation = async () => {
       if (locationDenied) return;
 
+      if (locationUpdateInterval.current) {
+        clearInterval(locationUpdateInterval.current);
+      }
+
       const hasPermission = await initialLocationRequest();
-      if (hasPermission) {
+      if (hasPermission && isMounted) {
         updateLocation();
-        if (isLocationInitialized) {
-          intervalId = setInterval(updateLocation, 10000);
-        }
+
+        locationUpdateInterval.current = setInterval(updateLocation, 60000);
       }
     };
 
     setupLocation();
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+      isMounted = false;
+      if (locationUpdateInterval.current) {
+        clearInterval(locationUpdateInterval.current);
       }
     };
-  }, [initialLocationRequest, updateLocation, locationDenied, isLocationInitialized]);
+  }, [initialLocationRequest, updateLocation, locationDenied]);
 
   return { locationDenied, isLocationInitialized };
 };
