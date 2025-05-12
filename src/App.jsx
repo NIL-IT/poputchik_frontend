@@ -57,12 +57,37 @@ function App() {
     }
   }, [isFetched, user, setCurrentUser]);
 
-  const initLocationRef = useRef(false);
-
   useEffect(() => {
-    if (initLocationRef.current) return;
-    initializeGeo(setPosition);
-  }, [initLocationRef]);
+    const tg = window.Telegram.WebApp;
+    if (!tg?.LocationManager) {
+      console.error("Telegram WebApp LocationManager недоступен");
+      return;
+    }
+
+    let initialized = false;
+    async function initGeo() {
+      if (initialized) return;
+      initialized = true;
+
+      await new Promise((resolve) => tg.LocationManager.init(resolve));
+
+      tg.LocationManager.onRequest((data) => {
+        if (!data || !data.available) {
+          console.warn("Геолокация запрещена");
+        } else {
+          setPosition([data.latitude, data.longitude]);
+        }
+      });
+
+      tg.LocationManager.getLocation((data) => {
+        if (!data) {
+          console.warn("Первоначальный запрос геолокации отклонён");
+        }
+      });
+    }
+
+    initGeo().catch(console.error);
+  }, [setPosition]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
