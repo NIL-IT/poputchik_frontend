@@ -61,26 +61,12 @@ function App() {
 
   useEffect(() => {
     if (initLocationRef.current) return;
-    initLocationRef.current = true;
-
-    const tg = window.Telegram.WebApp;
-    if (!tg?.LocationManager) {
-      console.error("Telegram WebApp LocationManager недоступен");
-      return;
-    }
-
-    let intervalId;
-
-    initializeGeo(setPosition);
-
-    return () => {
-      clearInterval(intervalId);
-    };
+    initializeGeo(setPosition).catch(console.error);
   }, [setPosition]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
-      // getCityByCoordinates();
+      getCityByCoordinates();
     }
   }, [positon]);
 
