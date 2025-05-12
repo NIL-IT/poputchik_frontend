@@ -13,7 +13,7 @@ import { useMap } from "../state/MapRoutesStore";
 import { getCityByCoordinates, initialLocationRequest, updateLocation } from "../utils/geoInit";
 
 export default function AppInitializer() {
-  const { setPosition, positon, setCity } = useMap();
+  const { setPosition, positon, setCity, setCenter } = useMap();
   const { currentUser, currentRole } = useUserStore();
   const hasDriverProfile = Boolean(currentUser?.driver_profile?.id);
   const isDriver = useUserStore((state) => state.currentRole === "driver");
@@ -25,22 +25,22 @@ export default function AppInitializer() {
 
   const tripsListByPassenger = useTripsListByPassenger(currentUser?.city);
 
-  // useEffect(() => {
-  //   const setupLocation = async () => {
-  //     const hasPermission = await initialLocationRequest();
-  //     if (hasPermission) {
-  //       updateLocation(setPosition);
-  //     }
-  //   };
+  useEffect(() => {
+    const setupLocation = async () => {
+      const hasPermission = await initialLocationRequest();
+      if (hasPermission) {
+        updateLocation(setPosition, setCenter);
+      }
+    };
 
-  //   setupLocation();
-  // }, []);
+    setupLocation();
+  }, []);
 
-  // useEffect(() => {
-  //   if (positon && positon.length === 2) {
-  //     getCityByCoordinates(setCity);
-  //   }
-  // }, [positon]);
+  useEffect(() => {
+    if (positon && positon.length === 2) {
+      getCityByCoordinates(setCity);
+    }
+  }, [positon]);
 
   const activeTripsData = useDriversTripsList(driverId, "active");
   const startedTripsData = useDriversTripsList(driverId, "started");

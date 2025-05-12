@@ -43,13 +43,14 @@ export const initialLocationRequest = async () => {
   }
 };
 
-export const updateLocation = (setPosition) => {
+export const updateLocation = (setPosition, setCenter) => {
   const tg = window.Telegram.WebApp;
   if (!tg || !tg.LocationManager) return;
 
   tg.LocationManager.getLocation((data) => {
     if (data) {
       setPosition([data.latitude, data.longitude]);
+      setCenter([data.latitude, data.longitude]);
     }
   });
 };

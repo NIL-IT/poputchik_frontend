@@ -3,13 +3,11 @@ import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
 import ProtectedRoute from "./components/Wrappers/ProtectedRoute";
 import UserPage from "./pages/UserPage";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useUserStore } from "./state/UserStore";
-import { API_KEY } from "./api/api";
 import { useUserById } from "./api/user";
 import PreviewPage from "./pages/PreviewPage";
 import MainModals from "./components/Modals/MainModals";
-import { useMap } from "./state/MapRoutesStore";
 import HistoryPage from "./pages/HistoryPage";
 import ActiveDrivesPage from "./pages/ActiveDrivesPage";
 import UserReviews from "./pages/UserReviews";
@@ -23,15 +21,12 @@ import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
 import AppInitializer from "./components/AppInitializer";
 import Success from "./pages/Success";
-import { useLocation } from "./hooks/useLocation";
 
 function App() {
   const { setCurrentUser } = useUserStore();
-
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-  useLocation();
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
