@@ -32,6 +32,7 @@ function App() {
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [isLocationInitialized, setIsLocationInitialized] = useState(false);
+  const [locationDenied, setLocationDenied] = useState(false);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -60,18 +61,30 @@ function App() {
 
   const initialLocationRequest = async () => {
     const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager) {
-      console.error("Telegram WebApp или LocationManager недоступен");
+    if (!tg || !tg.LocationManager || locationDenied) {
       return false;
     }
 
     try {
-      await new Promise((resolve) => tg.LocationManager.init(resolve));
+      await new Promise((resolve, reject) => {
+        tg.LocationManager.init((error) => {
+          if (error) {
+            setLocationDenied(true);
+            reject(error);
+          }
+          resolve();
+        });
+      });
+
       const isAvailable = tg.LocationManager.isLocationAvailable;
+      if (!isAvailable) {
+        setLocationDenied(true);
+      }
       setIsLocationInitialized(true);
       return isAvailable;
     } catch (error) {
       console.error("Ошибка инициализации LocationManager:", error);
+      setLocationDenied(true);
       return false;
     }
   };
@@ -90,10 +103,12 @@ function App() {
   useEffect(() => {
     let intervalId;
     const setupLocation = async () => {
-      const hasPermission = await initialLocationRequest();
-      if (hasPermission) {
-        updateLocation();
-        intervalId = setInterval(updateLocation, 10000);
+      if (!locationDenied) {
+        const hasPermission = await initialLocationRequest();
+        if (hasPermission) {
+          updateLocation();
+          intervalId = setInterval(updateLocation, 10000);
+        }
       }
     };
 
@@ -104,7 +119,7 @@ function App() {
         clearInterval(intervalId);
       }
     };
-  }, [updateLocation]);
+  }, [updateLocation, locationDenied]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
