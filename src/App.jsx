@@ -23,6 +23,7 @@ import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
 import AppInitializer from "./components/AppInitializer";
 import Success from "./pages/Success";
+import { useLocation } from "./hooks/useLocation";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -30,8 +31,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-  const [isLocationInitialized, setIsLocationInitialized] = useState(false);
-  const [locationDenied, setLocationDenied] = useState(localStorage.getItem("locationPermission") === "denied");
+  useLocation();
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -56,76 +56,6 @@ function App() {
       setIsUserLoaded(true);
     }
   }, [isFetched, user, setCurrentUser]);
-
-  const initialLocationRequest = async () => {
-    const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager || locationDenied) {
-      return false;
-    }
-
-    try {
-      const result = await new Promise((resolve) => {
-        tg.LocationManager.init((error) => {
-          if (error) {
-            localStorage.setItem("locationPermission", "denied");
-            setLocationDenied(true);
-            resolve(false);
-          } else {
-            resolve(true);
-          }
-        });
-      });
-
-      if (!result) return false;
-
-      const isAvailable = tg.LocationManager.isLocationAvailable;
-      if (!isAvailable) {
-        localStorage.setItem("locationPermission", "denied");
-        setLocationDenied(true);
-      } else {
-        localStorage.setItem("locationPermission", "granted");
-      }
-      setIsLocationInitialized(true);
-      return isAvailable;
-    } catch (error) {
-      console.error("Ошибка инициализации LocationManager:", error);
-      localStorage.setItem("locationPermission", "denied");
-      setLocationDenied(true);
-      return false;
-    }
-  };
-
-  const updateLocation = useCallback(() => {
-    const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager) return;
-
-    tg.LocationManager.getLocation((data) => {
-      if (data) {
-        setPosition([data.latitude, data.longitude]);
-      }
-    });
-  }, [setPosition]);
-
-  useEffect(() => {
-    let intervalId;
-    const setupLocation = async () => {
-      if (!locationDenied) {
-        const hasPermission = await initialLocationRequest();
-        if (hasPermission) {
-          updateLocation();
-          intervalId = setInterval(updateLocation, 10000);
-        }
-      }
-    };
-
-    setupLocation();
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [updateLocation, locationDenied]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
