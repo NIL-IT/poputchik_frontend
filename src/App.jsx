@@ -21,7 +21,6 @@ import AnimatedRoute from "./components/Wrappers/AnimatedRoute";
 import { pageSlideLeft, slideDownIn, slideUpIn } from "./utils/animation";
 import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
-import { getStatus } from "./api/payment";
 import AppInitializer from "./components/AppInitializer";
 import Success from "./pages/Success";
 
@@ -32,12 +31,11 @@ function App() {
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [isLocationInitialized, setIsLocationInitialized] = useState(false);
-  const [locationDenied, setLocationDenied] = useState(false);
+  const [locationDenied, setLocationDenied] = useState(localStorage.getItem("locationPermission") === "denied");
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     if (!tg) return;
-    getStatus();
     tg.ready();
     tg.expand();
     tg.setHeaderColor("#F6F6F6");
@@ -66,24 +64,32 @@ function App() {
     }
 
     try {
-      await new Promise((resolve, reject) => {
+      const result = await new Promise((resolve) => {
         tg.LocationManager.init((error) => {
           if (error) {
+            localStorage.setItem("locationPermission", "denied");
             setLocationDenied(true);
-            reject(error);
+            resolve(false);
+          } else {
+            resolve(true);
           }
-          resolve();
         });
       });
 
+      if (!result) return false;
+
       const isAvailable = tg.LocationManager.isLocationAvailable;
       if (!isAvailable) {
+        localStorage.setItem("locationPermission", "denied");
         setLocationDenied(true);
+      } else {
+        localStorage.setItem("locationPermission", "granted");
       }
       setIsLocationInitialized(true);
       return isAvailable;
     } catch (error) {
       console.error("Ошибка инициализации LocationManager:", error);
+      localStorage.setItem("locationPermission", "denied");
       setLocationDenied(true);
       return false;
     }
