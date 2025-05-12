@@ -80,7 +80,7 @@ function App() {
 
   useEffect(() => {
     if (positon && positon.length === 2) {
-      getCityByCoordinates();
+      // getCityByCoordinates();
     }
   }, [positon]);
 
