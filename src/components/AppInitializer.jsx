@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useBookedTripsList, usePassengerList } from "../api/passenger";
 import {
-  getTripsList,
   useDriversTripsList,
   usePassengerTripsList,
   useRequests,

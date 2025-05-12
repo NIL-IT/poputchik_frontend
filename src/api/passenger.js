@@ -25,6 +25,7 @@ export function usePassengerList(driver_id) {
     queryFn: () => getPassengerByDriver(driver_id),
     enabled: !!driver_id,
     select: (data) => data.data,
+    refetchInterval: 30000,
   });
   return data;
 }
@@ -38,6 +39,7 @@ export function useBookedTripsList(passenger_id) {
     queryKey: ["bookedTripList", passenger_id],
     queryFn: () => getBookedTripsByPassengerId(passenger_id),
     enabled: !!passenger_id,
+    refetchInterval: 30_000,
     select: (data) => data.data,
   });
   return data;

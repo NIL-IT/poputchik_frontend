@@ -11,10 +11,12 @@ export function useTripsList(city) {
     queryKey: ["tripsList", city],
     queryFn: () => getTripsList(city),
     enabled: !!city,
+    refetchInterval: 30_000,
     select: (data) => data?.data || [],
   });
   return data;
 }
+
 export async function getTripsListByPassenger(city) {
   return axios.get(`${url}/trips/driver/city_from/${city}`);
 }
@@ -24,6 +26,7 @@ export function useTripsListByPassenger(city) {
     queryKey: ["tripsListByPass", city],
     queryFn: () => getTripsListByPassenger(city),
     enabled: !!city,
+    refetchInterval: 30_000,
     select: (data) => data?.data || [],
   });
   return data;
@@ -73,6 +76,7 @@ export function useDriversTripsList(id, state) {
     queryKey: ["tripsList", id, state],
     queryFn: () => getDrviersTrips(id, state),
     enabled: !!id,
+    refetchInterval: 30_000,
     select: (data) => data.data,
   });
   return data;
@@ -104,7 +108,7 @@ export async function bookedTripByDriver(driver_id, trip_id) {
   }
 }
 
-async function getPassengerTrips(id, state) {
+export async function getPassengerTrips(id, state) {
   return axios.get(`${url}/trips/passenger/${id}?trip_status=${state}`);
 }
 export function usePassengerTripsList(id, state) {
@@ -164,7 +168,8 @@ export function useRequests(driver_id) {
   const { data } = useQuery({
     queryKey: ["requests", driver_id],
     queryFn: () => getRequestsByDriverId(driver_id),
-    enabled: !!driver_id, // добавлено, чтобы пропускать запрос при null
+    enabled: !!driver_id,
+    refetchInterval: 30_000,
     select: (data) => data.data,
   });
   return data;

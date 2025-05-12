@@ -21,14 +21,18 @@ export async function getUserById(id) {
 }
 
 export function useUserById(id) {
-  const { data } = useQuery({
+  const query = useQuery({
     queryKey: ["user", id],
     queryFn: () => (id ? getUserById(id) : null),
     enabled: !!id,
-    select: (data) => data.data,
+    select: (resp) => resp.data,
   });
 
-  return { data };
+  return {
+    user: query.data,
+    isFetched: query.isFetched,
+    isError: query.isError,
+  };
 }
 
 export async function updateUser(data) {

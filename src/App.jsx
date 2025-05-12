@@ -29,8 +29,8 @@ function App() {
   const { setCurrentUser } = useUserStore();
   const { setPosition, positon, setCity } = useMap();
   const [userId, setUserId] = useState(null);
-
-  const { data: user } = useUserById(userId);
+  const { user, isFetched } = useUserById(userId);
+  const [isUserLoaded, setIsUserLoaded] = useState(false);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -47,12 +47,15 @@ function App() {
       setUserId(userData.id);
     }
   }, []);
-
+  console.log(isUserLoaded);
   useEffect(() => {
-    if (user) {
-      setCurrentUser(user);
+    if (isFetched) {
+      if (user) {
+        setCurrentUser(user);
+      }
+      setIsUserLoaded(true);
     }
-  }, [user, setCurrentUser]);
+  }, [isFetched, user, setCurrentUser]);
 
   const initialLocationRequest = async () => {
     const tg = window.Telegram.WebApp;
@@ -138,7 +141,7 @@ function App() {
             path='/'
             element={
               <AnimatedRoute>
-                <StartPage />
+                <StartPage isUserLoaded={isUserLoaded} />
               </AnimatedRoute>
             }
           />

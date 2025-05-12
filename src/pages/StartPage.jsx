@@ -4,7 +4,7 @@ import { useUserStore } from "../state/UserStore";
 import { useState } from "react";
 import Welcome from "../components/Welcome";
 
-export default function StartPage() {
+export default function StartPage({ isUserLoaded }) {
   const { currentUser, changeCurrentRole, currentRole } = useUserStore();
   const isDriver = currentRole === "driver";
   const navigate = useNavigate();
@@ -69,6 +69,7 @@ export default function StartPage() {
     <div className='relative min-h-screen flex flex-col items-center '>
       {!toReg ? (
         <Welcome
+          isUserLoaded={isUserLoaded}
           func={navigateToRegister}
           step={switcherPos}
         />
