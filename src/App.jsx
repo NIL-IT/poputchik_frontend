@@ -61,7 +61,7 @@ function App() {
 
   useEffect(() => {
     if (initLocationRef.current) return;
-    initializeGeo(setPosition).catch(console.error);
+    // initializeGeo(setPosition);
   }, [setPosition]);
 
   useEffect(() => {
