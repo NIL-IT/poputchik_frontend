@@ -65,39 +65,35 @@ function App() {
       return false;
     }
 
-    if (!isLocationInitialized) {
-      try {
-        await new Promise((resolve) => tg.LocationManager.init(resolve));
-        setIsLocationInitialized(true);
-      } catch (error) {
-        console.error("Ошибка инициализации LocationManager:", error);
-        return false;
-      }
+    try {
+      await new Promise((resolve) => tg.LocationManager.init(resolve));
+      const isAvailable = tg.LocationManager.isLocationAvailable;
+      setIsLocationInitialized(true);
+      return isAvailable;
+    } catch (error) {
+      console.error("Ошибка инициализации LocationManager:", error);
+      return false;
     }
-
-    return tg.LocationManager.isLocationAvailable;
   };
 
   const updateLocation = useCallback(() => {
     const tg = window.Telegram.WebApp;
-    if (!tg || !tg.LocationManager || !isLocationInitialized) return;
+    if (!tg || !tg.LocationManager) return;
 
     tg.LocationManager.getLocation((data) => {
       if (data) {
         setPosition([data.latitude, data.longitude]);
       }
     });
-  }, [setPosition, isLocationInitialized]);
+  }, [setPosition]);
 
   useEffect(() => {
     let intervalId;
     const setupLocation = async () => {
-      if (!isLocationInitialized) {
-        const hasPermission = await initialLocationRequest();
-        if (hasPermission) {
-          updateLocation();
-          intervalId = setInterval(updateLocation, 10000);
-        }
+      const hasPermission = await initialLocationRequest();
+      if (hasPermission) {
+        updateLocation();
+        intervalId = setInterval(updateLocation, 10000);
       }
     };
 
@@ -108,7 +104,7 @@ function App() {
         clearInterval(intervalId);
       }
     };
-  }, [updateLocation, isLocationInitialized]);
+  }, [updateLocation]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
