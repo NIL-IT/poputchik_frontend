@@ -61,8 +61,8 @@ function App() {
 
   useEffect(() => {
     if (initLocationRef.current) return;
-    // initializeGeo(setPosition);
-  }, [setPosition]);
+    initializeGeo(setPosition);
+  }, [initLocationRef]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
