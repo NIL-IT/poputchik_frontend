@@ -68,7 +68,7 @@ function App() {
       if (initialized) return;
       initialized = true;
 
-      tg.LocationManager.init();
+      await new Promise((resolve) => tg.LocationManager.init(resolve));
 
       tg.LocationManager.onRequest((data) => {
         if (!data || !data.available) {
