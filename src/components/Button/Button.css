@@ -8,6 +8,10 @@
   color: #fff;
 }
 
+.btn:disabled {
+  background: #f69757;
+}
+
 .btn.large {
   height: 54px;
   width: 350px;
