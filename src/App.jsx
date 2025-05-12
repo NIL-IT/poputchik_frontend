@@ -56,40 +56,35 @@ function App() {
     }
   }, [isFetched, user, setCurrentUser]);
 
+  const initLocationRef = useRef(false);
+
   useEffect(() => {
+    if (initLocationRef.current) return;
+    initLocationRef.current = true;
+
     const tg = window.Telegram.WebApp;
     if (!tg?.LocationManager) {
       console.error("Telegram WebApp LocationManager недоступен");
       return;
     }
 
-    let intervalId;
-
     (async () => {
       if (!tg.LocationManager.isInited) {
         await new Promise((resolve) => tg.LocationManager.init(resolve));
       }
-
       tg.LocationManager.getLocation((data) => {
         if (data) setPosition([data.latitude, data.longitude]);
       });
 
-      intervalId = window.setInterval(() => {
+      const intervalId = window.setInterval(() => {
         tg.LocationManager.getLocation((data) => {
           if (data) setPosition([data.latitude, data.longitude]);
         });
       }, 10000);
-    })();
 
-    return () => {
-      clearInterval(intervalId);
-    };
+      return () => clearInterval(intervalId);
+    })();
   }, [setPosition]);
-  useEffect(() => {
-    if (positon && positon.length === 2) {
-      getCityByCoordinates();
-    }
-  }, [positon]);
 
   const getCityByCoordinates = async () => {
     try {
