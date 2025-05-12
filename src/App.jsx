@@ -24,6 +24,7 @@ import Info from "./pages/Info";
 import { getStatus } from "./api/payment";
 import AppInitializer from "./components/AppInitializer";
 import Success from "./pages/Success";
+import { initializeGeo } from "./utils/geoInit";
 
 function App() {
   const { setCurrentUser } = useUserStore();
@@ -68,23 +69,20 @@ function App() {
       return;
     }
 
-    (async () => {
-      if (!tg.LocationManager.isInited) {
-        await new Promise((resolve) => tg.LocationManager.init(resolve));
-      }
-      tg.LocationManager.getLocation((data) => {
-        if (data) setPosition([data.latitude, data.longitude]);
-      });
+    let intervalId;
 
-      const intervalId = window.setInterval(() => {
-        tg.LocationManager.getLocation((data) => {
-          if (data) setPosition([data.latitude, data.longitude]);
-        });
-      }, 10000);
+    initializeGeo(setPosition);
 
-      return () => clearInterval(intervalId);
-    })();
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [setPosition]);
+
+  useEffect(() => {
+    if (positon && positon.length === 2) {
+      getCityByCoordinates();
+    }
+  }, [positon]);
 
   const getCityByCoordinates = async () => {
     try {
