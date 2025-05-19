@@ -181,7 +181,7 @@ export default function DriveInfo() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder='Введите комментарий (необязательно)'
-            className='w-full min-h-[237px] bg-[#F6F6F6] rounded-[15px] border border-[#B4B4B4] mb-10 p-4 text-[14px] leading-4 text-[#919191]'
+            className='w-full min-h-[237px] bg-[#F6F6F6] rounded-[15px] border border-[#B4B4B4] mb-10 p-4 text-[14px] leading-4 text-[#919191] focus:border-none'
           />
         ) : (
           <>
@@ -240,7 +240,7 @@ export default function DriveInfo() {
                       </g>
                     </svg>
                   </button>
-                  <button
+                  {/* <button
                     className='w-10 h-10 bg-[#4CE5B1] rounded-full flex justify-center items-center'
                     onClick={() => (window.location.href = `tel:${targetUser?.phone_number}`)}>
                     <svg
@@ -274,7 +274,7 @@ export default function DriveInfo() {
                         />
                       </g>
                     </svg>
-                  </button>
+                  </button> */}
                 </div>
               )}
             </div>

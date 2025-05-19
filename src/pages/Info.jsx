@@ -5,13 +5,13 @@ export default function Info() {
   const navigate = useNavigate();
 
   return (
-    <div className='flex flex-col min-h-screen w-full'>
+    <div className='flex  flex-col min-h-screen w-full'>
       <CloseBtn
-        className='absolute top-[50px] right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
+        className='absolute top-[100px] right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
         onClick={() => navigate("/")}
       />
 
-      <div className='pt-[60px] h-[170px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold w-full'>
+      <div className='pt-[144px] pb-10 h-[170px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold w-full'>
         <h1>Информация о приложении</h1>
       </div>
 

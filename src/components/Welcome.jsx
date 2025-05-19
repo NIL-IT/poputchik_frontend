@@ -4,7 +4,6 @@ import Footer from "./Footer/Footer";
 import Switcher from "./Switcher/Switcher";
 
 export default function Welcome({ func, step, isUserLoaded }) {
-  console.log(isUserLoaded);
   return (
     <div className='flex justify-center items-center h-screen w-full'>
       <img

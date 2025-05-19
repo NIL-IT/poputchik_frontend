@@ -2,9 +2,9 @@ import PhoneInput from "react-phone-number-input";
 import { Link } from "react-router-dom";
 import Select from "../../../Select/Select";
 import Input from "../../../Input/Input";
+import { useRegistrationStore } from "../../../../state/useRegistration";
 
 export default function RegistrationInfo({
-  setName,
   handleFileChange,
   avatar,
   visibleAvatarPhoto,
@@ -13,16 +13,13 @@ export default function RegistrationInfo({
   phone,
   handlePhoneChange,
   email,
-  setEmail,
   about,
-  setAbout,
   city,
   handleCityChange,
   privacyAccepted,
-  setPrivacyAccepted,
   infoAccepted,
-  setInfoAccepted,
 }) {
+  const {setField} = useRegistrationStore();
   return (
     <>
       <fieldset className='w-[121px] h-[121px] mb-10 relative'>
@@ -53,7 +50,7 @@ export default function RegistrationInfo({
           type='text'
           placeholder='Имя'
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setField('name', e.target.value)}
           maxLength='17'
         />
         {formError.name && <p className='text-red-500 text-sm mt-1'>{formError.name}</p>}
@@ -77,7 +74,7 @@ export default function RegistrationInfo({
           type='email'
           placeholder='Почта'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setField('email', e.target.value)}
         />
         {formError.email && <p className='text-red-500 text-sm mt-1'>{formError.email}</p>}
       </div>
@@ -87,7 +84,7 @@ export default function RegistrationInfo({
           type='text'
           placeholder='О себе'
           value={about}
-          onChange={(e) => setAbout(e.target.value)}
+          onChange={(e) => setField('about', e.target.value)}
         />
       </div>
 
@@ -107,7 +104,7 @@ export default function RegistrationInfo({
             type='checkbox'
             id='privacy'
             checked={privacyAccepted}
-            onChange={(e) => setPrivacyAccepted(e.target.checked)}
+            onChange={(e) => setField('privacyAccepted', e.target.checked)}
             className='mt-1'
             required
           />
@@ -130,7 +127,7 @@ export default function RegistrationInfo({
             type='checkbox'
             id='privacy'
             checked={infoAccepted}
-            onChange={(e) => setInfoAccepted(e.target.checked)}
+            onChange={(e) => setField('infoAccepted', e.target.checked)}
             className='mt-1'
             required
           />

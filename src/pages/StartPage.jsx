@@ -1,24 +1,25 @@
 import Registration from "../components/Registration/Registration";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useUserStore } from "../state/UserStore";
 import { useState } from "react";
 import Welcome from "../components/Welcome";
+import { useRegistrationStore } from "../state/useRegistration";
 
 export default function StartPage({ isUserLoaded }) {
   const { currentUser, changeCurrentRole, currentRole } = useUserStore();
   const isDriver = currentRole === "driver";
   const navigate = useNavigate();
   const [isAuth, setAuth] = useState(false);
-  const [toReg, setToReg] = useState(false);
+  const {toReg, setField} = useRegistrationStore(); 
   const [step, setStep] = useState(0);
   const [switcherPos, setSwitcherPos] = useState(-1);
   const navigateToRegister = (value) => {
     if (currentUser && currentUser.name) {
       if (value == "passenger" && !currentUser.passenger_profile) {
-        setToReg(true);
+        setField('toReg', true);
         setSwitcherPos((prev) => prev + 1);
       } else if (value == "driver" && !currentUser.driver_profile) {
-        setToReg(true);
+        setField('toReg', true);
         setSwitcherPos((prev) => prev + 1);
         setStep(1);
       } else {
@@ -26,14 +27,14 @@ export default function StartPage({ isUserLoaded }) {
         navigate("/main");
       }
     } else {
-      setToReg(true);
+      setField('toReg', true);
       setSwitcherPos((prev) => prev + 1);
     }
     changeCurrentRole(value);
   };
   const backFunc = () => {
-    if (step === 1 && !currentUser.driver_profile && currentRole === "driver") {
-      setToReg(false);
+    if (step === 0 && !currentUser.driver_profile && currentRole === "driver") {
+      setField('toReg', false);
       setSwitcherPos(-1);
     }
 
@@ -42,12 +43,11 @@ export default function StartPage({ isUserLoaded }) {
 
       setSwitcherPos((prev) => prev - 1);
     } else if (step == 0) {
-      setToReg(false);
+      setField('toReg', false);
 
       setSwitcherPos((prev) => prev - 1);
     }
   };
-
   const nextStep = () => {
     if (step < 1 && currentRole == "passenger") {
       setStep((prev) => prev + 1);

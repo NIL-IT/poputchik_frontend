@@ -1,25 +1,22 @@
 import PropTypes from "prop-types";
 import Input from "../../../Input/Input";
+import { useRegistrationStore } from "../../../../state/useRegistration";
 
 export default function ChooseCar({
   selectedCar,
-  setSelectedCar,
   carNumber,
   carModel,
   carMake,
   carColor,
-  setCarNumber,
-  setCarModel,
-  setCarMake,
-  setCarColor,
   formError,
 }) {
+  const {setField} = useRegistrationStore();
   return (
     <div className='flex flex-col gap-5'>
       <div className='relative flex justify-between'>
         <div
           className='relative w-[90px] h-[90px] rounded-[16px] flex justify-center items-center bg-white'
-          onClick={() => setSelectedCar("sedan")}>
+          onClick={() => setField('carType', "sedan")}>
           <svg
             width='62'
             height='30'
@@ -56,7 +53,7 @@ export default function ChooseCar({
         </div>
         <div
           className='relative w-[90px] h-[90px] rounded-[16px] flex justify-center items-center bg-white'
-          onClick={() => setSelectedCar("van")}>
+          onClick={() => setField('carType', "van")}>
           <svg
             width='62'
             height='36'
@@ -94,7 +91,7 @@ export default function ChooseCar({
         </div>
         <div
           className='relative w-[90px] h-[90px] rounded-[16px] flex justify-center items-center bg-white'
-          onClick={() => setSelectedCar("truck")}>
+          onClick={() => setField('carType', "truck")}>
           <svg
             width='62'
             height='38'
@@ -156,28 +153,28 @@ export default function ChooseCar({
         </div>
       </div>
       <Input
-        onChange={(e) => setCarNumber(e.target.value)}
+        onChange={(e) => setField('carNumber', e.target.value)}
         placeholder={"Номер"}
         required
         value={carNumber}
       />
       {formError.carNumber && <p className='text-red-500 text-sm'>{formError.carNumber}</p>}
       <Input
-        onChange={(e) => setCarMake(e.target.value)}
+        onChange={(e) => setField('carMake',e.target.value)}
         placeholder={"Марка"}
         value={carMake}
         required
       />
       {formError.carMake && <p className='text-red-500 text-sm'>{formError.carMake}</p>}
       <Input
-        onChange={(e) => setCarModel(e.target.value)}
+        onChange={(e) => setField('carModel',e.target.value)}
         placeholder={"Модель"}
         value={carModel}
         required
       />
       {formError.carModel && <p className='text-red-500 text-sm'>{formError.carModel}</p>}
       <Input
-        onChange={(e) => setCarColor(e.target.value)}
+        onChange={(e) => setField('carColor',e.target.value)}
         placeholder={"Цвет"}
         required
         value={carColor}

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import backIcon from "../../assets/icons/arrow-left.svg";
 import { useEffect, useState } from "react";
@@ -14,37 +14,36 @@ import { swipeLeft } from "../../utils/animation";
 import { validateRegistrationStep } from "../../utils/regitarionValidation";
 import ChooseCar from "./components/ChooseCar/ChooseCar";
 import RegistrationInfo from "./components/RegistrationInfo/RegistrationInfo";
+import { useRegistrationStore } from "../../state/useRegistration";
 
 export default function Registration({ backFunc, step, nextStep }) {
   const { currentRole, setCurrentUser, currentUser } = useUserStore();
   const isDriver = currentRole === "driver";
   const [userId, setUserId] = useState(null);
-  const [phone, setPhone] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [city, setCity] = useState("");
-  const [avatar, setAvatar] = useState(null);
-  const [about, setAbout] = useState("");
-
-  const [carNumber, setCarNumber] = useState("");
-  const [carModel, setCarModel] = useState("");
-  const [carMake, setCarMake] = useState("");
-  const [carColor, setCarColor] = useState("");
-  const [carType, setCarType] = useState("");
-
-  const [visibleAvatarPhoto, setVisibleAvatarPhoto] = useState("");
-  const [visiblePassportPhoto, setVisiblePassportPhoto] = useState("");
-  const [visibleLicensePhoto, setVisibleLicensePhoto] = useState("");
-  const [visibleCarPhoto, setVisibleCarPhoto] = useState("");
-
-  const [passportPhoto, setPassportPhoto] = useState("");
-  const [carPhoto, setCarPhoto] = useState("");
-
-  const [driverLicensePhoto, setDriverLicensePhoto] = useState("");
-  const [formError, setFormError] = useState({});
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [infoAccepted, setInfoAccepted] = useState(false);
-
+  const {
+    name,
+    phone,
+    email,
+    city,
+    about,
+    avatar,
+    visibleAvatarPhoto,
+    visiblePassportPhoto,
+    visibleLicensePhoto,
+    visibleCarPhoto,
+    passportPhoto,
+    carPhoto,
+    driverLicensePhoto,
+    carNumber,
+    carModel,
+    carMake,
+    carColor,
+    carType,
+    privacyAccepted,
+    infoAccepted,
+    setField
+  } = useRegistrationStore();
+const [formError, setFormError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -63,15 +62,15 @@ export default function Registration({ backFunc, step, nextStep }) {
         return;
       }
       const profile_photo = await urlToFile(currentUser.profile_photo);
-      setAvatar(profile_photo);
-      setPassportPhoto(currentUser.passport_photo);
-      setCity(currentUser.city);
-      setName(currentUser.name);
-      setPhone(currentUser.phone_number);
-      setEmail(currentUser.email);
-      setVisibleAvatarPhoto(currentUser.profile_photo);
-      setVisiblePassportPhoto(currentUser.passport_photo);
-      setAbout(currentUser.info);
+      setField('avatar', profile_photo);
+      setField('passportPhoto', currentUser.passport_photo);
+      setField('city', currentUser.city);
+      setField('name',currentUser.name);
+      setField('phone',currentUser.phone_number);
+      setField('email',currentUser.email);
+      setField('visibleAvatarPhoto',currentUser.profile_photo);
+      setField('visiblePassportPhoto',currentUser.passport_photo);
+      setField('about', currentUser.info);
     };
     loadData();
   }, [currentUser, currentRole]);
@@ -153,26 +152,26 @@ export default function Registration({ backFunc, step, nextStep }) {
     setCurrentUser(data);
   };
 
-  const handleCityChange = (value) => setCity(value);
-  const handlePhoneChange = (value) => setPhone(value);
+  const handleCityChange = (value) => setField('city',value);
+  const handlePhoneChange = (value) => setField('phone',value);
   const handleFileChange = (e) => {
-    setAvatar(e.target.files[0]);
-    setVisibleAvatarPhoto(URL.createObjectURL(e.target.files[0]));
+    setField('avatar', e.target.files[0]);
+    setField('visibleAvatarPhoto', URL.createObjectURL(e.target.files[0]));
   };
 
   const handlePassportChange = (e) => {
-    setPassportPhoto(e.target.files[0]);
-    setVisiblePassportPhoto(URL.createObjectURL(e.target.files[0]));
+    setField('passportPhoto', e.target.files[0]);
+    setField('visiblePassportPhoto', URL.createObjectURL(e.target.files[0]));
   };
 
   const handleLicenseChange = (e) => {
-    setDriverLicensePhoto(e.target.files[0]);
-    setVisibleLicensePhoto(URL.createObjectURL(e.target.files[0]));
+    setField('driverLicensePhoto',e.target.files[0]);
+    setField('visibleLicensePhoto',URL.createObjectURL(e.target.files[0]));
   };
 
   const handleCarChange = (e) => {
-    setCarPhoto(e.target.files[0]);
-    setVisibleCarPhoto(URL.createObjectURL(e.target.files[0]));
+    setField('carPhoto', e.target.files[0]);
+    setField('visibleCarPhoto',URL.createObjectURL(e.target.files[0]));
   };
 
   const renderTitle = () => {
@@ -188,22 +187,17 @@ export default function Registration({ backFunc, step, nextStep }) {
   const infoProps = {
     handleFileChange,
     avatar,
-    setName,
     visibleAvatarPhoto,
     formError,
     name,
     phone,
     handlePhoneChange,
     email,
-    setEmail,
     about,
-    setAbout,
     city,
     handleCityChange,
     privacyAccepted,
     infoAccepted,
-    setInfoAccepted,
-    setPrivacyAccepted,
   };
   const photoProps = {
     handlePassportChange,
@@ -219,22 +213,17 @@ export default function Registration({ backFunc, step, nextStep }) {
   };
   const carProps = {
     selectedCar: carType,
-    setSelectedCar: setCarType,
     carNumber,
     carModel,
     carMake,
     carColor,
-    setCarNumber,
-    setCarModel,
-    setCarMake,
-    setCarColor,
     formError,
   };
 
   return (
     <main className='container-custom px-5 flex flex-col justify-between pb-6 relative w-full min-h-screen'>
       <div>
-        <header className='pt-[30px] flex items-center mb-1'>
+        <header className='pt-[66px] flex items-center mb-1'>
           <button
             className='absolute flex items-center'
             onClick={backFunc}>

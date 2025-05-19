@@ -1,7 +1,7 @@
 import "./Calendar.css";
 import { useTrip } from "../../../../state/TripStore";
 import { useModal } from "../../../../state/ModalStore";
-import { useState } from "react";
+import {  useState } from "react";
 import Button from "../../../Button/Button";
 import Input from "../../../Input/Input";
 
@@ -30,11 +30,15 @@ function CalendarComponent() {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const currentMonthIndex = today.getMonth();
+
+  const visibleMonths = months.slice(currentMonthIndex);
 
   const renderDays = (monthIndex) => {
-    const year = 2025;
-    const firstDayOfMonth = new Date(year, monthIndex, 1);
-    const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+    const year = new Date().getFullYear();
+    const realMonthIndex = monthIndex + currentMonthIndex;
+    const firstDayOfMonth = new Date(year, realMonthIndex, 1);
+    const daysInMonth = new Date(year, realMonthIndex + 1, 0).getDate();
 
     const getWeekDayIndex = (date) => {
       const jsDay = date.getDay();
@@ -45,20 +49,20 @@ function CalendarComponent() {
     const days = [];
 
     if (firstWeekDayIndex > 0) {
-      const prevMonthLastDate = new Date(year, monthIndex, 0).getDate();
+      const prevMonthLastDate = new Date(year, realMonthIndex, 0).getDate();
       for (let i = firstWeekDayIndex; i > 0; i--) {
         days.push(
           <div
             className='calendar-empty calendar-day'
-            key={`prev-${monthIndex}-${i}`}>
+            key={`prev-${realMonthIndex}-${i}`}>
             {prevMonthLastDate - i + 1}
-          </div>,
+          </div>
         );
       }
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
-      const currentDate = new Date(year, monthIndex, i);
+      const currentDate = new Date(year, realMonthIndex, i);
       currentDate.setHours(0, 0, 0, 0);
       const isPast = currentDate < today;
       const dayClass = isPast ? "calendar-empty calendar-day" : "calendar-day";
@@ -66,23 +70,24 @@ function CalendarComponent() {
       days.push(
         <p
           className={dayClass}
-          key={`${monthIndex}-${i}`}
-          onClick={!isPast ? () => handleDayClick(i, monthIndex) : undefined}>
+          key={`${realMonthIndex}-${i}`}
+          onClick={!isPast ? () => handleDayClick(i, realMonthIndex) : undefined}
+        >
           {i}
-        </p>,
+        </p>
       );
     }
 
-    const lastDayDate = new Date(year, monthIndex, daysInMonth);
+    const lastDayDate = new Date(year, realMonthIndex, daysInMonth);
     const lastWeekDayIndex = getWeekDayIndex(lastDayDate);
     if (lastWeekDayIndex < 6) {
       for (let i = 1; i <= 6 - lastWeekDayIndex; i++) {
         days.push(
           <div
             className='calendar-empty calendar-day'
-            key={`next-${monthIndex}-${i}`}>
+            key={`next-${realMonthIndex}-${i}`}>
             {i}
-          </div>,
+          </div>
         );
       }
     }
@@ -91,7 +96,7 @@ function CalendarComponent() {
   };
 
   const handleDayClick = (day, monthIndex) => {
-    const date = new Date(2025, monthIndex, day);
+    const date = new Date(new Date().getFullYear(), monthIndex, day);
     date.setHours(0, 0, 0, 0);
     setSelectedDate(date);
     setTripDate(date.toISOString());
@@ -104,8 +109,7 @@ function CalendarComponent() {
       return;
     }
 
-    const timeValue = e.target.value;
-    const [hoursStr, minutesStr, secondsStr = "0"] = timeValue.split(":");
+    const [hoursStr, minutesStr, secondsStr = "0"] = e.target.value.split(":");
     const hours = parseInt(hoursStr, 10);
     const minutes = parseInt(minutesStr, 10);
     const seconds = parseInt(secondsStr, 10);
@@ -130,18 +134,12 @@ function CalendarComponent() {
         <>
           <h2 className='calendar-title'>Выберите дату</h2>
           <div className='calendar-container'>
-            {months.map((month, index) => (
-              <div
-                key={index}
-                className='month'>
+            {visibleMonths.map((month, index) => (
+              <div key={index} className='month'>
                 <h3 className='calendar-month'>{month}</h3>
                 <div className='calendar-grid'>
                   {weekDays.map((day, idx) => (
-                    <span
-                      className='calendar-weekDay'
-                      key={idx}>
-                      {day}
-                    </span>
+                    <span className='calendar-weekDay' key={idx}>{day}</span>
                   ))}
                   {renderDays(index)}
                 </div>
@@ -154,20 +152,13 @@ function CalendarComponent() {
       {step === 1 && (
         <div className='time-selection flex flex-col items-center gap-4'>
           <h2 className='calendar-title'>Выберите время</h2>
-          <Input
-            onChange={handleTimeChange}
-            type='time'
-            step='60'
-          />
-          <Button
-            size='large'
-            onClick={handleTimeSubmit}>
-            Подтвердить время
-          </Button>
+          <Input onChange={handleTimeChange} type='time' step='60' />
+          <Button size='large' onClick={handleTimeSubmit}>Подтвердить время</Button>
         </div>
       )}
     </div>
   );
 }
+
 
 export default CalendarComponent;

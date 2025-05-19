@@ -27,7 +27,7 @@ export default function PeopleList() {
   }
 
   return (
-    <div className='pt-10 relative flex flex-col items-center jc w-full min-h-screen'>
+    <div className='pt-[66px] relative flex flex-col items-center jc w-full min-h-screen'>
       <BackButton onClick={() => navigate(-1)} />
       <h3 className='font-bold text-[20px] leading-5 pb-8 max-w-[250px]'>
         Список {isDriver ? "пассажиров твоих поездок" : "водителей"}

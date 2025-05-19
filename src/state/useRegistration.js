@@ -1,0 +1,26 @@
+import { create } from "zustand";
+
+export const useRegistrationStore = create((set) => ({
+  name: '',
+  phone: '',
+  email: '',
+  city: '',
+  about: '',
+  avatar: '',
+  visibleAvatarPhoto: '',
+  visiblePassportPhoto: '',
+  visibleLicensePhoto: '',
+  visibleCarPhoto: '',
+  passportPhoto: '',
+  carPhoto: '',
+  driverLicensePhoto: '',
+  carNumber: "",
+  carModel: "",
+  carMake: "",
+  carColor: '',
+  carType: '',
+  privacyAccepted: false,
+  infoAccepted: false,
+  toReg: false,
+  setField: (field, value) => set({ [field]: value } ),
+}));

@@ -64,6 +64,27 @@ function App() {
                 <StartPage isUserLoaded={isUserLoaded} />
               </AnimatedRoute>
             }
+          > 
+          </Route>
+            <Route
+            path='/privacy'
+            element={
+              <div className='custom-container'>
+                <AnimatedRoute variants={slideDownIn}>
+                  <Privacy />
+                </AnimatedRoute>
+              </div>
+            }
+          />
+          <Route
+            path='/info'
+            element={
+              <div className='custom-container'>
+                <AnimatedRoute variants={slideDownIn}>
+                  <Info />
+                </AnimatedRoute>
+              </div>
+            }
           />
           <Route
             path='/preview'

@@ -21,6 +21,9 @@
   width: 350px;
   position: relative;
 }
+.input input:focus {
+  border: none;
+}
 .input.tel {
   position: relative;
 }

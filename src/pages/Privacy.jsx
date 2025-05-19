@@ -22,12 +22,12 @@ export default function Privacy() {
   ];
 
   return (
-    <div className='flex flex-col min-h-screen mx-auto'>
+    <div className='flex  flex-col min-h-screen mx-auto'>
       <CloseBtn
-        className='absolute top-[50px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
+        className='absolute top-[100px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
         onClick={() => navigate("/")}
       />
-      <div className='pt-[80px]  bg-orange-500 text-white p-8 text-[25px] leading-8 font-semibold break-all pb-10'>
+      <div className='pt-[144px]  bg-orange-500 text-white p-8 text-[25px] leading-8 font-semibold break-all pb-10'>
         Политика <br /> конфиденциальности
       </div>
       <div className='max-w-4xl mx-auto p-4 flex flex-col text-left break-all'>
