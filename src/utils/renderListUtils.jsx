@@ -18,18 +18,29 @@ export const renderWaitingItems = (waitingList) => {
 
 export const renderMainList = (isDriver, list, onList = false, onChat = false) => {
   if (isDriver) {
-    if (!list || list.length === 0) return [];
-    return list.map((trip) => (
-      <ProfileComponent
-        key={trip.id}
-        drive={trip}
-        passenger={trip.passenger?.user || trip.passenger}
-        onList={onList}
-        onChat={onChat}
-      />
-    ));
+    return list.flatMap((trip) => {
+      if (Array.isArray(trip.booked_trips) && trip.booked_trips.length > 0) {
+        return trip.booked_trips.map((item) => (
+          <ProfileComponent
+            key={item.id}
+            drive={item}
+            onList={onList}
+            onChat={onChat}
+            passenger={trip.user}
+          />
+        ));
+      }
+      return [
+        <ProfileComponent
+          key={trip.id}
+          drive={trip}
+          passenger={trip.passenger?.user || trip.passenger}
+          onList={onList}
+          onChat={onChat}
+        />,
+      ];
+    });
   } else {
-    if (!list || list.length === 0) return [];
     return list.map((obj) => (
       <ProfileComponent
         key={obj.id}

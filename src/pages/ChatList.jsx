@@ -6,10 +6,10 @@ import { useList } from "../state/listStore.js";
 
 export default function ChatList() {
   const isDriver = useUserStore((state) => state.currentRole === "driver");
-  const { driveList, passengerTripsList } = useList();
+  const { driveList, passengersList } = useList();
 
   function renderList() {
-    const listToRender = isDriver ? passengerTripsList : driveList;
+    const listToRender = isDriver ? passengersList : driveList;
     return renderMainList(isDriver, listToRender, true, true);
   }
 
