@@ -94,7 +94,7 @@ export default function DriveInfo() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await payment(100, currentUser.passenger_profile.id, tripData.driver_id, tripData.id);
+      const { data } = await payment(tripData.price * 100, currentUser.passenger_profile.id, tripData.driver_id, tripData.id);
       const url = data.url || data;
       window.location.assign(url);
     } catch (e) {
