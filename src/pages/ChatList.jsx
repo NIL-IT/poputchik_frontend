@@ -17,10 +17,10 @@ export default function ChatList() {
   return (
     <div className='flex flex-col min-h-screen mx-auto'>
       <CloseBtn
-        className='absolute top-[50px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
+        className='absolute top-[110px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback z-10'
         onClick={() => navigate(-1)}
       />
-      <div className='pt-[60px] h-[170px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold'>Чаты</div>
+      <div className='pt-[140px] pb-[50px] bg-orange-500 text-white px-8 text-[32px] leading-8 font-semibold'>Чаты</div>
       <div className='container-custom flex flex-col gap-4 pb-5'>{renderList()}</div>
     </div>
   );

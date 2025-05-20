@@ -109,7 +109,7 @@ body {
   border-radius: 5px;
 }
 
-.img-upload__label::after {
+.img-upload__label.editing::after {
   content: "";
   position: absolute;
   bottom: 0px;
@@ -133,7 +133,7 @@ body {
   border: var(--orange-color) solid 2px;
 }
 
-.change-file .img-upload__label::after {
+.change-file .img-upload__label.editing::after {
   content: "";
   position: absolute;
 
@@ -199,7 +199,7 @@ body {
 }
 .searchBig-container {
   width: 100%;
-  padding: 0 20px;
+  padding: 100px 20px;
 }
 .searchBig-wrapper {
   width: 100%;

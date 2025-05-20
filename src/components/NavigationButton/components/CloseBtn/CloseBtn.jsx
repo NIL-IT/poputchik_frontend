@@ -1,7 +1,7 @@
 export default function CloseBtn({ onClick, ...props }) {
   return (
     <button
-      className='absolute top-[50px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback'
+      className='absolute top-[120px]  right-5 w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback'
       onClick={onClick}
       {...props}>
       <svg

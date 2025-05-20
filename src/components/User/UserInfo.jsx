@@ -48,7 +48,7 @@ export default function UserInfo({
               backgroundPosition: "center",
             }}
             htmlFor='change-file'
-            className='img-upload__label  img-upload__control'>
+            className={`img-upload__label  img-upload__control ${isEditable && 'editing'}`}>
             Загрузить
           </label>
         </fieldset>

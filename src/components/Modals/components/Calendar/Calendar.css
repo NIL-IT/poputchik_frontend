@@ -1,3 +1,6 @@
+.calendar-wrapper{
+  padding-top: 60px;
+}
 .calendar-container {
   margin-top: 30px;
   display: flex;

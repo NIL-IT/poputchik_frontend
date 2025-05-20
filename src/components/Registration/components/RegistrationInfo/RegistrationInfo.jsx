@@ -134,7 +134,7 @@ export default function RegistrationInfo({
           <label
             htmlFor='privacy'
             className='text-sm'>
-            ознакомлен с{" "}
+            Ознакомлен с{" "}
             <Link
               to='/info'
               className='text-blue-600 underline'>

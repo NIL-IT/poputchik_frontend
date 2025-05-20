@@ -101,7 +101,7 @@ export default function UserPage() {
   }
 
   return (
-    <div className='h-full w-full'>
+    <div className='h-full w-full pt-[66px]'>
       <div className='container-custom relative'>
         <div className='pt-10 pb-10 px-5 border-b border-[#919191] '>
           <BackButton />
