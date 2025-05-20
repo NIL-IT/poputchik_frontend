@@ -42,7 +42,8 @@ export const useList = create((set) => ({
   setHistoryList: (value) => set({ historyList: value }),
   setFilteredList: (value) => set({ filteredList: value }),
   setIsFiltered: (value) => set({ isFiltered: value }),
-
+   initialized: false,
+  setInitialized: (value) => set({ initialized: value }),
   applyTimeFilter: (startDateTime, endDateTime, list) =>
     set((state) => ({
       filteredList: filterTripsByTime(startDateTime, endDateTime, list),

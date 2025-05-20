@@ -39,11 +39,9 @@ export default function DriveInfo() {
   const [text, setText] = useState("");
   const [isTextAreaVisible, setIsTextAreaVisible] = useState(false);
   const isDriver = currentRole === "driver";
-
   const isPaid = isDriver
     ? checkTripState(tripData.passengers, tripData.passenger_payments)
     : checkPaymenst(tripData.passenger_payments, currentUser);
-
   function bookingByPassenger(e) {
     e.preventDefault();
     const formData = {
@@ -185,7 +183,7 @@ export default function DriveInfo() {
           />
         ) : (
           <>
-            <div className='w-full flex justify-between py-5 border-b border-[#EFEFF4]'>
+            <div className='w-full flex justify-between py-5 border-b border-[#EFEFF4] no-scrollbar'>
               <div className='flex text-left'>
                 <img
                   className='w-[50px] h-[50px] rounded-full mr-4'

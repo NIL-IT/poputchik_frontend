@@ -13,8 +13,25 @@ export default function PeopleList() {
     const listToRender = (isFiltered ? filteredList : isDriver ? passengersList : driveList).filter(
       (drive) => drive.state !== "started" && drive.state !== "booked",
     );
+
+  const currentDate = new Date();
+
+ const filteredListToRender = listToRender.filter((trip) => {
+    if (isDriver) {
+      if (Array.isArray(trip.booked_trips)) {
+        return trip.booked_trips.some((item) => {
+          const tripDate = new Date(item.departure_time);
+          return tripDate >= currentDate;
+        });
+      }
+      return new Date(trip.departure_time) >= currentDate;
+    } else {
+      return new Date(trip.departure_time) >= currentDate;
+    }
+  });
+
     const waitingItems = waitingList && isDriver ? renderWaitingItems(waitingList) : [];
-    const mainItems = listToRender && renderMainList(isDriver, listToRender, true, false);
+    const mainItems = filteredListToRender && renderMainList(isDriver, filteredListToRender, true, false);
     if (mainItems.length > 0 || waitingItems.length > 0) {
       if (isDriver) {
         return [...waitingItems, ...mainItems];

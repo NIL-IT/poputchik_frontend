@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useBookedTripsList, usePassengerList } from "../api/passenger";
 import {
   useDriversTripsList,
@@ -11,6 +11,8 @@ import { useUserStore } from "../state/UserStore";
 import useGlobalListInitializer from "../hooks/useGlobalListInitializer";
 import { useMap } from "../state/MapRoutesStore";
 import { getCityByCoordinates, initialLocationRequest, updateLocation } from "../utils/geoInit";
+import { useList } from "../state/listStore";
+import { useIsFetching } from "@tanstack/react-query";
 
 export default function AppInitializer() {
   const { setPosition, positon, setCity, setCenter } = useMap();
@@ -95,10 +97,31 @@ export default function AppInitializer() {
     }
     return [];
   }, [isDriver, tripsList, currentUser?.city]);
+  const setInitialized = useList((s) => s.setInitialized);
+
+  // число активных react-query fetch-запросов
+  const fetchingCount = useIsFetching();
+
+  // реф, чтобы убедиться, что реакция произойдёт только один раз
+  const didInitRef = useRef(false);
+
+  useEffect(() => {
+    // если уже инициализировались — больше не запускаем логику
+    if (didInitRef.current) return;
+    
+    // когда все запросы завершились (count === 0)
+    if (fetchingCount === 0) {
+      setInitialized(true);       // переключаем флаг в Zustand
+      didInitRef.current = true;  // заблокируем дальнейшие срабатывания
+    }
+  }, [fetchingCount, setInitialized]);
+
+
   const effectiveDriveList = hasValidUser ? tripsList : [];
   const effectiveActiveDrives = hasValidUser ? activeDrives : [];
   const effectiveWaitingList = hasValidUser ? waitingList : [];
   const effectiveHistoryList = hasValidUser ? historyList : [];
+
   useGlobalListInitializer({
     passengersList: effectivePassengersList,
     passengerTripsList: effectivePassengerTripsList,

@@ -13,7 +13,11 @@ export function checkTripState(passengersList, passengerPayments) {
     return false;
   }
 
-  const allPaid = passengerPayments.every((payment) => payment.status === "paid");
+  if (passengersList.length === 0 || passengerPayments.length === 0) {
+  return false;
+}
 
+  const allPaid = passengerPayments.every((payment) => payment.status === "paid");
+  console.log(allPaid)
   return allPaid;
 }

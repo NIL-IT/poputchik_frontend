@@ -11,16 +11,10 @@ import DriveInfo from "../components/DriveInfo/DriveInfo";
 import CreateTrip from "../components/CreateTrip/CreateTrip";
 import MapComponent from "../components/Map/MapComponent";
 import SearchComponent from "../components/SearchComponent/SearchComponent";
-import { useUserStore } from "../state/UserStore";
-import { useList } from "../state/listStore";
-import { getBookedTripsByPassengerId, getPassengerByDriver } from "../api/passenger";
-import { getDrviersTrips, getTripsList } from "../api/trips";
-import { useEffect } from "react";
+
 
 export default function MainPage() {
-  const { currentUser } = useUserStore();
-  const isDriver = useUserStore((state) => state.currentRole === "driver");
-  const { setMainList, setActiveList } = useList();
+
   const { bookedModal, toggleBookedModal, isCreating, setIsCreating } = useModal();
   const { setTripFrom, setTripTo, setTripDate, setPersons, setTripPrice } = useTrip();
   const { setIsRouteEnabled, setStartPoint, setEndPoint } = useMap();
@@ -68,26 +62,6 @@ export default function MainPage() {
       clearCreatingData();
     }
   }
-
-  // useEffect(() => {
-  //   async function getList() {
-  //     if (isDriver) {
-  //       const driverId = currentUser.driver_profile.id;
-  //       const passengerList = (await getPassengerByDriver(driverId)).data;
-  //       setMainList(passengerList);
-  //       const activeTrips = (await getDrviersTrips(driverId, "active")).data;
-  //       const startedTrips = (await getDrviersTrips(driverId, "started")).data;
-  //       const bookedTrips = (await getDrviersTrips(driverId, "booked")).data;
-  //       setActiveList([...activeTrips, ...startedTrips, ...bookedTrips]);
-  //     } else {
-  //       const drivesList = (await getTripsList(currentUser.city)).data;
-  //       setMainList(drivesList);
-  //       const bookedTripsList = (await getBookedTripsByPassengerId(currentUser?.passenger_profile?.id)).data;
-  //       setActiveList(bookedTripsList);
-  //     }
-  //   }
-  //   getList();
-  // }, []);
 
   return (
     <div className='bg-black h-screen relative'>
