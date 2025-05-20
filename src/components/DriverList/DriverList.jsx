@@ -12,7 +12,7 @@ export default function DriverList({ toggleCreating }) {
   const navigate = useNavigate();
   const { setFilterModalOpen } = useModal();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
-  const { passengerTripsList, activeList, waitingList, filteredList, isFiltered, driveList } = useList();
+  const { passengersList, activeList, waitingList, filteredList, isFiltered, driveList } = useList();
   const driverId = currentUser.driver_profile ? currentUser.driver_profile.id : null;
   const filteredDrives = activeList?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
@@ -23,30 +23,46 @@ export default function DriverList({ toggleCreating }) {
     return 0;
   }
 
-  function renderList() {
-    const listToRender = isFiltered ? filteredList : isDriver ? passengerTripsList : driveList;
+function renderList() {
+  const listToRender = isFiltered
+    ? filteredList
+    : isDriver
+      ? passengersList
+      : driveList;
 
-    const currentDate = new Date();
-    if (listToRender) {
-      const filteredListToRender = listToRender.filter((trip) => {
-        const tripDate = new Date(trip.date);
-        return tripDate >= currentDate;
-      });
-      const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
-      const mainItems = renderMainList(isDriver, filteredListToRender);
-      if (mainItems.length > 0 || waitingItems.length > 0) {
-        if (isDriver) {
-          return [...mainItems];
-        } else {
-          return [...waitingItems, ...mainItems].slice(0, 2);
-        }
-      } else {
-        return <>Список пустой</>;
-      }
-    } else {
-      return <>Список пустой</>;
-    }
+  if (!Array.isArray(listToRender) || listToRender.length === 0) {
+    return <>Список пустой</>;
   }
+
+  const currentDate = new Date();
+
+  const filteredListToRender = listToRender.filter((trip) => {
+    if (isDriver) {
+      if (Array.isArray(trip.booked_trips)) {
+        return trip.booked_trips.some((item) => {
+          const tripDate = new Date(item.departure_time);
+          return tripDate >= currentDate;
+        });
+      }
+      return new Date(trip.departure_time) >= currentDate;
+    } else {
+      return new Date(trip.departure_time) >= currentDate;
+    }
+  });
+
+
+  const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
+  const mainItems = renderMainList(isDriver, filteredListToRender);
+
+  const allItems = isDriver
+    ? [...waitingItems, ...mainItems]
+    : [...waitingItems, ...mainItems].slice(0, 2);
+
+  return allItems.length > 0
+    ? allItems
+    : <>Список пустой</>;
+}
+
 
   function openFilter() {
     document.body.classList.add("overflow-y-hidden");
@@ -54,7 +70,7 @@ export default function DriverList({ toggleCreating }) {
   }
   return (
     <Footer className={`bg-[#F6F6F6] flex justify-center`}>
-      <div className='w-full h-full flex flex-col justify-between relative'>
+      <div className='w-full h-full flex flex-col justify-between relative no-scrollbar'>
         <h2 className='font-bold text-[20px] leading-[20px] pb-5 '>Список {!isDriver ? "водителей" : "пассажиров"}</h2>
         <button
           className={`absolute right-0 top-0 w-[35px] h-[35px] flex justify-center items-center border border-[#323232] rounded-[12px] cursor-pointer ${

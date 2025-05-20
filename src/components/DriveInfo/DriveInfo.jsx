@@ -181,7 +181,7 @@ export default function DriveInfo() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder='Введите комментарий (необязательно)'
-            className='w-full min-h-[237px] bg-[#F6F6F6] rounded-[15px] border border-[#B4B4B4] mb-10 p-4 text-[14px] leading-4 text-[#919191] focus:border-none'
+            className='w-full min-h-[237px] bg-[#F6F6F6] rounded-[15px] border border-[#B4B4B4] mb-10 p-4 text-[14px] leading-4 text-[#919191] focus:border-none focus:outline-none focus:ring-0'
           />
         ) : (
           <>
