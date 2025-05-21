@@ -6,9 +6,7 @@ export async function payment(amount, passenger_id, driver_id, trip_id) {
     `${url}/users/payment?amount=${amount}&passenger_id=${passenger_id}&driver_id=${driver_id}&trip_id=${trip_id}`,
   );
 }
-export async function getStatus() {
-  return axios.get(`https://securepay.tinkoff.ru/v2/TinkoffPay/terminals/1743154896934/status`);
-}
+
 
 export async function verifyPayment(data) {
   const response = await axios({

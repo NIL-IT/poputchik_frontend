@@ -31,7 +31,7 @@ export default function HistoryCard({ drive }) {
     : useDriverById(userIdToFetch, { skip: !userIdToFetch });
 
   const user = userQuery?.data;
-
+  console.log(user)
   useEffect(() => {
     if (!drive) return;
 
@@ -128,7 +128,6 @@ export default function HistoryCard({ drive }) {
     setIsRouteEnabled(true);
     navigate("/main");
   };
-
   function activeClick() {
     if (drive.state == "started") {
       setBookedDrive(drive);
@@ -156,10 +155,10 @@ export default function HistoryCard({ drive }) {
           <div
             className='history-driver'
             onClick={openProfile}>
-            {user.rating && <div className='history-rating'>{user.rating}</div>}
+            <div className='history-rating'>{user.rating && user.rating}</div>
             <img
               className='history-img'
-              // src={user.user.profile_photo}
+              src={is_passenger_create ? user.profile_photo : user.user.profile_photo}
               alt={is_passenger_create ? "Passenger" : "Driver"}
             />
           </div>

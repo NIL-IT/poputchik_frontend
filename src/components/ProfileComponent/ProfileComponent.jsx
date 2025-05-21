@@ -9,8 +9,10 @@ import { approveRequest, rejectRequest, useTripById } from "../../api/trips";
 import { formatDate } from "../../utils/utils";
 import { useUserByUserId } from "../../api/user";
 import Profile from "./components/Profile/Profile";
+import { useList } from "../../state/listStore";
 
 export default function ProfileComponent({ drive, passenger, onList, pending, request, onChat }) {
+  const {waitingList, setWaitingList} = useList();
   const { setSelectedDriver, toggleBookedModal } = useModal();
   const tripData = useTripById(drive.id);
   const navigate = useNavigate();
@@ -75,16 +77,30 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
     navigate(`/userReview/${user.id}`);
   };
 
-  const handleReject = (e) => {
-    e.stopPropagation();
-    rejectRequest(request.id);
-    setReqStatus("reject");
+   const removeFromWaiting = () => {
+    setWaitingList(prev => prev.filter(item => item.id !== request.id));
   };
 
-  const handleApprove = (e) => {
+  const handleReject = async (e) => {
     e.stopPropagation();
-    approveRequest(request.id);
-    setReqStatus("approve");
+    try {
+      await rejectRequest(request.id);
+      setReqStatus("reject");
+      removeFromWaiting();
+    } catch (err) {
+      console.error("Failed to reject request:", err);
+    }
+  };
+
+  const handleApprove = async (e) => {
+    e.stopPropagation();
+    try {
+      await approveRequest(request.id);
+      setReqStatus("approve");
+      removeFromWaiting();
+    } catch (err) {
+      console.error("Failed to approve request:", err);
+    }
   };
 
   const viewProps = {
