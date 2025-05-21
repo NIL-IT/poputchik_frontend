@@ -31,7 +31,7 @@ export default function HistoryCard({ drive }) {
     : useDriverById(userIdToFetch, { skip: !userIdToFetch });
 
   const user = userQuery?.data;
-  console.log(user)
+
   useEffect(() => {
     if (!drive) return;
 
