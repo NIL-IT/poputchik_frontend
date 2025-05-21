@@ -53,7 +53,6 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
         return;
       }
     };
-    console.log(drive)
     setBookedDrive(drive);
     toggleBookedModal(true);
     setIsRouteEnabled(true);
@@ -70,7 +69,6 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
       navigate(`/chat/${id}/${currentUser.id}`);
     }
   };
-
   const openProfile = (e) => {
     e.stopPropagation();
     setSelectedDriver(user);

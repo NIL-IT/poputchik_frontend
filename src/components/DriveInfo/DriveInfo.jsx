@@ -46,7 +46,7 @@ export default function DriveInfo() {
     e.preventDefault();
     const formData = {
       trip_id: tripData.id,
-      user_id: currentUser.id,
+      user_id: currentUser.passenger_profile.id,
       text: text,
       seats_requested: 1,
     };
