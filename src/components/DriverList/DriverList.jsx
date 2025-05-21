@@ -9,12 +9,11 @@ import { useModal } from "../../state/ModalStore.js";
 
 export default function DriverList({ toggleCreating }) {
   const { initialized } = useList();
-  console.log(initialized)
   const { currentUser } = useUserStore();
   const navigate = useNavigate();
   const { setFilterModalOpen } = useModal();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
-  const { passengersList, activeList, waitingList, filteredList, isFiltered, driveList } = useList();
+  const { passengersList, activeList, waitingList, filteredList, isFiltered, driveList, tripsByPassenger } = useList();
   const driverId = currentUser.driver_profile ? currentUser.driver_profile.id : null;
   const filteredDrives = activeList?.filter((i) => (driverId ? i.driver_id !== driverId : true));
 
@@ -26,11 +25,10 @@ export default function DriverList({ toggleCreating }) {
   }
 
   function renderList() {
-    const listToRender = isFiltered ? filteredList : isDriver ? passengersList : driveList;
+    const listToRender = isFiltered ? filteredList : isDriver ? [...passengersList, ...tripsByPassenger ] : driveList;
     if (!Array.isArray(listToRender) || listToRender.length === 0) {
       return <>Список пустой</>;
     }
-
     const currentDate = new Date();
 
     const filteredListToRender = listToRender.filter((trip) => {
@@ -40,20 +38,17 @@ export default function DriverList({ toggleCreating }) {
             const tripDate = new Date(item.departure_time);
             return tripDate >= currentDate;
           });
-        }
+        } 
         return new Date(trip.departure_time) >= currentDate;
       } else {
         return new Date(trip.departure_time) >= currentDate;
       }
     });
-
-    console.log(filteredListToRender);
     const waitingItems = isDriver ? renderWaitingItems(waitingList) : [];
     const mainItems = renderMainList(isDriver, filteredListToRender);
 
     const allItems = isDriver ? [...waitingItems, ...mainItems] : [...waitingItems, ...mainItems].slice(0, 2);
-
-    return allItems.length > 0 ? allItems : <>Список пустой</>;
+    return allItems.length > 0 ? allItems.slice(0,2) : <>Список пустой</>;
   }
 
   function openFilter() {

@@ -14,7 +14,7 @@ function useGlobalListInitializer({
   const { currentUser } = useUserStore();
   const {
     setPassengersList,
-    setPassengerTripsList,
+    setTripsByPassenger,
     setDriversList,
     setMainList,
     setActiveList,
@@ -36,7 +36,7 @@ function useGlobalListInitializer({
       };
       if (JSON.stringify(newLists) !== JSON.stringify(prevListsRef.current)) {
         setPassengersList(passengersList);
-        setPassengerTripsList(passengerTripsList);
+        setTripsByPassenger(passengerTripsList);
         setMainList(driversList);
         setDriveList(driveList);
         setActiveList(activeDrives);

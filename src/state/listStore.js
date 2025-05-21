@@ -30,10 +30,11 @@ export const useList = create((set) => ({
   historyList: [],
   waitingList: [],
   filteredList: [],
+  tripsByPassenger: [],
   isFiltered: false,
 
   setPassengersList: (value) => set({ passengersList: value }),
-  setPassengerTripsList: (value) => set({ passengerTripsList: filterList(value) }),
+  setTripsByPassenger: (value) => set({ tripsByPassenger: filterList(value) }),
   setDriversList: (value) => set({ driversList: value }),
   setMainList: (value) => set({ mainList: filterList(value) }),
   setDriveList: (value) => set({ driveList: filterList(value) }),

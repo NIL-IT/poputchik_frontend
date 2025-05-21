@@ -48,6 +48,11 @@ export default function ProfileComponent({ drive, passenger, onList, pending, re
   const chooseDrive = (event) => {
     event.stopPropagation();
     if (disabled || onChat) return;
+    if (isDriver){
+      if (!drive.is_passenger_create){
+        return;
+      }
+    };
     setBookedDrive(drive);
     toggleBookedModal(true);
     setIsRouteEnabled(true);

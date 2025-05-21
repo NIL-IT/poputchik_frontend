@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useBookedTripsList, usePassengerList } from "../api/passenger";
 import {
   useDriversTripsList,
@@ -18,13 +18,12 @@ export default function AppInitializer() {
   const { setPosition, positon, setCity, setCenter } = useMap();
   const { currentUser, currentRole } = useUserStore();
   const hasDriverProfile = Boolean(currentUser?.driver_profile?.id);
-  const isDriver = useUserStore((state) => state.currentRole === "driver");
+  const isDriver = currentRole === "driver";
   const driverId = currentUser?.driver_profile?.id || null;
   const passengerId = currentUser?.passenger_profile?.id || null;
 
   const passengerList = usePassengerList(driverId);
   const tripsList = useTripsList(currentUser?.city);
-
   const tripsListByPassenger = useTripsListByPassenger(currentUser?.city);
 
   useEffect(() => {
@@ -36,92 +35,69 @@ export default function AppInitializer() {
     };
 
     setupLocation();
-  }, []);
+  }, [setPosition, setCenter]);
 
   useEffect(() => {
     if (positon && positon.length === 2) {
       getCityByCoordinates(setCity);
     }
-  }, [positon]);
+  }, [positon, setCity]);
 
+  // Driver-specific data
   const activeTripsData = useDriversTripsList(driverId, "active");
   const startedTripsData = useDriversTripsList(driverId, "started");
   const bookedTripsData = useDriversTripsList(driverId, "booked");
   const requestsData = useRequests(driverId);
+
+  // Passenger-specific data
   const bookedTripsList = useBookedTripsList(passengerId);
   const passengerHistoryList = usePassengerTripsList(passengerId, "finished");
   const driverHistoryList = useDriversTripsList(driverId, "finished");
-  const historyList = useMemo(() => {
-    if (currentRole === "passenger" && passengerId) {
-      return passengerHistoryList;
-    }
-    if (hasDriverProfile) {
-      return driverHistoryList;
-    }
-    return [];
-  }, [currentRole, passengerId, hasDriverProfile, passengerHistoryList, driverHistoryList]);
+
+  // Build lists without useMemo
+  const historyList =
+    currentRole === "passenger" && passengerId
+      ? passengerHistoryList || []
+      : hasDriverProfile
+      ? driverHistoryList || []
+      : [];
+
+  const activeTrips = driverId ? activeTripsData || [] : [];
+  const startedTrips = driverId ? startedTripsData || [] : [];
+  const bookedTrips = driverId ? bookedTripsData || [] : [];
+  const waitingList = isDriver && driverId ? requestsData || [] : [];
+
+  const activeDrives =
+    currentRole === "passenger" && currentUser?.passenger_profile
+      ? bookedTripsList || []
+      : hasDriverProfile
+      ? [...activeTrips, ...startedTrips, ...bookedTrips]
+      : [];
+
+  const effectivePassengersList = passengerList || [] ;
+  const effectivePassengerTripsList =  tripsListByPassenger || [] ;
+  const effectiveDriversList =
+    !isDriver
+      ? tripsList?.filter(trip => !trip.is_passenger_create && trip.city === currentUser?.city) || []
+      : [];
 
   const hasValidUser = Boolean(currentUser && Object.keys(currentUser).length > 0);
 
-  const activeTrips = useMemo(() => (driverId ? activeTripsData || [] : []), [driverId, activeTripsData]);
-  const startedTrips = useMemo(() => (driverId ? startedTripsData || [] : []), [driverId, startedTripsData]);
-  const bookedTrips = useMemo(() => (driverId ? bookedTripsData || [] : []), [driverId, bookedTripsData]);
-  const waitingList = useMemo(
-    () => (isDriver && driverId ? requestsData || [] : []),
-    [isDriver, driverId, requestsData],
-  );
-  const activeDrives = useMemo(() => {
-    if (currentRole === "passenger" && currentUser?.passenger_profile) {
-      return bookedTripsList || [];
-    }
-    return currentUser?.driver_profile ? [...activeTrips, ...startedTrips, ...bookedTrips] : [];
-  }, [currentRole, currentUser, bookedTripsList, activeTrips, startedTrips, bookedTrips]);
-
-  const effectivePassengersList = useMemo(() => {
-    if (isDriver) {
-      return passengerList || [];
-    }
-    return [];
-  }, [isDriver, passengerList]);
-
-  const effectivePassengerTripsList = useMemo(() => {
-    if (isDriver) {
-      return tripsListByPassenger || [];
-    }
-    return [];
-  }, [isDriver, tripsListByPassenger]);
-
-  const effectiveDriversList = useMemo(() => {
-    if (!isDriver) {
-      return tripsList?.filter((trip) => !trip.is_passenger_create && trip.city === currentUser?.city) || [];
-    }
-    return [];
-  }, [isDriver, tripsList, currentUser?.city]);
-  const setInitialized = useList((s) => s.setInitialized);
-
-  // число активных react-query fetch-запросов
-  const fetchingCount = useIsFetching();
-
-  // реф, чтобы убедиться, что реакция произойдёт только один раз
-  const didInitRef = useRef(false);
-
-  useEffect(() => {
-    // если уже инициализировались — больше не запускаем логику
-    if (didInitRef.current) return;
-    
-    // когда все запросы завершились (count === 0)
-    if (fetchingCount === 0) {
-      setInitialized(true);       // переключаем флаг в Zustand
-      didInitRef.current = true;  // заблокируем дальнейшие срабатывания
-    }
-  }, [fetchingCount, setInitialized]);
-
-
-  const effectiveDriveList = hasValidUser ? tripsList : [];
+  const effectiveDriveList = hasValidUser ? tripsList || [] : [];
   const effectiveActiveDrives = hasValidUser ? activeDrives : [];
   const effectiveWaitingList = hasValidUser ? waitingList : [];
   const effectiveHistoryList = hasValidUser ? historyList : [];
 
+  const setInitialized = useList(s => s.setInitialized);
+  const fetchingCount = useIsFetching();
+  const didInitRef = useRef(false);
+
+  useEffect(() => {
+    if (!didInitRef.current && fetchingCount === 0) {
+      setInitialized(true);
+      didInitRef.current = true;
+    }
+  }, [fetchingCount, setInitialized]);
   useGlobalListInitializer({
     passengersList: effectivePassengersList,
     passengerTripsList: effectivePassengerTripsList,

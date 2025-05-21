@@ -7,10 +7,10 @@ import BackButton from "../components/NavigationButton/components/BackButton/Bac
 export default function PeopleList() {
   const navigate = useNavigate();
 
-  const { driveList, passengersList, waitingList, isFiltered, filteredList } = useList();
+  const { driveList, passengersList, waitingList, isFiltered, filteredList, tripsByPassenger } = useList();
   const isDriver = useUserStore((state) => state.currentRole === "driver");
   function renderList() {
-    const listToRender = (isFiltered ? filteredList : isDriver ? passengersList : driveList).filter(
+    const listToRender = (isFiltered ? filteredList : isDriver ? [...passengersList, ...tripsByPassenger ]  : driveList).filter(
       (drive) => drive.state !== "started" && drive.state !== "booked",
     );
 
