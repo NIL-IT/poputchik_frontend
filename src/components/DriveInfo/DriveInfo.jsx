@@ -55,11 +55,7 @@ export default function DriveInfo() {
   }
   function bookingByDriver(e) {
     e.preventDefault();
-    const formData = {
-      driver_id: currentUser.driver_profile.id,
-      trip_id: bookedDrive.id,
-    };
-    bookedTripByDriver(formData);
+    bookedTripByDriver(currentUser.driver_profile.id, bookedDrive.id);
     toggleBookedModal(false);
   }
 

@@ -32,7 +32,7 @@ export default function RegistrationInfo({
         />
         <label
           htmlFor='upload-file'
-          className='img-upload__label img-upload__control'
+          className='img-upload__label img-upload__control editing'
           style={{
             backgroundImage: avatar && `url(${visibleAvatarPhoto})`,
             backgroundSize: "cover",
