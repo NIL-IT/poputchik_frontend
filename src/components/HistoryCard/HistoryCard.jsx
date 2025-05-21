@@ -11,6 +11,7 @@ import { useUserStore } from "../../state/UserStore";
 import { cleanAddress } from "../../api/api";
 import PropTypes from "prop-types";
 import { useList } from "../../state/listStore";
+import { useUserByUserId } from "../../api/user";
 
 export default function HistoryCard({ drive }) {
   const { currentUser } = useUserStore();
@@ -25,10 +26,12 @@ export default function HistoryCard({ drive }) {
   const tripData = useTripById(drive.id);
   const isStarted = drive.state === "started";
   const userIdToFetch = is_passenger_create && tripData ? tripData.passengers[0]?.user_id : drive?.driver_id;
-  console.log(userIdToFetch)
-  const userQuery = useDriverById(drive ? userIdToFetch : null, { skip: !drive });
-  const user = userQuery?.data;
+  const userQuery = is_passenger_create
+    ? useUserByUserId(userIdToFetch, { skip: !userIdToFetch })
+    : useDriverById(userIdToFetch, { skip: !userIdToFetch });
 
+  const user = userQuery?.data;
+  console.log(user)
   useEffect(() => {
     if (!drive) return;
 
@@ -153,10 +156,10 @@ export default function HistoryCard({ drive }) {
           <div
             className='history-driver'
             onClick={openProfile}>
-            <div className='history-rating'>{user.rating}</div>
+            {user.rating && <div className='history-rating'>{user.rating}</div>}
             <img
               className='history-img'
-              src={user.user.profile_photo}
+              // src={user.user.profile_photo}
               alt={is_passenger_create ? "Passenger" : "Driver"}
             />
           </div>
