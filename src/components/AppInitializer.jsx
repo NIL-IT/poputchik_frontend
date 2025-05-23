@@ -15,7 +15,7 @@ import { useList } from "../state/listStore";
 import { useIsFetching } from "@tanstack/react-query";
 
 export default function AppInitializer() {
-  const { setPosition, positon, setCity, setCenter } = useMap();
+  const { setPosition, positon, setCity, setCenter,setGeoReady } = useMap();
   const { currentUser, currentRole } = useUserStore();
   const hasDriverProfile = Boolean(currentUser?.driver_profile?.id);
   const isDriver = currentRole === "driver";
@@ -39,22 +39,21 @@ export default function AppInitializer() {
 
   useEffect(() => {
     if (positon && positon.length === 2) {
-      getCityByCoordinates(setCity);
+      getCityByCoordinates(setCity).then(()=>{
+        setGeoReady(true)
+      });
     }
   }, [positon, setCity]);
 
-  // Driver-specific data
   const activeTripsData = useDriversTripsList(driverId, "active");
   const startedTripsData = useDriversTripsList(driverId, "started");
   const bookedTripsData = useDriversTripsList(driverId, "booked");
   const requestsData = useRequests(driverId);
 
-  // Passenger-specific data
   const bookedTripsList = useBookedTripsList(passengerId);
   const passengerHistoryList = usePassengerTripsList(passengerId, "finished");
   const driverHistoryList = useDriversTripsList(driverId, "finished");
 
-  // Build lists without useMemo
   const historyList =
     currentRole === "passenger" && passengerId
       ? passengerHistoryList || []

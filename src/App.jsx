@@ -21,12 +21,15 @@ import Privacy from "./pages/Privacy";
 import Info from "./pages/Info";
 import AppInitializer from "./components/AppInitializer";
 import Success from "./pages/Success";
+import LoadingPage from "./pages/LoadingPage";
+import { useMap } from "./state/MapRoutesStore";
 
 function App() {
   const { setCurrentUser } = useUserStore();
   const [userId, setUserId] = useState(null);
   const { user, isFetched } = useUserById(userId);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
+  const {isGeoReady} = useMap()
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -51,6 +54,11 @@ function App() {
       setIsUserLoaded(true);
     }
   }, [isFetched, user, setCurrentUser]);
+
+  if (!isFetched && !isGeoReady){
+    return <LoadingPage />
+  }
+
 
   return (
     <div className='container'>

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
 export const useMap = create((set) => ({
+  isGeoReady: false,
+  setGeoReady: (ready) => set({ isGeoReady: ready }),
   city: "",
   setCity: (city) => set({ city }),
   center: [51.9582, 85.9603],
