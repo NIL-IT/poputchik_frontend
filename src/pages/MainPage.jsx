@@ -73,7 +73,7 @@ export default function MainPage() {
             initial='initial'
             animate='animate'
             exit='exit'
-            className='absolute top-[70px] left-5 z-10'>
+            className='absolute top-[90px] left-5 z-10'>
             <BackButton
               className='w-11 h-11 rounded-full flex justify-center items-center bg-[#fff] shadow-btnback'
               onClick={() => onButtonClick()}

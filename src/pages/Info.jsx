@@ -11,7 +11,7 @@ export default function Info() {
         onClick={() => navigate("/")}
       />
 
-      <div className='pt-[144px] pb-10 h-[170px] bg-orange-500 text-white p-8 text-[32px] leading-8 font-semibold w-full'>
+      <div className='pt-[144px]  bg-orange-500 text-white p-8 text-[25px] leading-8 font-semibold break-all pb-10'>
         <h1>Информация о приложении</h1>
       </div>
 

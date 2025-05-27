@@ -46,7 +46,7 @@ export default function PeopleList() {
   return (
     <div className='pt-[66px] relative flex flex-col items-center jc w-full min-h-screen'>
       <BackButton onClick={() => navigate(-1)} />
-      <h3 className='font-bold text-[20px] leading-5 pb-8 max-w-[250px]'>
+      <h3 className='font-bold text-[20px] leading-5 pb-8 max-w-[250px] pt-[40px]'>
         Список {isDriver ? "пассажиров твоих поездок" : "водителей"}
       </h3>
       <div className='flex flex-col gap-4 w-full justify-center items-center'>
