@@ -11,7 +11,7 @@ export default function Header() {
     navigate("/chats");
   }
   return (
-    <div className='px-5 py-[66px] flex justify-between items-center absolute w-full z-10'>
+    <div className='px-5 py-[94px] flex justify-between items-center absolute w-full z-10'>
       <div className='flex w-full justify-between'>
         <Burger onClick={goToChats} />
         <Search />
