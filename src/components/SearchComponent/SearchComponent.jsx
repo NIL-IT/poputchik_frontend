@@ -64,7 +64,7 @@ export default function SearchComponent({ onLocClick }) {
         const collection = data.response.GeoObjectCollection.featureMember
           .filter((item) => {
             const kind = item.GeoObject.metaDataProperty.GeocoderMetaData.kind;
-            return ["locality", "street", "house"].includes(kind) && item.GeoObject.description.includes("Алтай");
+            return ["locality", "street", "house"].includes(kind);
           })
           .map((item) => item.GeoObject);
 
