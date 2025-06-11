@@ -10,7 +10,11 @@ export default function ChatList() {
 
   function renderList() {
     const listToRender = isDriver ? passengersList : activeList;
+    if (listToRender.length > 0){
     return renderMainList(isDriver, listToRender, true, true);
+    } else {
+      return <>У вас нет активных чатов</>
+    }
   }
 
   const navigate = useNavigate();

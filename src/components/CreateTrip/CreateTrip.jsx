@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import Button from "../Button/Button";
-import Footer from "../Footer/Footer";
 import Input from "../Input/Input";
 import { useModal } from "../../state/ModalStore";
 import { useTrip } from "../../state/TripStore";
@@ -70,7 +69,7 @@ export default function CreateTrip() {
     });
     setTripDate("");
     setPersons(1);
-    setTripPrice(500);
+    setTripPrice(40);
     setIsCreating(false);
     setIsRouteEnabled(false);
     setStartPoint([]);
@@ -157,7 +156,12 @@ export default function CreateTrip() {
       }
 
       const grossRatePerKm = 15 / 0.95;
-      const totalFare = value * grossRatePerKm;
+      let totalFare = value * grossRatePerKm;
+
+      if (totalFare < 40) {
+        totalFare = 40;
+      }
+
       return totalFare.toFixed(2);
     }
 
@@ -232,8 +236,6 @@ export default function CreateTrip() {
               <div className='price'>
                 <Input
                   readOnly
-                  // onClick={() => togglePrice(true)}
-                  // type={"number"}
                   onChange={() => {}}
                   value={price}
                 />
